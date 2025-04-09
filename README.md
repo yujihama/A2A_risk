@@ -57,7 +57,7 @@ The Agent2Agent (A2A) protocol facilitates communication between independent AI 
     * [Multi-Agent Web App](/demo/README.md)
     * CLI ([Python](/samples/python/hosts/cli/README.md), [JS](/samples/js/README.md))
 * 🤖 Use our [sample agents](/samples/python/agents/README.md) to see how to bring A2A to agent frameworks
-    * [Google Agent Developer Kit (ADK)](/samples/python/agents/google_adk/README.md)
+    * [Agent Developer Kit (ADK)](/samples/python/agents/google_adk/README.md)
     * [CrewAI](/samples/python/agents/crewai/README.md)
     * [LangGraph](/samples/python/agents/langgraph/README.md)
     * [Genkit](/samples/js/src/agents/README.md)
