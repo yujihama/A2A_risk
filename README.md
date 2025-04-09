@@ -72,7 +72,7 @@ The Agent2Agent (A2A) protocol facilitates communication between independent AI 
 We welcome contributions! Please see our [contributing guide](CONTRIBUTING.md) to get started.\
 Have questions? Join our community in GitHub discussions.\
 Help with protocol improvement feedback, in GitHub issues.\
-Want to send private feedback, use this [google form](https://docs.google.com/forms/d/e/1FAIpQLScS23OMSKnVFmYeqS2dP7dxY3eTyT7lmtGLUa8OJZfP4RTijQ/viewform)
+Want to send private feedback? use this [Google form](https://docs.google.com/forms/d/e/1FAIpQLScS23OMSKnVFmYeqS2dP7dxY3eTyT7lmtGLUa8OJZfP4RTijQ/viewform)
 
 ### **What's next**
 
