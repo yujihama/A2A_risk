@@ -40,5 +40,8 @@ def async_poller(
       events={
           "triggerEvent": trigger_event,
       },
-      properties={"action": asdict(action) if action else {}},
+      properties={
+          "polling_interval": action.duration_seconds if action else 1,
+          "action": asdict(action) if action else {}
+      },
   )

@@ -7,11 +7,10 @@ import functools
 import threading
 
 from state.state import AppState, SettingsState, StateMessage
-from state.host_agent_service import SendMessage, UpdateAppState, ListConversations
+from state.host_agent_service import SendMessage, ListConversations, convert_message_to_state
 from .chat_bubble import chat_bubble
 from .form_render import is_form, render_form, form_sent
 from .async_poller import async_poller, AsyncAction
-from state.host_agent_service import UpdateAppState
 from common.types import Message, TextPart
 
 
@@ -49,6 +48,16 @@ async def send_message(message: str, message_id: str = ""):
       metadata={'conversation_id': c.conversation_id if c else "",
                 'conversation_name': c.name if c else ""},
   )
+  # Add message to state until refresh replaces it.
+  state_message = convert_message_to_state(request)
+  if not app_state.messages:
+    app_state.messages = []
+  app_state.messages.append(state_message)
+  conversation = next(filter(
+      lambda x: x.conversation_id == c.conversation_id,
+      app_state.conversations), None)
+  if conversation:
+    conversation.message_ids.append(state_message.message_id)
   response = await SendMessage(request)
 
 
