@@ -11,7 +11,11 @@ from common.types import AgentCapabilities, AgentCard, AgentSkill, MissingAPIKey
 import logging
 import os
 from task_manager import AgentTaskManager
+from dotenv import load_dotenv
 
+load_dotenv()
+
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 @click.command()

@@ -68,15 +68,7 @@ sequenceDiagram
    echo "GOOGLE_API_KEY=your_api_key_here" > .env
    ```
 
-3. Set up the Python environment:
-
-   ```bash
-   uv python pin 3.13
-   uv venv
-   source .venv/bin/activate
-   ```
-
-4. Run the agent:
+3. Run the agent:
 
    ```bash
    # Basic run on default port 10000
@@ -86,7 +78,7 @@ sequenceDiagram
    uv run . --host 0.0.0.0 --port 8080
    ```
 
-5. In a separate terminal, run an A2A [client](/samples/python/hosts/README.md):
+4. In a separate terminal, run an A2A [client](/samples/python/hosts/README.md):
 
    ```bash
    uv run hosts/cli

@@ -22,7 +22,9 @@ from service.server.server import ConversationServer
 
 from fastapi import FastAPI, APIRouter
 from fastapi.middleware.wsgi import WSGIMiddleware
+from dotenv import load_dotenv
 
+load_dotenv()
 
 def on_load(e: me.LoadEvent):  # pylint: disable=unused-argument
     """On load event"""
@@ -120,7 +122,11 @@ app.mount(
     ),
 )
 
-if __name__ == "__main__":
+if __name__ == "__main__":    
+    if not os.getenv("GOOGLE_API_KEY"):
+        print("GOOGLE_API_KEY environment variable not set.")
+        exit(1)        
+
     import uvicorn
     # Setup the connection details, these should be set in the environment
     host = os.environ.get("A2A_UI_HOST", "0.0.0.0")
