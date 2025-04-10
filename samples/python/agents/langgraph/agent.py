@@ -2,9 +2,10 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.tools import tool
 from langgraph.prebuilt import create_react_agent
 from langgraph.checkpoint.memory import MemorySaver
-from langchain_core.messages import AIMessage, ToolMessage, HumanMessage
+from langchain_core.messages import AIMessage, ToolMessage
 import httpx
-from typing import Any, Dict, AsyncIterable
+from typing import Any, Dict, AsyncIterable, Literal
+from pydantic import BaseModel
 
 memory = MemorySaver()
 
@@ -24,7 +25,7 @@ def get_exchange_rate(
 
     Returns:
         A dictionary containing the exchange rate data, or an error message if the request fails.
-    """
+    """    
     try:
         response = httpx.get(
             f"https://api.frankfurter.app/{currency_date}",
@@ -42,17 +43,35 @@ def get_exchange_rate(
         return {"error": "Invalid JSON response from API."}
 
 
+class ResponseFormat(BaseModel):
+    """Respond to the user in this format."""
+    status: Literal["input_required", "completed", "error"] = "input_required"
+    message: str
+
 class CurrencyAgent:
+
+    SYSTEM_INSTRUCTION = (
+        "You are a specialized assistant for currency conversions. "
+        "Your sole purpose is to use the 'get_exchange_rate' tool to answer questions about currency exchange rates. "
+        "If the user asks about anything other than currency conversion or exchange rates, "
+        "politely state that you cannot help with that topic and can only assist with currency-related queries. "
+        "Do not attempt to answer unrelated questions or use tools for other purposes."
+        "Set response status to input_required if the user needs to provide more information."
+        "Set response status to error if there is an error while processing the request."
+        "Set response status to completed if the request is complete."
+    )
+     
     def __init__(self):
         self.model = ChatGoogleGenerativeAI(model="gemini-2.0-flash")
         self.tools = [get_exchange_rate]
+
         self.graph = create_react_agent(
-            self.model, tools=self.tools, checkpointer=memory
+            self.model, tools=self.tools, checkpointer=memory, prompt = self.SYSTEM_INSTRUCTION, response_format=ResponseFormat
         )
 
     def invoke(self, query, sessionId) -> str:
         config = {"configurable": {"thread_id": sessionId}}
-        self.graph.invoke({"messages": [("user", query)]}, config)
+        self.graph.invoke({"messages": [("user", query)]}, config)        
         return self.get_agent_response(config)
 
     async def stream(self, query, sessionId) -> AsyncIterable[Dict[str, Any]]:
@@ -76,33 +95,38 @@ class CurrencyAgent:
                     "is_task_complete": False,
                     "require_user_input": False,
                     "content": "Processing the exchange rates..",
-                }
+                }            
+        
         yield self.get_agent_response(config)
 
+        
     def get_agent_response(self, config):
-        current_state = self.graph.get_state(config)
-        messages = current_state.values["messages"]
-
-        last_message = messages[-1]
-
-        # from the last message check if there is a ToolMessage before we hit a HumanMessage
-        # if there is ToolMessage, we assume the tool is invoked and we have final response
-        # if not we assume the tool needs additional inputs from user
-        for i in range(len(messages) - 2, 0, -1):
-            current = messages[i]
-            if isinstance(current, ToolMessage):
+        current_state = self.graph.get_state(config)        
+        structured_response = current_state.values.get('structured_response')
+        if structured_response and isinstance(structured_response, ResponseFormat): 
+            if structured_response.status == "input_required":
+                return {
+                    "is_task_complete": False,
+                    "require_user_input": True,
+                    "content": structured_response.message
+                }
+            elif structured_response.status == "error":
+                return {
+                    "is_task_complete": False,
+                    "require_user_input": True,
+                    "content": structured_response.message
+                }
+            elif structured_response.status == "completed":
                 return {
                     "is_task_complete": True,
                     "require_user_input": False,
-                    "content": last_message.content,
+                    "content": structured_response.message
                 }
-            elif isinstance(current, HumanMessage):
-                break
 
         return {
             "is_task_complete": False,
             "require_user_input": True,
-            "content": last_message.content,
+            "content": "We are unable to process your request at the moment. Please try again.",
         }
 
     SUPPORTED_CONTENT_TYPES = ["text", "text/plain"]
