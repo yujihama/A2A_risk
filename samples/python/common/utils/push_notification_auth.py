@@ -48,7 +48,7 @@ class PushNotificationSenderAuth(PushNotificationAuth):
                 response.raise_for_status()
                 is_verified = response.text == validation_token
 
-                logger.info(f"Verfied push-notification URL: {url} => {is_verified}")            
+                logger.info(f"Verified push-notification URL: {url} => {is_verified}")            
                 return is_verified                
             except Exception as e:
                 logger.warning(f"Error during sending push-notification for URL {url}: {e}")

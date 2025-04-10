@@ -31,7 +31,7 @@ class FormElement:
     "time",
     "url",
     "week",
-    # These are cusom types that dictate non input elements.
+    # These are custom types that dictate non input elements.
     "radio",
     "checkbox",
     "date-picker",

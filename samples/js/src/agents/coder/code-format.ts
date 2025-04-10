@@ -118,7 +118,7 @@ export function defineCodeFormat(ai: GenkitBeta) {
     },
     () => {
       return {
-        instructions: `\n\n=== Output Instuctions
+        instructions: `\n\n=== Output Instructions
 
 Output code in a markdown code block using the following format:
 

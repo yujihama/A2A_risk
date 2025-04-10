@@ -17,7 +17,7 @@ class StateConversation:
 
 @dataclass
 class StateMessage:
-  """StateMessage provdes mesop state compliant view of a message"""
+  """StateMessage provides mesop state compliant view of a message"""
   message_id: str = ""
   role: str = ""
   # Each content entry is a content, media type pair.
