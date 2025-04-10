@@ -7,7 +7,7 @@ class AsyncPoller extends LitElement {
   static properties = {
     triggerEvent: {type: String},
     action: {type: Object},
-    isRunning: {type: Boolean},
+    polling_interval: {type: Number},
   };
 
   render() {
@@ -15,10 +15,13 @@ class AsyncPoller extends LitElement {
   }
 
   firstUpdated() {
+    if (this.polling_interval <= 0) {
+      return;
+    }
     if (this.action) {
       setTimeout(() => {
         this.runTimeout(this.action)
-      }, this.action.duration_seconds * 1000);
+      }, this.polling_interval * 1000);
     }
   }
 
@@ -28,9 +31,11 @@ class AsyncPoller extends LitElement {
         action: action,
       }),
     );
-    setTimeout(() => {
-      this.runTimeout(action);
-    }, action.duration_seconds * 1000);
+    if (this.polling_interval > 0) {
+      setTimeout(() => {
+        this.runTimeout();
+      }, this.polling_interval * 1000);
+    }
   }
 }
 

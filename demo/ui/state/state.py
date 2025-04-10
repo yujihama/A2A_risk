@@ -65,6 +65,7 @@ class AppState:
   completed_forms: dict[str, dict[str, Any] | None] = dataclasses.field(default_factory=dict)
   # This is used to track the message sent to agent with form data
   form_responses: dict[str, str] = dataclasses.field(default_factory=dict)
+  polling_interval: int = 1
 
 @me.stateclass
 class SettingsState:
