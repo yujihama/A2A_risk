@@ -1,0 +1,21 @@
+ログID,日時,送信者ID,送信者アドレス,受信者ID,受信者アドレス/グループ名,種別,件名,キーワードフラグ,業務外フラグ
+COM00001,2024-01-11 10:30:15,EMP003,c.user@example.com,V00026-PIC,sato@vendor-z.co.jp,Email,部品AAA納期確認,0,0
+COM00002,2024-02-06 15:10:05,EMP001,a.user@example.com,V00001-PIC,yamada@supplier-x.com,Email,Re: 部品BBBの件,0,0
+COM00003,2024-02-14 22:45:30,EMP001,a.user@example.com,V00001-PIC,yamada@supplier-x.com,Chat,確認ありがとう,0,1
+COM00004,2024-03-01 09:15:00,EMP005,e.user@example.com,EMP001,a.user@example.com,Chat,X社との価格交渉状況は？,0,0
+COM00005,2024-03-03 11:05:20,EMP001,a.user@personal-a.com,V00001-PIC,yamada@personal-x.com,Email,例の件です,1,1
+COM00006,2024-03-16 14:00:55,EMP001,a.user@example.com,V00001-PIC,yamada@supplier-x.com,Email,部品CCC納入スケジュール,0,0
+COM00007,2024-04-09 11:20:10,EMP003,c.user@example.com,V00027-PIC,kato@vendor-y.co.jp,Chat,サービス仕様について,0,0
+COM00008,2024-05-13 16:40:30,EMP004,d.user@example.com,V00030-PIC,suzuki@vendor-w.co.jp,Email,ライセンス納品確認,0,0
+COM00009,2024-06-09 10:00:00,EMP001,a.user@example.com,V00001-PIC,yamada@supplier-x.com,Chat,今晩大丈夫そうですか？,0,1
+COM00010,2024-07-16 13:35:18,EMP005,e.user@example.com,V00035-PIC,takahashi@vendor-v.co.jp,Email,研修内容最終確認,0,0
+COM00011,2024-09-07 17:55:45,EMP001,a.user@example.com,V00001-PIC,yamada@supplier-x.com,Email,Re: FFFの価格について,0,0
+COM00012,2024-10-22 10:10:10,EMP004,d.user@example.com,社内グループ,購買部各位,Chat,経費精算システム変更通知,0,0
+COM00013,2025-01-09 14:25:05,EMP001,a.user@example.com,V00001-PIC,yamada@supplier-x.com,Email,部品GGG仕様確認,0,0
+COM00014,2025-01-16 18:05:30,EMP002,b.user@example.com,V00055-PIC,tanaka@consult-y.co.jp,Email,調査報告書ドラフト送付,0,0
+COM00015,2025-01-21 23:15:00,EMP002,b.user@personal-b.com,V00055-PIC,tanaka@personal-y.com,Chat,例の件、無事承認されました,1,1
+COM00016,2025-02-06 11:00:40,EMP004,d.user@example.com,V00030-PIC,suzuki@vendor-w.co.jp,Email,システム改修打ち合わせ日程,0,0
+COM00017,2025-02-09 09:50:15,EMP002,b.user@example.com,V00056-PIC,kobayashi@design-s.jp,Chat,ロゴデザイン案について,0,0
+COM00018,2025-02-11 10:30:00,EMP002,b.user@example.com,V00055-PIC,tanaka@consult-y.co.jp,Email,Re: 追加調査見積もり依頼,0,0
+COM00019,2025-03-02 16:00:20,EMP005,e.user@example.com,V00045-PIC,nakamura@event-r.co.jp,Chat,展示会ブースデザイン確認,0,0
+COM00020,2025-03-19 08:45:55,EMP001,a.user@example.com,V00001-PIC,yamada@supplier-x.com,Email,至急！部品HHH納期の件,0,0

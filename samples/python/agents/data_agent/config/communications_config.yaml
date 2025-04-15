@@ -1,0 +1,38 @@
+# 基本設定
+agent_name: "メールデータ管理エージェント"
+agent_description: "社内外メールデータの分析と情報提供を行います"
+host: "localhost"
+port: 8007
+llm_model: "gpt-4o-mini"
+data_source: "../data/communications.csv"
+
+# A2A設定
+organization: "あなたの会社名"
+version: "1.0.0"
+endpoint: "/a2a"
+
+# UI/UX設定
+defaultInputModes: ["text"]
+defaultOutputModes: ["text"]
+
+# スキル定義
+skills:
+  - id: "query_communication"
+    name: "メール情報検索"
+    description: "メール記録を自然言語で検索します"
+    examples:
+      - "従業員IDがE001の先月のメール送信数を教えてください"
+      - "取引先V002との最近のメール履歴を表示してください"
+      - "業務時間外のメールが多い従業員を特定してください"
+    inputModes: ["text"]
+    outputModes: ["text"]
+  
+  - id: "analyze_communications"
+    name: "メール分析"
+    description: "メールデータの傾向分析を行います"
+    examples:
+      - "部門間のメール頻度を分析してください"
+      - "社外とのメール量の推移を教えてください"
+      - "特定キーワードを含むメールを検出してください"
+    inputModes: ["text"]
+    outputModes: ["text"]

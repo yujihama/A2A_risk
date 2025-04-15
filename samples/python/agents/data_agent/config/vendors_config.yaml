@@ -1,0 +1,38 @@
+# 基本設定
+agent_name: "取引先データ管理エージェント"
+agent_description: "取引先データの分析と情報提供を行います"
+host: "localhost"
+port: 8004
+llm_model: "gpt-4o-mini"
+data_source: "../data/vendors.csv"
+
+# A2A設定
+organization: "あなたの会社名"
+version: "1.0.0"
+endpoint: "/a2a"
+
+# UI/UX設定
+defaultInputModes: ["text"]
+defaultOutputModes: ["text"]
+
+# スキル定義
+skills:
+  - id: "query_vendor"
+    name: "取引先情報検索"
+    description: "取引先情報を自然言語で検索します"
+    examples:
+      - "取引先IDがV001の会社情報を教えてください"
+      - "東京に所在する取引先を一覧表示してください"
+      - "取引開始日が2022年以降の取引先を探してください"
+    inputModes: ["text"]
+    outputModes: ["text"]
+  
+  - id: "analyze_vendors"
+    name: "取引先分析"
+    description: "取引先データの分析を行います"
+    examples:
+      - "取引金額が最も大きい取引先ランキングを表示してください"
+      - "業種別の取引先数を分析してください"
+      - "取引頻度が低下している取引先を特定してください"
+    inputModes: ["text"]
+    outputModes: ["text"] 

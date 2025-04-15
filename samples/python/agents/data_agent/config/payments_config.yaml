@@ -1,0 +1,38 @@
+# 基本設定
+agent_name: "支払データ管理エージェント"
+agent_description: "支払データの分析と情報提供を行います"
+host: "localhost"
+port: 8003
+llm_model: "gpt-4o-mini"
+data_source: "../data/payments.csv"
+
+# A2A設定
+organization: "あなたの会社名"
+version: "1.0.0"
+endpoint: "/a2a"
+
+# UI/UX設定
+defaultInputModes: ["text"]
+defaultOutputModes: ["text"]
+
+# スキル定義
+skills:
+  - id: "query_payment"
+    name: "支払情報検索"
+    description: "支払情報を自然言語で検索します"
+    examples:
+      - "請求書番号C789の支払状況を教えてください"
+      - "先月の総支払額はいくらですか？"
+      - "取引先Bへの支払予定を教えてください"
+    inputModes: ["text"]
+    outputModes: ["text"]
+  
+  - id: "analyze_payments"
+    name: "支払傾向分析"
+    description: "支払データの傾向分析を行います"
+    examples:
+      - "支払遅延が発生している取引先を教えてください"
+      - "支払額の月次推移を分析してください"
+      - "異常な支払パターンがないか確認してください"
+    inputModes: ["text"]
+    outputModes: ["text"] 

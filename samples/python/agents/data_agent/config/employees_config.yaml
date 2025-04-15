@@ -1,0 +1,38 @@
+# 基本設定
+agent_name: "従業員データ管理エージェント"
+agent_description: "従業員データの分析と情報提供を行います"
+host: "localhost"
+port: 8006
+llm_model: "gpt-4o-mini"
+data_source: "../data/employees.csv"
+
+# A2A設定
+organization: "あなたの会社名"
+version: "1.0.0"
+endpoint: "/a2a"
+
+# UI/UX設定
+defaultInputModes: ["text"]
+defaultOutputModes: ["text"]
+
+# スキル定義
+skills:
+  - id: "query_employee"
+    name: "従業員情報検索"
+    description: "従業員情報を自然言語で検索します"
+    examples:
+      - "従業員ID E001の人事情報を教えてください"
+      - "営業部に所属する従業員一覧を表示してください"
+      - "入社日が2020年以降の従業員数は何人ですか？"
+    inputModes: ["text"]
+    outputModes: ["text"]
+  
+  - id: "analyze_employees"
+    name: "従業員データ分析"
+    description: "従業員データの傾向分析を行います"
+    examples:
+      - "部門別の平均勤続年数を分析してください"
+      - "職位別の従業員分布を教えてください"
+      - "最近の人事異動パターンを分析してください"
+    inputModes: ["text"]
+    outputModes: ["text"] 

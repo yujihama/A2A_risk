@@ -1,0 +1,38 @@
+# 基本設定
+agent_name: "経費データ管理エージェント"
+agent_description: "経費データの分析と情報提供を行います"
+host: "localhost"
+port: 8005
+llm_model: "gpt-4o-mini"
+data_source: "../data/expenses.csv"
+
+# A2A設定
+organization: "あなたの会社名"
+version: "1.0.0"
+endpoint: "/a2a"
+
+# UI/UX設定
+defaultInputModes: ["text"]
+defaultOutputModes: ["text"]
+
+# スキル定義
+skills:
+  - id: "query_expense"
+    name: "経費情報検索"
+    description: "経費情報を自然言語で検索します"
+    examples:
+      - "申請番号E001の経費詳細を教えてください"
+      - "先月の出張費総額はいくらですか？"
+      - "承認待ちの経費申請を一覧表示してください"
+    inputModes: ["text"]
+    outputModes: ["text"]
+  
+  - id: "analyze_expenses"
+    name: "経費傾向分析"
+    description: "経費データの傾向分析を行います"
+    examples:
+      - "部門別の経費使用状況を分析してください"
+      - "経費カテゴリ別の使用割合を教えてください"
+      - "異常な経費申請パターンがないか確認してください"
+    inputModes: ["text"]
+    outputModes: ["text"] 

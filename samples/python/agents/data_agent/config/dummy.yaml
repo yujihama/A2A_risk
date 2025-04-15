@@ -1,0 +1,38 @@
+# 基本設定
+agent_name: "購買データ管理エージェント"
+agent_description: "購買データの分析と情報提供を行います"
+host: "localhost"
+port: 8001
+llm_model: "gpt-4o-mini"
+data_source: "../data/dummy_data.csv"
+
+# A2A設定
+organization: "あなたの会社名"
+version: "1.0.0"
+endpoint: "/a2a"
+
+# UI/UX設定
+defaultInputModes: ["text"]
+defaultOutputModes: ["text"]
+
+# スキル定義
+skills:
+  - id: "query_product"
+    name: "製品情報検索"
+    description: "製品情報を自然言語で検索します"
+    examples:
+      - "商品番号A123の価格はいくらですか？"
+      - "在庫数が10個以上ある商品を教えてください"
+      - "最も高価な製品は何ですか？"
+    inputModes: ["text"]
+    outputModes: ["text"]
+  
+  - id: "analyze_sales"
+    name: "売上分析"
+    description: "売上データの分析を行います"
+    examples:
+      - "先月の総売上はいくらですか？"
+      - "カテゴリ別の売上比率を教えてください"
+      - "売上が最も多い商品は何ですか？"
+    inputModes: ["text"]
+    outputModes: ["text"]

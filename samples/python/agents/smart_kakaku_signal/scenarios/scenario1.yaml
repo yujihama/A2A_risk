@@ -1,0 +1,19 @@
+scenario_id: high_price_purchase_by_specific_employee_vendor
+name: 特定担当者・取引先間の高単価購買検知
+description: 特定の従業員(purchase_orders.担当者ID)が特定の取引先(purchase_orders.取引先ID)から商品/サービスを調達する際に、その単価(purchase_orders.単価)が、関連する価格マスターデータや過去の平均購入単価と比較して、一定割合(例: 120%)以上高い場合に異常と判定します。これは担当者と取引先の癒着による価格上乗せ(キックバックの原資)の可能性を示します。
+
+scenario_id: excessive_entertainment_expenses_for_specific_vendor
+name: 特定取引先に対する過剰接待費検知
+description: 特定の従業員(expenses.申請者ID)が、特定の取引先(expenses.関連取引先ID)の関係者との交際費(expenses.経費種別='交際費')を、他の取引先に対する交際費と比較して、または一定の閾値(例: 1回5万円超、または月3回以上)を超えて申請している場合に異常と判定します。これはキックバックの見返りや関係維持のための過剰な利益供与の可能性を示します。
+
+scenario_id: correlated_high_purchase_and_entertainment_expense
+name: 高額購買と過剰接待費の相関検知
+description: 同一の従業員(担当者ID/申請者ID)と取引先(取引先ID/関連取引先ID)の組み合わせにおいて、「特定担当者・取引先間の高単価購買検知(high_price_purchase_by_specific_employee_vendor)」または「発注集中検知(※別途定義が必要: 特定担当者・取引先への発注額/件数が閾値超)」と、「特定取引先に対する過剰接待費検知(excessive_entertainment_expenses_for_specific_vendor)」の両方の条件に該当する場合に異常と判定します。これはキックバックの蓋然性がより高い状況を示します。
+
+scenario_id: long_term_employee_vendor_relationship
+name: 長期的な担当者・取引先関係検知
+description: 特定の従業員(employees.従業員ID)が購買関連部署に長期間(例: 5年以上)在籍(employees.最終異動日等で判断)し、かつ特定の取引先(vendors.取引先ID)との取引期間も長い(例: 5年以上、vendors.取引開始日で判断)組み合わせにおいて、高額な取引(purchase_orders.発注金額)が継続している場合に注意喚起します。これは長年の関係性によるチェック機能低下や癒着のリスクを示唆します。
+
+scenario_id: suspicious_communication_pattern_anomaly
+name: 不審なコミュニケーションパターン検知
+description: 特定の従業員(communications.送信者ID/calls.発信者ID)と特定の取引先担当者との間で、業務時間外・休日の連絡が多い(communications.業務外フラグ=1 / calls.発信日時)、個人連絡先の使用が疑われる(communications.業務外フラグ=1)、不正を示唆するキーワード(communications.キーワードフラグ=1)が検出される、または通話記録が極端に多い/少ない場合に異常と判定します。これは隠蔽工作、馴れ合い、または取引実態の欠如を示唆します。

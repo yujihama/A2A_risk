@@ -1,0 +1,20 @@
+# Core Frameworks
+fastapi
+uvicorn
+langchain
+langgraph
+langchain-openai # Or other LLM provider like langchain-google-genai
+langchain-core
+
+# A2A Dependencies (likely used by common code)
+httpx # For A2AClient
+httpx_sse # For streaming A2A events
+sse-starlette # For streaming (if implemented)
+pydantic
+starlette
+
+# Utilities
+python-dotenv # For loading environment variables
+pandas
+
+# Add other dependencies if needed 

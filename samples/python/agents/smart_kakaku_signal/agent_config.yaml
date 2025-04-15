@@ -1,0 +1,52 @@
+agents:
+  # 発注データエージェント
+  purchase_orders:
+    name: PurchaseOrdersAgent
+    url: http://localhost:8002
+    description: 発注データの分析と情報提供を行うエージェント
+  
+  # 支払データエージェント
+  payments:
+    name: PaymentsAgent
+    url: http://localhost:8003
+    description: 支払データの分析と情報提供を行うエージェント
+  
+  # 取引先データエージェント
+  vendors:
+    name: VendorsAgent
+    url: http://localhost:8004
+    description: 取引先データの分析と情報提供を行うエージェント
+  
+  # 経費データエージェント
+  expenses:
+    name: ExpensesAgent
+    url: http://localhost:8005
+    description: 経費データの分析と情報提供を行うエージェント
+  
+  # 従業員データエージェント
+  employees:
+    name: EmployeesAgent
+    url: http://localhost:8006
+    description: 従業員データの分析と情報提供を行うエージェント
+  
+  # コミュニケーションデータエージェント
+  communications:
+    name: CommunicationsAgent
+    url: http://localhost:8007
+    description: 社内外コミュニケーションデータの分析と情報提供を行うエージェント
+  
+  # 通話データエージェント
+  calls:
+    name: CallsAgent
+    url: http://localhost:8008
+    description: 通話データの分析と情報提供を行うエージェント
+  
+  # リクエストデータエージェント
+  requests:
+    name: RequestsAgent
+    url: http://localhost:8009
+    description: リクエストデータの分析と情報提供を行うエージェント
+
+# サーバー設定
+server:
+  port: 8000  # このエージェント自体のポート番号（必要な場合） 

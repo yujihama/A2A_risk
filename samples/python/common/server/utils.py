@@ -1,4 +1,4 @@
-from common.types import (
+from samples.python.common.types import (
     JSONRPCResponse,
     ContentTypeNotSupportedError,
     UnsupportedOperationError,

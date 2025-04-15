@@ -1,4 +1,3 @@
-
 """A UI solution and host service to interact with the agent framework.
 run:
   uv main.py
@@ -24,7 +23,23 @@ from fastapi import FastAPI, APIRouter
 from fastapi.middleware.wsgi import WSGIMiddleware
 from dotenv import load_dotenv
 
-load_dotenv()
+print("スクリプト開始")
+print(f"load_dotenv() 実行前の GOOGLE_API_KEY: {os.getenv('GOOGLE_API_KEY')}")
+
+# === デバッグ追加 ===
+dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
+print(f"期待される .env ファイルのパス: {dotenv_path}")
+try:
+    with open(dotenv_path, 'r', encoding='utf-8') as f:
+        print(".env ファイルの内容 (最初の行):", f.readline().strip())
+except Exception as e:
+    print(f".env ファイルの手動読み込みエラー: {e}")
+# === デバッグ追加終わり ===
+
+# .env ファイルのパスを明示的に指定してみる
+load_dotenv(dotenv_path=dotenv_path, verbose=True) 
+
+print(f"load_dotenv() 実行後の GOOGLE_API_KEY: {os.getenv('GOOGLE_API_KEY')}")
 
 def on_load(e: me.LoadEvent):  # pylint: disable=unused-argument
     """On load event"""
@@ -123,6 +138,9 @@ app.mount(
 )
 
 if __name__ == "__main__":    
+    print("__main__ ブロック開始")
+    print(f"__main__ ブロック内の GOOGLE_API_KEY: {os.getenv('GOOGLE_API_KEY')}")
+
     if not os.getenv("GOOGLE_API_KEY"):
         print("GOOGLE_API_KEY environment variable not set.")
         exit(1)        

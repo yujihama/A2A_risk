@@ -1,0 +1,29 @@
+# 基本設定
+agent_name: "発注データ管理エージェント"
+agent_description: "発注データの分析と情報提供を行います"
+host: "localhost"
+port: 8002
+llm_model: "gpt-4o"
+data_source: "../data/purchase_orders.csv"
+
+# A2A設定
+organization: "あなたの会社名"
+version: "1.0.0"
+endpoint: "/a2a"
+
+# UI/UX設定
+defaultInputModes: ["text"]
+defaultOutputModes: ["text"]
+
+# スキル定義
+skills:
+  - id: "query_order"
+    name: "発注情報検索"
+    description: "発注に関する情報を自然言語で検索します"
+    examples:
+      - "先月の総発注額はいくらですか？"
+      - "取引先Aに対する発注件数を教えてください"
+      - "発注量が最も多い取引先を教えてください"
+    inputModes: ["text"]
+    outputModes: ["text"]
+  

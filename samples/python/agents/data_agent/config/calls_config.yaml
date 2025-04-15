@@ -1,0 +1,38 @@
+# 基本設定
+agent_name: "通話データ管理エージェント"
+agent_description: "通話データの分析と情報提供を行います"
+host: "localhost"
+port: 8008
+llm_model: "gpt-4o-mini"
+data_source: "../data/calls.csv"
+
+# A2A設定
+organization: "あなたの会社名"
+version: "1.0.0"
+endpoint: "/a2a"
+
+# UI/UX設定
+defaultInputModes: ["text"]
+defaultOutputModes: ["text"]
+
+# スキル定義
+skills:
+  - id: "query_call"
+    name: "通話情報検索"
+    description: "通話記録を自然言語で検索します"
+    examples:
+      - "従業員IDがE001の先月の通話履歴を表示してください"
+      - "取引先V003との通話頻度はどれくらいですか？"
+      - "業務時間外の通話が多い従業員を教えてください"
+    inputModes: ["text"]
+    outputModes: ["text"]
+  
+  - id: "analyze_calls"
+    name: "通話傾向分析"
+    description: "通話データの傾向分析を行います"
+    examples:
+      - "部門別の外部通話量を分析してください"
+      - "通話時間の長さに基づいて異常を検出してください"
+      - "特定の通話パターンが見られる従業員を特定してください"
+    inputModes: ["text"]
+    outputModes: ["text"] 

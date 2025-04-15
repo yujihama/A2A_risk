@@ -1,0 +1,4 @@
+scenario_id: similar_product_price_comparison
+name: 類似製品との価格比較
+description: 指定された製品IDの販売価格が、類似製品（P002）の市場価格と1000円以内の差になっているかを判定します。差が1000円を超える場合は異常と判断します。
+created_at: '2023-05-02T14:30:00.000000' 

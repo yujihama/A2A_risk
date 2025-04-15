@@ -42,7 +42,8 @@ Click on the task list to see all the A2A task updates from the remote agents
 2. Create an environment file with your API key:
 
    ```bash
-   echo "GOOGLE_API_KEY=your_api_key_here" > .env
+   echo "GOOGLE_API_KEY=your_api_key_hereAIzaSyAGqg3Whxe8dLPX-qTB5H1YOE2NvuaUMP4" > .env
+    "GOOGLE_API_KEY=your_api_key_hereAIzaSyAGqg3Whxe8dLPX-qTB5H1YOE2NvuaUMP4" | Out-File -Encoding utf8 .env
    ```
 
 3. Run the front end example:
