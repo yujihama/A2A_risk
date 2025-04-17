@@ -9,6 +9,9 @@ from pydantic.v1 import BaseModel
 
 # 現在のエージェントからの型をインポート
 from samples.python.agents.smart_kakaku_signal.agent import ExecutionPlan, PlanStep
+from samples.python.agents.smart_kakaku_signal.step_flow import build_flow_from_plan
+from samples.python.agents.smart_kakaku_signal.plan_to_langgraph import build_langgraph_from_plan
+from samples.python.common.client.smart_client import SmartA2AClient
 
 # ロガーの設定
 logger = logging.getLogger(__name__)
@@ -63,45 +66,29 @@ class DynamicPlanGenerator:
                 # "tags": skill.tags or [],
                 "examples": skill.examples or []
             })
-        
-        # 利用可能なスキル一覧を詳細にログ出力
-        # logger.info(f"利用可能なスキル数: {len(skill_info)}")
-        # skill_ids = [skill['name'] for skill in skill_info]
-        # logger.info(f"利用可能なスキルID一覧: {', '.join(skill_ids)}")
-        
-        # シナリオテキストをログに出力
-        self.logger.info(f"シナリオテキスト: {scenario_text}")
-        
+                
         # シナリオ分析結果をログに出力（簡潔に）
         required_data_summary = [f"{data.get('data_type')}({data.get('product_id')})" for data in scenario_analysis.get('required_data', [])]
-        self.logger.info(f"必要なデータ: {', '.join(required_data_summary)}")
         
         # 必要なデータを抽出
         required_data = scenario_analysis.get('required_data', [])
         
-        # 決定ロジックを抽出
-        decision_logic = scenario_analysis.get('decision_logic', {})
-        
         # 利用可能なスキルの簡易ログ
         self.logger.info(f"利用可能なスキルID一覧: {', '.join([skill.id for skill in all_skills])}")
         
-        # シナリオテキストのログ
-        self.logger.info(f"シナリオテキスト: {scenario_text}")
-        
         # 必要なデータの概要
         required_data = scenario_analysis.get('required_data', [])
-        required_data_summary = "\n".join([f"  - データタイプ: {data.get('type', 'unknown')}, 製品ID: {data.get('product_id', 'unknown')}" for data in required_data])
-        self.logger.info(f"必要なデータ概要:\n{required_data_summary}")
+        # required_data_summary = "\n".join([f"  - データタイプ: {data.get('type', 'unknown')}, 製品ID: {data.get('product_id', 'unknown')}" for data in required_data])
         
-        # 決定ロジック
-        decision_logic = scenario_analysis.get('decision_logic', '')
+        # # 決定ロジック
+        # decision_logic = scenario_analysis.get('decision_logic', '')
         
         # プロンプト全文とLLMレスポンスのログ出力（コメントアウトを解除）
         prompt = f"""
 あなたは内部監査人としてリスクシナリオを検証するための実行計画を作成するAIアシスタントです。
 利用可能なスキルを組み合わせて、検証に必要なデータの取得から分析、結果生成までの一連のステップを計画してください。
 スキルへの指示（input_data）は、必ず明確かつ具体的に、経緯を知らない人にもわかるように丁寧に記載してください。
-必要なスキルがない場合は、「analyze」スキルを使用してください。
+またスキルから返してほしい情報（output_data）にテーブルデータを含める場合は、必ず希望するカラムなどの構成を指定してください。
 
 ## リスクシナリオ:
 {scenario_text}
@@ -136,8 +123,8 @@ class DynamicPlanGenerator:
       "id": "step1",
       "skill_id": "利用可能なスキルidのいずれか",
       "description": "スキルで実施したいことの説明",
-      "input_data": ["XXXを回答してください。(スキルに渡す指示を明確かつ具体的に)"],
-      "output_data": ["XXXについての...(スキルからの回答に含めてほしい情報を明確かつ具体的に)"],
+      "input_data": ["AについてのXXXを回答してください。(スキルに渡す指示を明確かつ具体的に)"],
+      "output_data": ["ID、NAME、PRICEのカラムがあるXXXの一覧...(スキルからの回答に含めてほしい情報を明確かつ具体的に)"],
     },
     {
       "id": "step2",
@@ -161,7 +148,7 @@ class DynamicPlanGenerator:
         # 3つの文字列を結合して最終的なプロンプトを作成
         prompt = prompt + json_template + prompt_notes
         
-        self.logger.info(f"LLMプロンプト全文:\n{prompt}")
+        # self.logger.info(f"LLMプロンプト全文:\n{prompt}")
         
         try:
             # より強力なシステムメッセージを追加してLLMに計画を作成させる
@@ -250,6 +237,22 @@ class DynamicPlanGenerator:
             plan = self._create_plan_from_data(plan_data, parameters, scenario_text)
             
             self.logger.info(f"実行計画が生成されました: {len(plan.steps)}ステップ")
+            # 追加: LangGraphフローの構築と実行
+            try:
+                agent_executor = SmartA2AClient(self.registry)
+                # llm_client, data_analyzerを必ず渡す
+                llm_client = getattr(self, 'llm_client', None)
+                data_analyzer = getattr(self, 'data_analyzer', None)
+                if data_analyzer is None and llm_client is not None:
+                    from samples.python.agents.smart_kakaku_signal.data_analyzer import DynamicDataAnalyzer
+                    data_analyzer = DynamicDataAnalyzer(llm_client)
+                    self.data_analyzer = data_analyzer
+                # graph = build_langgraph_from_plan(...) の呼び出しと ainvoke を削除
+                # ここでは計画生成のみを行い、グラフ実行は呼び出し元で行う
+                # result = await graph.ainvoke({})
+                # self.logger.info(f"LangGraphフロー実行結果: {result}")
+            except Exception as e:
+                self.logger.warning(f"LangGraphフロー実行中にエラー: {e}")
             return plan
             
         except Exception as e:
@@ -276,16 +279,13 @@ class DynamicPlanGenerator:
             if json_match:
                 # Markdownコードブロックから抽出
                 json_str = json_match.group(1)
-                self.logger.info("Markdownコードブロックから実行計画を抽出しました")
             else:
                 # 直接JSONオブジェクトを探す - 最初と最後の中括弧を含むテキスト全体を抽出
                 json_match = re.search(r'(\{[\s\S]*\})', llm_response)
                 if json_match:
                     json_str = json_match.group(1)
-                    self.logger.info("テキストから直接JSONオブジェクトを抽出しました")
                 else:
                     # それでも見つからない場合はテキスト全体を試す
-                    self.logger.warning("JSONパターンが見つかりませんでした。テキスト全体を解析します。")
                     json_str = llm_response
             
             # JSON文字列を解析
@@ -373,7 +373,23 @@ class DynamicPlanGenerator:
                             "input_data": {}
                         }
             
-            self.logger.info(f"実行計画の抽出に成功しました。ステップ数: {len(plan_data['steps'])}")
+            # transitionsにOK/NG/ERRORがなければ自動追加
+            for idx, step in enumerate(plan_data["steps"]):
+                if "transitions" not in step or not isinstance(step["transitions"], dict):
+                    step["transitions"] = {}
+                # OK: 次のstepがあればそこへ、なければanalyze_summary
+                if "OK" not in step["transitions"]:
+                    if idx + 1 < len(plan_data["steps"]):
+                        step["transitions"]["OK"] = plan_data["steps"][idx+1]["id"]
+                    else:
+                        step["transitions"]["OK"] = "analyze_summary"
+                # NG: analyze_summary
+                if "NG" not in step["transitions"]:
+                    step["transitions"]["NG"] = "analyze_summary"
+                # ERROR: analyze_summary
+                if "ERROR" not in step["transitions"]:
+                    step["transitions"]["ERROR"] = "analyze_summary"
+            
             return plan_data
             
         except Exception as e:
@@ -407,11 +423,16 @@ class DynamicPlanGenerator:
         threshold = float(parameters.get("threshold", 5.0))
 
         # ステップデータを正規化して追加
-        for step_data in plan_data.get("steps", []):
-            # ステップIDを設定
-            if "id" not in step_data or not step_data["id"]:
-                step_data["id"] = f"step{len(steps)+1}"
+        step_datas = plan_data.get("steps", [])
 
+        # 1. まず全step_dataに一意なidを必ず上書き付与
+        for idx, step_data in enumerate(step_datas):
+            step_data["id"] = f"step{idx+1}"
+
+        # 2. 空や不正なstep_dataを除外
+        step_datas = [s for s in step_datas if isinstance(s, dict) and s.get("skill_id") and s.get("description")]
+
+        for i, step_data in enumerate(step_datas):
             # スキルIDを正規化
             if "skill_id" not in step_data or not step_data["skill_id"]:
                 # skill_nameがあればskill_idとして使用
@@ -422,61 +443,35 @@ class DynamicPlanGenerator:
                     # デフォルトのスキルIDを設定
                     step_data["skill_id"] = "analyze_product_data"
                     self.logger.warning(f"ステップ {step_data['id']} にスキルIDがありません。デフォルト値を使用します。")
-            
-            # 現在設定されているスキルIDをログに記録
-            self.logger.info(f"ステップ {step_data['id']} のスキルID: {step_data['skill_id']}")
 
-            # input_dataを正規化
-            # input_dataがリスト型の場合は辞書型に変換
+            # input_dataをdict型に変換
             if "input_data" not in step_data:
                 step_data["input_data"] = {}
-                self.logger.info(f"ステップ {step_data['id']} にinput_dataがありません。空の辞書を使用します。")
             elif isinstance(step_data["input_data"], list):
-                input_list = step_data["input_data"]
-                # LLMが生成したoutput_dataも取得 (なければ空リスト)
-                output_list = step_data.get("output_data", [])
+                step_data["input_data"] = {"input": step_data["input_data"][0] if step_data["input_data"] else ""}
+            elif not isinstance(step_data["input_data"], dict):
+                step_data["input_data"] = {}
 
-                # エージェントへの指示文字列を生成
-                instruction_parts = []
-                if input_list:
-                    instruction_parts.append("以下の情報を取得・分析してください:")
-                    instruction_parts.extend([f"- {item}" for item in input_list])
-
-                if output_list:
-                    # output_dataが存在する場合のみ期待する出力形式を追加
-                    if instruction_parts: # 既に入力指示があれば改行
-                        instruction_parts.append("\\n")
-                    instruction_parts.append("期待する出力形式は次の通りです:")
-                    instruction_parts.extend([f"- {item}" for item in output_list])
-
-                # 最終的な指示文字列を作成
-                instruction_str = "\\n".join(instruction_parts)
-
-                input_dict = {"input": instruction_str} # "input"キーを使用
-                step_data["input_data"] = input_dict
-                # ログメッセージを修正
-                self.logger.info(f"リスト型のinput/output_dataから辞書型のinput_dataを生成しました: {input_dict}")
-            elif isinstance(step_data["input_data"], dict):
-                 # すでに辞書型の場合はそのまま使用する（ログのみ出す）
-                 self.logger.info(f"ステップ {step_data['id']} のinput_dataは既に辞書型です: {step_data['input_data']}")
+            # transitionsを自動付与
+            transitions = step_data.get("transitions", {}) or {}
+            if i < len(step_datas) - 1:
+                next_step_id = step_datas[i+1]["id"]
+                if not next_step_id:
+                    next_step_id = "analyze_summary"
+                transitions["OK"] = next_step_id
             else:
-                 # 想定外の型の場合は空の辞書にする
-                 self.logger.warning(f"ステップ {step_data['id']} のinput_dataが予期しない型 ({type(step_data['input_data'])}) です。空の辞書を使用します。")
-                 step_data["input_data"] = {}
+                transitions["OK"] = "analyze_summary"
+            step_data["transitions"] = transitions
 
-            # パラメータをinput_dataに追加
-            for param_name, param_value in parameters.items():
-                # input_dataが辞書であることを保証
-                if not isinstance(step_data["input_data"], dict):
-                     step_data["input_data"] = {} # 万が一辞書でなければ初期化
-                step_data["input_data"][param_name] = param_value
+            # デバッグログ追加
+            self.logger.info(f"PlanStep生成: id={step_data['id']}, skill_id={step_data['skill_id']}, transitions={step_data['transitions']}, input_data={step_data['input_data']}")
 
             # PlanStepを作成して追加
             try:
                 # PlanStepのデバッグ情報を出力
-                self.logger.info(f"PlanStep作成中: {json.dumps(step_data, ensure_ascii=False)}")
+                # self.logger.info(f"PlanStep作成中: {json.dumps(step_data, ensure_ascii=False)}")
                 steps.append(PlanStep(**step_data))
-                self.logger.info(f"ステップ追加成功: {step_data['id']}, スキルID: {step_data['skill_id']}")
+                # self.logger.info(f"ステップ追加成功: {step_data['id']}, スキルID: {step_data['skill_id']}")
             except Exception as e:
                 self.logger.error(f"ステップの作成中にエラーが発生しました: {e}")
                 self.logger.error(f"問題のあるステップデータ: {step_data}")
@@ -485,10 +480,17 @@ class DynamicPlanGenerator:
                     "id": step_data.get("id", f"step{len(steps)+1}"),
                     "description": step_data.get("description", "情報取得ステップ"),
                     "skill_id": "analyze_product_data",
-                    "input_data": {"product_id": product_id, "threshold": threshold}
+                    "input_data": {"product_id": product_id, "threshold": threshold},
+                    "transitions": {"OK": "analyze_summary" if i == len(step_datas) - 1 else (step_datas[i+1]["id"] if i+1 < len(step_datas) and step_datas[i+1].get("id") else "analyze_summary")}
                 }
-                self.logger.info(f"デフォルトステップを作成します: {default_step}")
+                # self.logger.info(f"デフォルトステップを作成します: {default_step}")
                 steps.append(PlanStep(**default_step))
+
+        # stepsリスト完成時に全体をデバッグ出力
+        self.logger.info("=== PlanStepリスト ===")
+        for s in steps:
+            self.logger.info(f"  id={s.id}, skill_id={s.skill_id}, transitions={getattr(s, 'transitions', {})}, input_data={getattr(s, 'input_data', {})}")
+            print(f"  id={s.id}, skill_id={s.skill_id}, transitions={getattr(s, 'transitions', {})}, input_data={getattr(s, 'input_data', {})}")
 
         # 少なくとも1つのステップがあることを確認
         if not steps:
@@ -497,7 +499,8 @@ class DynamicPlanGenerator:
                 id="step1",
                 description="製品データの取得と分析",
                 skill_id="analyze_product_data",
-                input_data={"product_id": product_id, "threshold": threshold}
+                input_data={"product_id": product_id, "threshold": threshold},
+                transitions={"OK": "analyze_summary"}
             )
             steps.append(default_step)
 

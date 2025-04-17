@@ -31,7 +31,6 @@ class ScenarioAnalyzer:
         Returns:
             Dict: 抽出された情報（必要なデータと判定ロジック）
         """
-        logger.info(f"シナリオを分析中: {scenario_text[:100]}...")
         
         prompt = f"""
 あなたは与えられたリスクシナリオから不正の兆候を検知するエキスパートです。

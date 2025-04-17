@@ -4,6 +4,7 @@ import logging
 import yaml
 from dotenv import load_dotenv
 from typing import Dict, Any, Optional, Union
+import argparse # argparse をインポート
 
 # query_agentを明示的にインポート
 from .query_agent import QueryAgent
@@ -17,10 +18,67 @@ load_dotenv()
 # 設定ファイルとデータファイルのデフォルトパス
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 DEFAULT_DATA_PATH = os.path.join(CURRENT_DIR, "data", "dummy_data.csv")
+DEFAULT_LLM_MODEL = 'gpt-4o' # デフォルトLLMモデルを定数化
 
-# QueryAgentのシングルトンインスタンス
+# QueryAgentのシングルトンインスタンスと設定
 _agent_instance: Optional[QueryAgent] = None
 _config: Optional[Dict[str, Any]] = None
+_config_path: Optional[str] = None # 設定ファイルパスを保持するグローバル変数
+
+def set_config_path(path: str):
+    """
+    設定ファイルのパスを設定する
+
+    Args:
+        path (str): YAML設定ファイルのパス
+    """
+    global _config_path, _config, _agent_instance
+    logger.info(f"新しい設定ファイルパスが指定されました: {path}")
+    # 新しい設定パスが指定されたら、既存の設定とインスタンスをリセットする可能性がある
+    if _config_path != path:
+        logger.warning("設定ファイルパスが変更されました。既存のエージェントインスタンスと設定をリセットします。")
+        _config_path = path
+        _config = None # 設定キャッシュをクリア
+        _agent_instance = None # インスタンスをリセットして再初期化を促す
+    elif _config is None:
+        # パスは同じだが、まだロードされていない場合
+        _config_path = path
+
+
+def _load_config() -> Dict[str, Any]:
+    """
+    設定ファイルパス(_config_path)から設定を読み込む
+    """
+    global _config_path
+    config_data = {}
+    if _config_path and os.path.exists(_config_path):
+        logger.info(f"設定ファイルを読み込みます: {_config_path}")
+        try:
+            with open(_config_path, 'r', encoding='utf-8') as f:
+                config_data = yaml.safe_load(f)
+            if not isinstance(config_data, dict):
+                logger.warning(f"設定ファイルの内容が辞書形式ではありません: {_config_path}")
+                config_data = {}
+            else:
+                # データソースの相対パス解決
+                if 'data_source' in config_data and isinstance(config_data['data_source'], str):
+                    if not os.path.isabs(config_data['data_source']):
+                        config_dir = os.path.dirname(_config_path)
+                        config_data['data_source'] = os.path.abspath(os.path.join(config_dir, config_data['data_source']))
+                        logger.info(f"相対データソースパスを解決しました: {config_data['data_source']}")
+        except yaml.YAMLError as e:
+            logger.error(f"設定ファイルの読み込み中にYAMLエラーが発生しました: {e}", exc_info=True)
+            config_data = {}
+        except Exception as e:
+            logger.error(f"設定ファイルの読み込み中に予期せぬエラーが発生しました: {e}", exc_info=True)
+            config_data = {}
+    elif _config_path:
+        logger.warning(f"指定された設定ファイルが見つかりません: {_config_path}。デフォルト設定を使用します。")
+    else:
+        logger.info("設定ファイルが指定されていません。デフォルト設定を使用します。")
+
+    return config_data
+
 
 def get_agent_instance() -> QueryAgent:
     """
@@ -32,13 +90,24 @@ def get_agent_instance() -> QueryAgent:
     Raises:
         RuntimeError: エージェントの初期化またはデータロードに失敗した場合
     """
-    global _agent_instance
+    global _agent_instance, _config
     if _agent_instance is None:
-        logger.info("QueryAgentの新しいインスタンスを作成します。")
+        logger.info("QueryAgentのインスタンスを初期化します。")
+
+        # 設定の読み込み (初回のみ)
+        if _config is None:
+            _config = _load_config()
+
         try:
-            # デフォルト値を使用
-            llm_model = 'gpt-4o'
-            data_source = DEFAULT_DATA_PATH
+            # 設定値またはデフォルト値を使用
+            llm_model = _config.get('llm_model', DEFAULT_LLM_MODEL)
+            # data_source は設定ファイルになければデフォルトを使用
+            # 設定ファイルにパスが記載されている場合、そのパスをそのまま使う
+            data_source = _config.get('data_source', DEFAULT_DATA_PATH)
+
+            logger.info(f"使用するLLMモデル: {llm_model}")
+            logger.info(f"使用するデータソース: {data_source}")
+
 
             # インスタンスを作成
             _agent_instance = QueryAgent(model=llm_model)

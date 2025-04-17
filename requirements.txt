@@ -2,7 +2,7 @@
 fastapi
 uvicorn
 langchain
-langgraph
+langgraph>=0.0.30
 langchain-openai # Or other LLM provider like langchain-google-genai
 langchain-core
 

@@ -15,6 +15,7 @@ from langchain_openai import ChatOpenAI
 from samples.python.agents.smart_kakaku_signal.agent import initialize_registry
 from samples.python.agents.smart_kakaku_signal.scenario_manager import ScenarioManager
 from samples.python.agents.smart_kakaku_signal.scenario_engine import ScenarioExecutionEngine
+from samples.python.agents.smart_kakaku_signal.data_analyzer import DynamicDataAnalyzer
 
 # ロガーの取得
 logger = logging.getLogger(__name__)
@@ -209,9 +210,13 @@ async def main():
         # LLMクライアントの初期化
         llm = ChatOpenAI(model="gpt-4o", temperature=0)
         
+        # データアナライザーの初期化
+        data_analyzer = DynamicDataAnalyzer(llm)
+        
         # シナリオ実行エンジンの初期化
         from samples.python.agents.smart_kakaku_signal.agent import registry
         engine = ScenarioExecutionEngine(llm, registry)
+        engine.data_analyzer = data_analyzer  # 必ずセット
         
         total_scenarios = len(scenarios)
         logger.info(f"テスト実行: 合計 {total_scenarios} シナリオを実行します")
@@ -232,9 +237,25 @@ async def main():
                 
                 # 結果の表示
                 print(f"\n=== シナリオ {i+1}/{total_scenarios} 実行結果: {scenario['name']} ===")
-                print(f"異常検出: {'あり' if result['is_anomaly'] else '異常なし' if result['is_anomaly'] is False else '判断保留'}")
-                print(f"データ十分性: {'十分' if result['is_data_sufficient'] else '不十分'}")
-                print(f"分析: {result['analysis']}")
+                summary = result.get('summary', {})
+                is_anomaly = summary.get('is_anomaly', None)
+                is_data_sufficient = summary.get('is_data_sufficient', None)
+                analysis = summary.get('analysis', None)
+                if is_anomaly is None:
+                    print("異常検出: 判定不能 (is_anomalyが取得できませんでした)")
+                elif is_anomaly is True:
+                    print("異常検出: あり")
+                elif is_anomaly is False:
+                    print("異常検出: なし")
+                else:
+                    print("異常検出: 判断保留")
+                if is_data_sufficient is None:
+                    print("データ十分性: 判定不能 (is_data_sufficientが取得できませんでした)")
+                elif is_data_sufficient:
+                    print("データ十分性: 十分")
+                else:
+                    print("データ十分性: 不十分")
+                print(f"分析: {analysis if analysis is not None else 'analysisが取得できませんでした'}")
                 print("---\n")
                 
             except Exception as e:
@@ -297,6 +318,9 @@ async def main():
         # LLMクライアントの初期化
         llm = ChatOpenAI(model="gpt-4o", temperature=0)
         
+        # データアナライザーの初期化
+        data_analyzer = DynamicDataAnalyzer(llm)
+        
         try:
             # シナリオテキストの取得
             if args.scenario_id:
@@ -325,6 +349,7 @@ async def main():
             # シナリオ実行エンジンの初期化
             from samples.python.agents.smart_kakaku_signal.agent import registry
             engine = ScenarioExecutionEngine(llm, registry)
+            engine.data_analyzer = data_analyzer  # 必ずセット
             
             # シナリオの実行
             result = await engine.execute_scenario(
@@ -335,9 +360,25 @@ async def main():
             
             # 結果の表示
             print("\n=== 実行結果 ===")
-            print(f"異常検出: {'あり' if result['is_anomaly'] else '異常なし' if result['is_anomaly'] is False else '判断保留'}")
-            print(f"データ十分性: {'十分' if result['is_data_sufficient'] else '不十分'}")
-            print(f"分析: {result['analysis']}")
+            summary = result.get('summary', {})
+            is_anomaly = summary.get('is_anomaly', None)
+            is_data_sufficient = summary.get('is_data_sufficient', None)
+            analysis = summary.get('analysis', None)
+            if is_anomaly is None:
+                print("異常検出: 判定不能 (is_anomalyが取得できませんでした)")
+            elif is_anomaly is True:
+                print("異常検出: あり")
+            elif is_anomaly is False:
+                print("異常検出: なし")
+            else:
+                print("異常検出: 判断保留")
+            if is_data_sufficient is None:
+                print("データ十分性: 判定不能 (is_data_sufficientが取得できませんでした)")
+            elif is_data_sufficient:
+                print("データ十分性: 十分")
+            else:
+                print("データ十分性: 不十分")
+            print(f"分析: {analysis if analysis is not None else 'analysisが取得できませんでした'}")
             
             # デバッグモードの場合は詳細情報も表示
             if args.debug:

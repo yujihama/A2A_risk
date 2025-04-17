@@ -50,6 +50,7 @@ class PlanStep(BaseModel):
     error: Optional[str] = Field(default=None, description="エラーが発生した場合のメッセージ")
     selected_agent: Optional[Dict[str, Any]] = Field(default=None, description="選択されたエージェントの情報")
     start_time: Optional[datetime] = Field(default=None, description="ステップの開始時刻")
+    transitions: Dict[str, str] = Field(default_factory=dict, description="判定条件ごとの遷移先ノードID")
 
 class ExecutionPlan(BaseModel):
     """実行計画全体を表すモデル"""

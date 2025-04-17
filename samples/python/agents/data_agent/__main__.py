@@ -38,7 +38,7 @@ if parent_dir not in sys.path:
 # このエージェント固有の実装
 try:
     from data_agent.query_agent import QueryAgent # QueryAgent もロード確認のためにインポート
-    from data_agent.agent import run_agent
+    from data_agent.agent import run_agent, set_config_path
     # task_manager_impl.py が purchasing_data からコピー・リネームされたと仮定
     from data_agent.task_manager_impl import DataAgentTaskManager
 except ImportError as e:
@@ -46,7 +46,7 @@ except ImportError as e:
     logger.warning(f"モジュールインポートに失敗 ({e})。カレントディレクトリからのインポートを試みます。")
     try:
         from query_agent import QueryAgent
-        from agent import run_agent
+        from agent import run_agent, set_config_path
         from task_manager_impl import DataAgentTaskManager
     except ImportError as inner_e:
          logger.critical(f"必要なモジュールが見つかりません: {inner_e}")
@@ -189,23 +189,6 @@ def load_config(config_path: str) -> Dict[str, Any]:
          logger.error(f"設定ファイルの読み込み中に予期せぬエラー ({config_path}): {e}")
          raise
 
-def initialize_agent(config: Dict[str, Any]):
-    """設定に基づいてQueryAgentを初期化し、データをロードする"""
-    # この関数は agent.py の get_agent_instance と役割が重複するため、
-    # agent.py 側で設定ファイルを引数で受け取れるように修正するのがより良い設計だが、
-    # ここでは __main__ で初期化を完結させる。
-    try:
-        llm_model = config.get('llm_model', "gpt-4o-mini")
-        data_source = config['data_source']
-        agent = QueryAgent(model=llm_model)
-        logger.info(f"データソース ({data_source}) をロードしています...",)
-        agent.load_data(data_source) # 同期的にロード
-        logger.info("データロード完了。")
-        return agent
-    except Exception as e:
-         logger.error(f"QueryAgentの初期化またはデータロードに失敗: {e}", exc_info=True)
-         raise RuntimeError("エージェントの準備に失敗しました。") from e
-
 def main(args: argparse.Namespace):
     """メイン処理: A2Aサーバーを起動する"""
     try:
@@ -227,24 +210,9 @@ def main(args: argparse.Namespace):
         default_output_modes = config.get('defaultOutputModes', ["text"])
         skills = config.get('skills', [])
 
-        # ★重要: QueryAgent のシングルトンインスタンスを設定に基づいて初期化・ロードする
-        # agent.py の get_agent_instance はここでは直接使わず、設定を反映させる
-        # agent.py 側も修正し、設定を外部から注入できるようにするのが望ましい
-        logger.info(f"設定に基づいて QueryAgent ('{agent_name}') を準備しています...")
-        # ここで QueryAgent のインスタンスを作成し、データをロードする
-        # 注意: このままだと run_agent が agent.py の get_agent_instance を使ってしまう
-        # run_agent が初期化済みの agent インスタンスを受け取れるように agent.py を修正するか、
-        # または TaskManager が agent インスタンスを保持するように設計変更が必要。
-
-        # --- 回避策: run_agent が内部で使うシングルトンをここで上書きロードする --- 
-        # (より良い設計は agent.py の get_agent_instance を修正すること)
-        from data_agent.agent import _agent_instance as agent_singleton
-        logger.warning("agent.py のシングルトンインスタンスを設定で上書きします。（設計改善推奨）")
-        temp_agent = QueryAgent(model=llm_model)
-        temp_agent.load_data(data_source)
-        # グローバル変数を直接書き換えるのは推奨されないが、一時的な回避策
-        globals()['_agent_instance'] = temp_agent # agent.py内のシングルトン参照をこれで上書き
-        # ---------------------------------------------------------------------
+        # ★重要: agent.py の設定ファイルパスを設定
+        logger.info(f"設定ファイルパスを agent.py に設定します: {args.config}")
+        set_config_path(args.config)
 
         # TaskManagerのインスタンス化 (run_agent 関数を渡す)
         task_manager = DataAgentTaskManager(agent_runner=run_agent)
