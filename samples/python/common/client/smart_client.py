@@ -2,10 +2,10 @@ import logging
 from typing import Dict, Any, List, Optional, Union, Tuple
 from uuid import uuid4
 
-from samples.python.common.client.client import A2AClient
-from samples.python.common.types import Message
-from samples.python.common.registry.agent_registry import AgentRegistry
-from samples.python.common.registry.skill_selector import SkillSelector
+from A2A_risk.samples.python.common.client.client import A2AClient
+from A2A_risk.samples.python.common.types import Message
+from A2A_risk.samples.python.common.registry.agent_registry import AgentRegistry
+from A2A_risk.samples.python.common.registry.skill_selector import SkillSelector
 
 logger = logging.getLogger(__name__)
 

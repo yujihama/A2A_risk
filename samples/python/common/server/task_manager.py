@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Union, AsyncIterable, List
-from samples.python.common.types import Task
-from samples.python.common.types import (
+from A2A_risk.samples.python.common.types import Task
+from A2A_risk.samples.python.common.types import (
     JSONRPCResponse,
     TaskIdParams,
     TaskQueryParams,
@@ -31,7 +31,7 @@ from samples.python.common.types import (
     TaskPushNotificationConfig,
     InternalError,
 )
-from samples.python.common.server.utils import new_not_implemented_error
+from A2A_risk.samples.python.common.server.utils import new_not_implemented_error
 import asyncio
 import logging
 

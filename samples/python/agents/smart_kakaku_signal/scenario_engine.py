@@ -5,10 +5,12 @@ from typing import Dict, Any, List, Optional, Tuple
 import asyncio
 
 # 自作コンポーネントをインポート
-from samples.python.agents.smart_kakaku_signal.scenario_analyzer import ScenarioAnalyzer
-from samples.python.agents.smart_kakaku_signal.plan_generator import DynamicPlanGenerator
-from samples.python.agents.smart_kakaku_signal.data_analyzer import DynamicDataAnalyzer
-from samples.python.agents.smart_kakaku_signal.agent import execute_step, ExecutionPlan
+from A2A_risk.samples.python.agents.smart_kakaku_signal.scenario_analyzer import ScenarioAnalyzer
+from A2A_risk.samples.python.agents.smart_kakaku_signal.plan_generator import DynamicPlanGenerator
+from A2A_risk.samples.python.agents.smart_kakaku_signal.data_analyzer import DynamicDataAnalyzer
+from A2A_risk.samples.python.agents.smart_kakaku_signal.agent import execute_step, ExecutionPlan
+from A2A_risk.samples.python.agents.smart_kakaku_signal.plan_to_langgraph import build_langgraph_from_plan
+from A2A_risk.samples.python.common.client.smart_client import SmartA2AClient
 
 # ロガーの設定
 logger = logging.getLogger(__name__)
@@ -69,8 +71,6 @@ class ScenarioExecutionEngine:
             logger.info(f"実行計画生成完了: ID={execution_plan.plan_id}, ステップ数={len(execution_plan.steps)}")
             # 3. LangGraphグラフで計画を実行
             logger.info("LangGraphグラフで計画を実行します...")
-            from samples.python.agents.smart_kakaku_signal.plan_to_langgraph import build_langgraph_from_plan
-            from samples.python.common.client.smart_client import SmartA2AClient
             agent_executor = SmartA2AClient(self.registry)
             graph = build_langgraph_from_plan(
                 execution_plan,

@@ -3,9 +3,12 @@ from typing import Any, Dict
 from samples.python.agents.smart_kakaku_signal.agent import ExecutionPlan, PlanStep
 
 # 追加: Message, DataPartのimport
-from samples.python.common.types import Message, DataPart
+from A2A_risk.samples.python.common.types import Message, DataPart
 import asyncio
 import json
+import time
+import logging # Add import for logging
+import pprint, traceback
 
 # PlanStepをLangGraphノードに変換する関数
 def make_step_node(step: PlanStep, agent_executor, llm_client=None, default_next=None):
@@ -53,6 +56,10 @@ def make_step_node(step: PlanStep, agent_executor, llm_client=None, default_next
                     parts=[DataPart(data=input_part_data)] 
                 )
                 response = await agent_executor.find_and_send_task(step.skill_id, input_message)
+                # レスポンス内容を詳細にログ出力
+                logging.info(f"Agent initial response for step {step.id}: {response}")
+                pprint.pprint(response)
+                
                 task_id = getattr(response.result, "id", None) if response and hasattr(response, "result") else None
                 if not task_id:
                     raise ValueError("エージェントからタスクIDを取得できませんでした")
@@ -129,6 +136,8 @@ def make_step_node(step: PlanStep, agent_executor, llm_client=None, default_next
                 # --- ここまで条件付きエッジ判定 ---
         except Exception as e:
             print(f"  スキル実行エラー: {e}")
+            import traceback
+            traceback.print_exc()
             result = None
             condition = "ERROR"
         state = dict(state)

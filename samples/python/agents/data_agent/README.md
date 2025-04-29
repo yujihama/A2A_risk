@@ -36,27 +36,36 @@ pip install pandas langchain-openai pyyaml numpy uvicorn fastapi
 
 QueryAgentの機能を対話的にテストするには、以下のコマンドを実行します：
 
-```bash
-# 特定の設定ファイルを指定する場合 (config ディレクトリ内のファイル名を指定)
-python samples/python/agents/data_agent/test_run_agent.py your_config_name.yaml
+```powershell
+# まず仮想環境を有効化（必要に応じて）
+.\venv\Scripts\Activate
+
+# data_agentの親ディレクトリに移動
+cd A2A_risk/samples/python/agents
+
+# パッケージとしてテストを実行
+python -m data_agent.tests.test_run_agent purchase_orders_config.yaml
 ```
 
-このコマンドを実行すると、指定された（またはデフォルトの）設定ファイルに従ってデータソースを読み込み、コンソール上でデータに関する質問ができるようになります。
+- 設定ファイル（YAML）は `data_agent/config/` ディレクトリ内のファイル名を指定してください。
+- 例: `purchase_orders_config.yaml` など。
+- 実行時のカレントディレクトリが `data_agent` の親ディレクトリであることを確認してください。
 
 「exit」または「quit」と入力することで終了できます。
 
 ### 2. A2Aエージェントとして起動
 
-A2Aプロトコルに対応したエージェントとして起動するには、以下のコマンドを実行します：
+A2Aプロトコルに対応したエージェントとして起動するには、まずA2A_riskディレクトリに移動してから、以下のコマンドを実行します：
 
-```bash
-python -m samples.python.agents.data_agent --config samples/python/agents/data_agent/config/purchasing_config.yaml
+```powershell
+cd A2A_risk
+python -m samples.python.agents.data_agent --config samples/python/agents/data_agent/config/purchase_orders_config.yaml
 ```
 
 ポートを変更する場合：
 
-```bash
-python -m samples.python.agents.data_agent --config samples/python/agents/data_agent/config/purchasing_config.yaml --port 8123
+```powershell
+python -m samples.python.agents.data_agent --config samples/python/agents/data_agent/config/purchase_orders_config.yaml --port 8123
 ```
 
 ### 3. 複数のエージェントを一括起動する方法
@@ -224,7 +233,8 @@ python -m samples.python.agents.data_agent --config samples/python/agents/data_a
 
 ### データ読み込みエラー
 
-データファイルのパスが正しいか確認してください。相対パスは設定ファイルからの相対パスとして解釈されます。
+- データファイルのパスが正しいか確認してください。相対パスは設定ファイルからの相対パスとして解釈されます。
+- 設定ファイル名のスペルミス（例: `purchasing_config.yaml` ではなく `purchase_orders_config.yaml` など）に注意してください。
 
 ### LLMモデルエラー
 

@@ -1,5 +1,5 @@
 from typing import List, Callable, Optional
-from samples.python.agents.smart_kakaku_signal.agent import PlanStep, ExecutionPlan
+from A2A_risk.samples.python.agents.smart_kakaku_signal.agent import PlanStep, ExecutionPlan
 
 class StepNode:
     def __init__(self, step: PlanStep):

@@ -31,7 +31,7 @@ load_dotenv()
 # --- グローバル変数 ---
 registry = AgentRegistry()
 smart_a2a_client = None  # 初期化は非同期で行うため、別途初期化関数を用意
-llm = ChatOpenAI(model="gpt-4o", temperature=0)  # 計画立案用LLM
+llm = ChatOpenAI(model="gpt-4.1-mini", temperature=0)  # 計画立案用LLM
 agent_selector = None  # エージェント選択器
 
 # ロガーを設定
@@ -98,7 +98,7 @@ async def initialize_registry(config: Dict[str, Any]):
     print(f"登録されたエージェント: {', '.join([agent.name for agent in agents])}")
     
     # LLMベースのスキル選択器を作成
-    skill_selector = SkillSelector(model_name="gpt-4o", temperature=0)
+    skill_selector = SkillSelector(model_name="gpt-4.1-mini", temperature=0)
     print("LLMベースのスキル選択器を初期化しました。")
     
     # エージェント選択器を初期化
@@ -120,9 +120,6 @@ async def execute_step(step: PlanStep) -> PlanStep:
     Returns:
         PlanStep: 実行結果で更新されたステップ
     """
-    logger.info(f"ステップ {step.id} ({step.description}) を開始")
-    logger.info(f"  スキルID: {step.skill_id}")
-    logger.info(f"  入力データ: {json.dumps(step.input_data, ensure_ascii=False)}")
     step.start_time = datetime.now()
     
     try:
@@ -133,14 +130,7 @@ async def execute_step(step: PlanStep) -> PlanStep:
             
             if matching_agents:
                 print(f"スキル '{step.skill_id}' を持つエージェントが {len(matching_agents)} 件見つかりました")
-                # 見つかったエージェントの詳細情報を表示
-                for i, agent in enumerate(matching_agents):
-                    print(f"  エージェント{i+1}: 名前={agent.name}, URL={agent.url}")
-                    # スキルの詳細も表示
-                    for skill in agent.skills:
-                        if skill.id == step.skill_id:
-                            print(f"    スキル詳細: 名前={skill.name}, 説明={skill.description or '説明なし'}")
-                
+
                 # 最適なエージェントを選択 (スコアや優先度などのロジックを実装可能)
                 selected_agent = matching_agents[0]
                 print(f"エージェント '{selected_agent.name}' を選択しました")
@@ -164,7 +154,7 @@ async def execute_step(step: PlanStep) -> PlanStep:
                             "message": input_message
                         }
                     )
-                    logger.info(f"task_response: {task_response}")
+                    logger.debug(f"task_response: {task_response}")
                     # レスポンスからタスクIDを取得
                     if not task_response.result or not task_response.result.id:
                         raise ValueError("エージェントからタスクIDを取得できませんでした")
@@ -173,23 +163,30 @@ async def execute_step(step: PlanStep) -> PlanStep:
                     logger.info(f"タスクが送信されました。タスクID: {task_id}")
                     
                     # 結果をポーリングで待機
-                    max_retries = 20
-                    poll_interval = 2
-                    result_text = None
+                    max_retries = 30
+                    poll_interval = 4
+                    result_message = None
                     
                     for attempt in range(max_retries):
-                        logger.info(f"結果をポーリング中... 試行 {attempt + 1}/{max_retries}")
+                        logger.debug(f"結果をポーリング中... 試行 {attempt + 1}/{max_retries}")
                         task_response = await smart_a2a_client.client.get_task(
                             payload={
                                 "id": task_id
                             }
                         )
-                        logger.info(f"task_response: {task_response}")
+                    
                         # 完了チェック
                         if task_response.result and task_response.result.status.state == TaskState.COMPLETED:
+                            logger.debug(f"task_response: {task_response}")
                             result_message = task_response.result.status.message
-                            if result_message and result_message.parts and isinstance(result_message.parts[0], TextPart):
-                                result_text = result_message.parts[0].text
+                            if result_message and result_message.parts:
+                                text = None
+                                data = None
+                                for part in result_message.parts:
+                                    if isinstance(part, TextPart):
+                                        text = part.text
+                                    elif isinstance(part, DataPart):
+                                        data = part.data
                                 logger.info(f"タスク結果を取得しました")
                                 break
                         
@@ -206,10 +203,18 @@ async def execute_step(step: PlanStep) -> PlanStep:
                         await asyncio.sleep(poll_interval)
                     
                     # 結果を設定
-                    if result_text:
+                    if result_message and result_message.parts:
+                        text = None
+                        data = None
+                        for part in result_message.parts:
+                            if isinstance(part, TextPart):
+                                text = part.text
+                            elif isinstance(part, DataPart):
+                                data = part.data
                         step.is_completed = True
                         step.output_data = {
-                            "result": result_text,
+                            "text": text,
+                            "data": data,
                             "agent": selected_agent.name
                         }
                     else:

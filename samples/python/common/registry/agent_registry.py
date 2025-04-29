@@ -2,7 +2,7 @@ import logging
 import httpx
 from typing import List, Dict, Optional, Set
 
-from samples.python.common.types import AgentCard, AgentSkill
+from A2A_risk.samples.python.common.types import AgentCard, AgentSkill
 
 logger = logging.getLogger(__name__)
 

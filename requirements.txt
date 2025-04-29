@@ -17,4 +17,7 @@ starlette
 python-dotenv # For loading environment variables
 pandas
 
-# Add other dependencies if needed 
+# Add other dependencies if needed
+pyyaml
+numpy
+argparse 

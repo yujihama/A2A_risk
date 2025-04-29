@@ -11,6 +11,9 @@ from typing import Dict, Any
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 
+# モジュールのインポートパスを修正（相対パスに変更）
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../..")))
+
 # 必要なモジュールをインポート
 from samples.python.agents.smart_kakaku_signal.agent import initialize_registry
 from samples.python.agents.smart_kakaku_signal.scenario_manager import ScenarioManager
@@ -192,11 +195,20 @@ async def main():
             logger.error(f"設定の更新中にエラーが発生しました: {e}")
             return
     
+    # 設定ファイルを読み込む
+    try:
+        with open(args.config, 'r', encoding='utf-8') as f:
+            config_data = yaml.safe_load(f)
+        logger.info(f"設定ファイルを読み込みました: {args.config}")
+    except Exception as e:
+        logger.error(f"設定ファイルの読み込みに失敗しました: {e}")
+        return
+    
     # テストモードの場合は全シナリオを実行
     if args.test_all:
         logger.info("すべてのテストシナリオを実行します")
         # エージェントレジストリを初期化
-        await initialize_registry()
+        await initialize_registry(config_data)
         
         # シナリオディレクトリのパス
         scenario_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "scenarios")
@@ -226,7 +238,7 @@ async def main():
                 logger.info(f"シナリオ {i+1}/{total_scenarios}: '{scenario['name']}' を実行します")
                 
                 # デフォルトパラメータ
-                parameters = {"product_id": "P001"}
+                parameters = {}
                 
                 # シナリオの実行
                 result = await engine.execute_scenario(
@@ -301,11 +313,8 @@ async def main():
     # シナリオの削除
     elif args.command == "delete":
         try:
-            success = scenario_manager.delete_scenario(args.id)
-            if success:
-                logger.info(f"シナリオを削除しました: {args.id}")
-            else:
-                logger.error(f"シナリオの削除に失敗しました: {args.id}")
+            logger.info(f"削除するシナリオID: {args.id}")
+            scenario_manager.delete_scenario(args.id)
         except Exception as e:
             logger.error(f"シナリオの削除中にエラーが発生しました: {e}")
         return
@@ -313,7 +322,7 @@ async def main():
     # シナリオの実行
     elif args.command == "run":
         # エージェントレジストリを初期化
-        await initialize_registry()
+        await initialize_registry(config_data)
         
         # LLMクライアントの初期化
         llm = ChatOpenAI(model="gpt-4o", temperature=0)

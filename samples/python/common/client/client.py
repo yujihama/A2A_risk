@@ -1,12 +1,13 @@
 import httpx
 from httpx_sse import connect_sse
-from typing import Any, AsyncIterable
-from samples.python.common.types import (
+from typing import Any, AsyncIterable, Union
+from A2A_risk.samples.python.common.types import (
     AgentCard,
     GetTaskRequest,
     SendTaskRequest,
     SendTaskResponse,
     JSONRPCRequest,
+    A2ARequest,
     GetTaskResponse,
     CancelTaskResponse,
     CancelTaskRequest,
@@ -20,6 +21,9 @@ from samples.python.common.types import (
     SendTaskStreamingResponse,
 )
 import json
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class A2AClient:
@@ -51,19 +55,27 @@ class A2AClient:
                 except httpx.RequestError as e:
                     raise A2AClientHTTPError(400, str(e)) from e
 
-    async def _send_request(self, request: JSONRPCRequest) -> dict[str, Any]:
+    async def _send_request(self, request: Union[A2ARequest, JSONRPCRequest]) -> dict:
+        """共通のリクエスト送信ロジック"""
         async with httpx.AsyncClient() as client:
             try:
-                # Image generation could take time, adding timeout
+                logger.debug(f"Sending request to {self.url}: {request.model_dump()}")
                 response = await client.post(
-                    self.url, json=request.model_dump(), timeout=30
+                    self.url, json=request.model_dump(), timeout=120
                 )
                 response.raise_for_status()
-                return response.json()
+                response_json = response.json()
+                logger.debug(f"Received response: {response_json}")
+                return response_json
+            except httpx.TimeoutException as e:
+                logger.error(f"Request timed out: {e}")
+                raise
             except httpx.HTTPStatusError as e:
-                raise A2AClientHTTPError(e.response.status_code, str(e)) from e
-            except json.JSONDecodeError as e:
-                raise A2AClientJSONError(str(e)) from e
+                logger.error(f"HTTP error occurred: {e.response.status_code} - {e.response.text}")
+                raise
+            except Exception as e:
+                logger.error(f"An unexpected error occurred during request: {e}", exc_info=True)
+                raise
 
     async def get_task(self, payload: dict[str, Any]) -> GetTaskResponse:
         request = GetTaskRequest(params=payload)

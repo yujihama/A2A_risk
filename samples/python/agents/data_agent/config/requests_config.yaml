@@ -17,22 +17,16 @@ defaultOutputModes: ["text"]
 
 # スキル定義
 skills:
-  - id: "query_request"
-    name: "稟議書・申請書情報検索"
-    description: "稟議書・申請書情報を自然言語で検索します"
-    examples:
-      - "稟議書IDがR001の詳細情報を教えてください"
-      - "先月の未処理稟議書数を教えてください"
-      - "優先度の高い稟議書を一覧表示してください"
-    inputModes: ["text"]
-    outputModes: ["text"]
-  
   - id: "analyze_requests"
     name: "稟議書・申請書傾向分析"
-    description: "稟議書・申請書データの傾向分析を行います"
+    description: |
+      稟議書・申請書データを自然言語で分析します。稟議ID,申請日,申請者ID,申請者名,取引先ID,取引先名,件名,申請金額,承認状況,承認日,選定理由コメントの情報を保持しています。
+      以下の操作を組み合わせた分析が可能です。
+        "filter","select","sum","mean","count","max","min","sort","head","tail","group_by"
     examples:
-      - "部門別の稟議書・申請書傾向を分析してください"
-      - "稟議書・申請書処理時間の推移を教えてください"
+      - "申請者IDがXXXの稟議書を教えてください"
+      - "取引先IDがXXXの稟議書を教えてください"
+      - "承認状況が承認済みの稟議書を教えてください"
       - "異常な処理遅延が発生しているケースを特定してください"
     inputModes: ["text"]
     outputModes: ["text"] 

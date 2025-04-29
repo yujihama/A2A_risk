@@ -12,10 +12,21 @@
 
 ## 使い方
 
+### 起動オプション
+
+- `--config <パス>` : 設定ファイルを指定して起動します（例: `--config agent_config.yaml`）
+- `--update-config <key=value,...>` : 設定ファイルの一時的な上書きが可能です（例: `--update-config "agents.purchasing_data.url=http://localhost:5001"`）
+- `--test-all` : すべてのテストシナリオを一括実行します
+- `--log-file <パス>` : ログ出力先ファイルを指定します
+
+> **PowerShellでの注意:**
+> - JSONやイコール記号を含む引数はクォート（`'` または `"`）で囲んでください。
+> - パス区切りは `\` ではなく `/` も利用可能です。
+
 ### シナリオの保存
 
-```bash
-python -m samples.python.agents.smart_kakaku_signal save \
+```powershell
+python -m agents.smart_kakaku_signal save \
   --id price_threshold \
   --name "価格閾値超過検知" \
   --description "指定された製品IDの販売価格が10000円を超える場合に異常と判定します。高額商品の販売状況を監視します。"
@@ -23,32 +34,50 @@ python -m samples.python.agents.smart_kakaku_signal save \
 
 ### シナリオ一覧の表示
 
-```bash
-python -m samples.python.agents.smart_kakaku_signal list
+```powershell
+python -m agents.smart_kakaku_signal list
 ```
 
 ### シナリオの実行
 
 #### 保存済みシナリオから実行
 
-```bash
-python -m samples.python.agents.smart_kakaku_signal run \
+```powershell
+python -m agents.smart_kakaku_signal run \
   --scenario-id price_deviation \
-  --params '{"product_id": "P001", "threshold": 5.0}'
+  --params '{"product_id": "P001", "threshold": 5.0}' \
+  --log-file logs/smart_kakaku.log
 ```
+
+#### 実行例
+cd C:\Users\nyham\work\A2A\A2A\A2A_risk\samples\python; python -m agents.smart_kakaku_signal --log-file logs/smart_kakaku.log run --scenario-id scenario_test2
+
 
 #### 直接シナリオを指定して実行
 
-```bash
-python -m samples.python.agents.smart_kakaku_signal run \
+```powershell
+python -m agents.smart_kakaku_signal run \
   --scenario-text "指定された製品IDの在庫数が5個未満の場合に異常と判定します。これは在庫不足の可能性があることを示します。" \
-  --params '{"product_id": "P001"}'
+  --params '{"product_id": "P001"}' \
+  --log-file logs/smart_kakaku.log
 ```
 
 ### シナリオの削除
 
-```bash
-python -m samples.python.agents.smart_kakaku_signal delete --id price_threshold
+```powershell
+python -m agents.smart_kakaku_signal delete --id price_threshold
+```
+
+### 設定の一時的な上書き例
+
+```powershell
+python -m agents.smart_kakaku_signal --update-config "agents.purchasing_data.url=http://localhost:5001" run --scenario-id price_deviation --params '{"product_id": "P001"}'
+```
+
+### テストシナリオの一括実行
+
+```powershell
+python -m agents.smart_kakaku_signal --test-all --log-file logs/test_all.log
 ```
 
 ## シナリオの記述例

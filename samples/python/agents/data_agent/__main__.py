@@ -21,8 +21,8 @@ logger = logging.getLogger(__name__)
 
 # A2A共通ライブラリ
 try:
-    from samples.python.common.server.server import A2AServer
-    from samples.python.common.types import (
+    from A2A_risk.samples.python.common.server.server import A2AServer
+    from A2A_risk.samples.python.common.types import (
         AgentCard, AgentProvider, AgentCapabilities, AgentSkill
     )
 except ImportError:
@@ -37,20 +37,12 @@ if parent_dir not in sys.path:
 
 # このエージェント固有の実装
 try:
-    from data_agent.query_agent import QueryAgent # QueryAgent もロード確認のためにインポート
-    from data_agent.agent import run_agent, set_config_path
-    # task_manager_impl.py が purchasing_data からコピー・リネームされたと仮定
-    from data_agent.task_manager_impl import DataAgentTaskManager
+    from A2A_risk.samples.python.agents.data_agent.query_agent import QueryAgent
+    from A2A_risk.samples.python.agents.data_agent.agent import run_agent, initialize_agent_config
+    from A2A_risk.samples.python.agents.data_agent.task_manager.task_manager_impl import DataAgentTaskManager
 except ImportError as e:
-    # フォールバック (IDEでの直接実行など)
-    logger.warning(f"モジュールインポートに失敗 ({e})。カレントディレクトリからのインポートを試みます。")
-    try:
-        from query_agent import QueryAgent
-        from agent import run_agent, set_config_path
-        from task_manager_impl import DataAgentTaskManager
-    except ImportError as inner_e:
-         logger.critical(f"必要なモジュールが見つかりません: {inner_e}")
-         sys.exit(1)
+    logger.critical(f"必要なモジュールが見つかりません: {e}")
+    sys.exit(1)
 
 # コマンドライン引数のデフォルト設定
 DEFAULT_CONFIG_PATH = os.path.join(current_dir, 'config', 'purchasing_config.yaml')
@@ -210,9 +202,9 @@ def main(args: argparse.Namespace):
         default_output_modes = config.get('defaultOutputModes', ["text"])
         skills = config.get('skills', [])
 
-        # ★重要: agent.py の設定ファイルパスを設定
-        logger.info(f"設定ファイルパスを agent.py に設定します: {args.config}")
-        set_config_path(args.config)
+        # ★重要: agent.py の設定データを初期化
+        logger.info(f"エージェントの設定を初期化します...")
+        initialize_agent_config(config) # 読み込んだ設定データを渡す
 
         # TaskManagerのインスタンス化 (run_agent 関数を渡す)
         task_manager = DataAgentTaskManager(agent_runner=run_agent)

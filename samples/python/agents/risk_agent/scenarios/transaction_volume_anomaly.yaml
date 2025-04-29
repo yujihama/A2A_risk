@@ -1,0 +1,4 @@
+scenario_id: transaction_volume_anomaly
+name: 取引数量の異常検知
+description: 指定された製品IDの取引数が他の製品の取引数の平均より半分以下であれば異常と判定します。これは商品の流通が少なく在庫が滞留している可能性があることを示します。
+created_at: '2023-05-03T09:15:00.000000' 
