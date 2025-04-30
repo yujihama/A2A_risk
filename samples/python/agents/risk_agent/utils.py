@@ -1,4 +1,6 @@
 from typing import List, Dict, Any
+import yaml
+import os
 
 def _all_hypotheses_resolved(hypotheses: List[Dict[str, Any]]) -> bool:
     if not hypotheses:
@@ -42,4 +44,25 @@ def _summarize_hypotheses(hypotheses: List[Dict[str, Any]]):
             "priority": h.get("priority"),
         }
         for h in hypotheses
-    ] 
+    ]
+
+def save_checkpoint(state: dict, node_name: str, checkpoint_dir: str = "checkpoints"):
+    """
+    stateをyamlで保存する。ノード名ごとにファイルを分ける。
+    """
+    os.makedirs(checkpoint_dir, exist_ok=True)
+    path = os.path.join(checkpoint_dir, f"{node_name}.yaml")
+    with open(path, "w", encoding="utf-8") as f:
+        yaml.dump(state, f, allow_unicode=True)
+    return path
+
+def load_checkpoint(node_name: str, checkpoint_dir: str = "checkpoints"):
+    """
+    yamlからstateを復元する。
+    """
+    path = os.path.join(checkpoint_dir, f"{node_name}.yaml")
+    if not os.path.exists(path):
+        return None
+    with open(path, "r", encoding="utf-8") as f:
+        state = yaml.safe_load(f)
+    return state 

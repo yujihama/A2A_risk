@@ -97,3 +97,35 @@ python -m samples.python.agents.kakaku_ijou_signal --test-all
 *   各エージェントからLLM APIが呼び出され、応答が得られるか。
 
 詳細は `プロトタイプ.yaml` の `verification_points` を参照してください。
+
+# RiskAgent リファクタリング (Node/Graph Framework)
+本リポジトリには **risk_agent** の新アーキテクチャ実装が含まれています。
+
+```
+└─ samples/python/agents/risk_agent/
+   ├─ core/   # Node / Edge / Engine / Condition / GraphLoader
+   ├─ nodes/  # 各ビジネスロジックを担う Node 実装
+   ├─ engine_runner.py  # YAML グラフを読み込んで実行するエントリ
+   └─ core/graphs/*.yml # ノードと条件付きエッジを記述した YAML
+```
+
+## クイックスタート (risk_agent)
+
+```powershell
+# OpenAI を使用しない（Mock モード）
+python -m A2A_risk.samples.python.agents.risk_agent.engine_runner
+
+# OpenAI を使用する場合
+$env:OPENAI_API_KEY="sk-..."
+$env:USE_OPENAI="1"
+python -m A2A_risk.samples.python.agents.risk_agent.engine_runner
+```
+
+## Graph 可視化
+Graphviz がインストール済みなら、次のコマンドでノード遷移図(PNG)を生成できます。
+
+```powershell
+python tools/graphviz_export.py A2A_risk\samples\python\agents\risk_agent\core\graphs\simple_graph.yml
+```
+
+`simple_graph.gv.png` が出力され、ノードと条件付きエッジを確認できます。

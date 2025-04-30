@@ -1,4 +1,6 @@
 from typing import TypedDict, List, Dict, Any, Optional, Literal
+from operator import add
+from typing_extensions import Annotated
 
 class Hypothesis(TypedDict):
     id: str
@@ -36,7 +38,7 @@ class HistoryEntry(TypedDict):
 
 class DynamicAgentState(TypedDict):
     objective: str
-    history: List[HistoryEntry]
+    history: Annotated[List[HistoryEntry], add]
     current_hypotheses: List[Hypothesis]
     collected_data_summary: Dict[str, Any]
     active_plan: Optional[Dict]
@@ -57,4 +59,5 @@ class DynamicAgentState(TypedDict):
     current_verification_steps: Optional[List[Dict]]
     verification_results: Optional[Dict]
     eda_summary: Optional[str]
-    eda_stats: Optional[Dict] 
+    eda_stats: Optional[Dict]
+    analysis_result: Dict[str, Any]

@@ -16,9 +16,9 @@ def get_decision_maker_prompt(state, focused_hypothesis, currently_investigating
         if h.get('type') == 'observation' and h.get('hypothesis_id') == currently_investigating_hypothesis_id
     ]
     history_for_prompt = json.dumps(observation_history[-1:], ensure_ascii=False, indent=2)
-    available_agents = state.get('available_data_agents_and_skills', [])
-    
-
+    print("-----------------------")
+    print(f"history_for_prompt:{history_for_prompt}")
+    print("-----------------------")
     return f"""
 ### ROLE
 あなたは経験豊富な内部監査人／調査エージェント AI です。仮説駆動型アプローチに従ってください。現在フォーカスしている仮説の検証を進めます。
@@ -34,7 +34,6 @@ def get_decision_maker_prompt(state, focused_hypothesis, currently_investigating
 
 ### AVAILABLE_RESOURCES
 - ACTION_TYPES_JSON: {json.dumps(available_actions, ensure_ascii=False, indent=2)}
-- DATA_AGENTS_JSON: {available_agents}
 
 ### ACTION-SELECTION POLICY (このポリシーに従ってください)
 **Focus Hypothesis is {focused_hypothesis['status']}. Determine the next step:**
@@ -43,9 +42,8 @@ def get_decision_maker_prompt(state, focused_hypothesis, currently_investigating
         *   Look at the latest entry in HISTORY_JSON.
         *   If the latest entry is an Observation from 'query_data_agent' related to the focus_hypothesis → **Analyze if the collected data (in observation.content.result) is sufficient to evaluate the hypothesis.**
             *   If **sufficient** → **must** select "evaluate_hypothesis" for this hypothesis_id ({currently_investigating_hypothesis_id}).
-            *   If **insufficient** → **must** determine **what specific information is still missing** based on the focus_hypothesis.text, focus_hypothesis.required_next_data, and the collected data. Then, select "query_data_agent" with a **new, more specific query** to obtain the missing information. Avoid repeating the exact same query.
-            *   To avoid errors from overly complex queries, **always start with a simple, first-step query that targets only the most essential missing information**.
-            *   If multiple pieces of information are missing, **do not combine them into a single query**. Instead, address them one at a time, starting with the most fundamental or high-priority item.
+            *   If **insufficient** → **must** determine **what specific information is still missing** based on the focus_hypothesis.text, focus_hypothesis.required_next_data, and the collected data. Then, select "query_data_agent" with a **new, more specific query** (or queries) to obtain the missing information. Avoid repeating the exact same query.
+            *   If multiple pieces of information are missing, **create a list of queries** (each query should address only one missing information) and pass this list to "query_data_agent". Do not combine multiple missing items into a single query; instead, enumerate them as a list of simple queries, each targeting a single missing item.
         *   If the latest entry is NOT a relevant Observation → **must** select "query_data_agent" based on focus_hypothesis.required_next_data to get the initially requested data.
 *   If focus_hypothesis.status == "investigating" → **must** select "evaluate_hypothesis" for this hypothesis_id ({currently_investigating_hypothesis_id}).
 *   *Do not select "generate_hypothesis" or "conclude" while focusing on a hypothesis.*
@@ -57,7 +55,7 @@ def get_decision_maker_prompt(state, focused_hypothesis, currently_investigating
 3. 失敗や不整合がある場合は action_type に "error" を指定せよ。
 4. 各 action_type の parameters は以下の形式で出力せよ：
    - "evaluate_hypothesis": {{ "hypothesis_id": {currently_investigating_hypothesis_id} }}
-   - "query_data_agent": {{ "agent_skill_id": "<データエージェントのID>", "query": "<具体的で新しい問い合わせ内容>" }}（queryには既取得情報を含めないこと）
+   - "query_data_agent": {{ "query": ["<具体的で新しい問い合わせ内容>",...] }}（queryには既取得情報を含めないこと）
    - "refine_plan": {{ "hypothesis_id": "{currently_investigating_hypothesis_id}" }}
    - "execute_plan_step": {{ "step_id": "<ステップID>" }}
 
@@ -68,7 +66,7 @@ Example 1: Status is inconclusive, no recent relevant observation.
   "thought": "Currently focusing on '{currently_investigating_hypothesis_id}'. Its status is 'inconclusive' and it requires data 'XYZ' (from required_next_data field). The history does not show recent data collection for this. Policy requires querying the necessary data. Selecting 'query_data_agent'.",
   "action": {{
     "action_type": "query_data_agent",
-    "parameters": {{ "agent_skill_id": "some_agent_skill", "query": "Retrieve XYZ data related to {currently_investigating_hypothesis_id} based on evaluation requirement." }}
+    "parameters": {{ "query": ["Retrieve XYZ data related to {currently_investigating_hypothesis_id} based on evaluation requirement."] }}
   }}
 }}
 Example 2: Status is inconclusive, **recent observation contains data 'XYZ'**.
@@ -84,7 +82,7 @@ Example 3: Status inconclusive, **recent observation data is insufficient** (e.g
   "thought": "Status 'inconclusive'. Recent observation provided some data, but analysis indicates field 'ABC' is still missing to fully evaluate. Policy requires querying for the missing specific information. Selecting 'query_data_agent' with a refined query.",
   "action": {{
     "action_type": "query_data_agent",
-    "parameters": {{ "agent_skill_id": "some_agent_skill", "query": "Retrieve specific field 'ABC' details for the records related to {currently_investigating_hypothesis_id} obtained in the previous query." }}
+    "parameters": {{ "query": ["Retrieve specific field 'ABC' details for the records related to {currently_investigating_hypothesis_id} obtained in the previous query."] }}
   }}
 }}
 Example 4: Status is complex, select refine_plan.
@@ -100,7 +98,7 @@ Example 4: Status is complex, select refine_plan.
 {{
   "thought": "<why this action is optimal for {currently_investigating_hypothesis_id}, referencing the policy, focus state, and latest history observation>",
   "action": {{
-    "action_type": "<one_of: {', '.join([a['type'] for a in available_actions if a['type'] not in ['generate_hypothesis', 'conclude']] )}, refine_plan, execute_plan_step>",
+    "action_type": "<one_of: {', '.join(available_actions)}>",
     "parameters": {{<key_value_pairs_or_empty_object>}}
   }}
 }}
@@ -162,19 +160,19 @@ def get_evaluate_hypothesis_prompt(state, hypothesis_to_evaluate, parameters):
     history_for_prompt = json.dumps(observation_history, ensure_ascii=False, indent=2)
     # hypothesis_to_evaluate['id']と重複したキーのものだけに絞る
     collected_data_summary = state.get('collected_data_summary', {})
+    
     filtered_data_summary = {k: v for k, v in collected_data_summary.items() if k == hypothesis_to_evaluate['id']}
     collected_data_summary_for_prompt = json.dumps(filtered_data_summary, ensure_ascii=False, indent=2)
 
     # 最新の data_analysis_result (該当仮説) を抽出
-    latest_analysis_result = next((
-        o['content']['data_analysis_result']
-        for o in reversed(state.get('history', []))
-        if o.get('type') == 'observation'
-        and o.get('hypothesis_id') == hypothesis_to_evaluate['id']
-        and isinstance(o.get('content'), dict)
-        and 'data_analysis_result' in o['content']
-    ), None)
+    # 以前は history から逆順探索していたが、analysis_result に最新が保持されているため直接参照する。
+    latest_analysis_result = None
+    analysis_dict = state.get("analysis_result", {})
+    if isinstance(analysis_dict, dict):
+        latest_analysis_result = analysis_dict.get(hypothesis_to_evaluate['id'])
+
     latest_analysis_result_json = json.dumps(latest_analysis_result, ensure_ascii=False, indent=2) if latest_analysis_result is not None else 'null'
+    
 
     return f"""
 ### ROLE
@@ -191,8 +189,9 @@ def get_evaluate_hypothesis_prompt(state, hypothesis_to_evaluate, parameters):
 1. 利用可能なデータおよび最新のデータ分析結果に基づき、TARGET_HYPOTHESIS を評価せよ。
 2. evaluation_status を supported | rejected | needs_revision | inconclusive から選べ。
 3. reasoning は評価の根拠を 2–4 文で述べよ。
-4. inconclusive または needs_revision の場合は、評価に必要な次のデータ (required_next_data) を具体的に示せ (null も可)。
-   - データ分析結果に "取得できない" 旨の記述やレコード件数 0 / coverage=0 など十分なデータが得られていない兆候がある場合は、evaluation_status を "needs_revision" とし、hypothesis の見直しを推奨する理由を明記せよ。
+4. inconclusive(十分なデータが取得できていない) または needs_revision(データ取得が繰り返し不十分であり仮説の見直しを推奨する) の場合は、評価に必要な次のデータ (required_next_data) を具体的に示せ (null も可)。
+   - inconclusive: 十分なデータが得られていない場合は、評価に必要な次のデータを明記せよ。
+   - needs_revision:DATA_SUMMARY_JSONに "取得できない" 旨の記述など十分なデータが得られていない兆候がある場合はhypothesis の見直しを推奨する理由を明記せよ。
 ### OUTPUT FORMAT (DO NOT WRAP IN CODE BLOCK)
 {{ "hypothesis_id": "{hypothesis_to_evaluate['id']}", "evaluation_status": "<status>", "reasoning": "...", "required_next_data": "<null_or_specific_data_needed>" }}
     """
@@ -252,8 +251,8 @@ def get_query_refinement_prompt(query):
 SYSTEM:
 You are an internal-audit hypothesis‐to‐rule selector AI.
 以下の "PATTERN CATALOG" と "JSON SCHEMA" のルールに **厳密** に従い、  
-以下の調査方針に対して、適切なパターン（複数可）とパラメータを **JSON 配列** で出力してください。  
-調査方針：{query}
+以下のデータを取得するために適切なパターン（複数可）とパラメータを **JSON 配列** で出力してください。  
+必要なデータ：{query}
 
 PATTERN CATALOG:
 1. value_threshold  
@@ -294,8 +293,8 @@ JSON SCHEMA(answerキーにJSON配列を出力):
     "step_id":"<1,2,3...>",
     "required_data":
         {{
-            "new":<パターンに必要なデータ、カラムの一覧>,
-            "other_step_output":<パターンに必要なデータ>
+            "new":<パターンに必要なデータ、カラムの一覧>,※新たにデータベースから取得が必要なデータ
+            "other_step_output":<パターンに必要なデータ>※他のstepの出力結果を使用する場合は、「1」のように`step_id` のみを回答する
              }},
     "pattern_id":"<パターンID>",
     "params":{{<選択したパターンのパラメータ>}}
@@ -363,7 +362,7 @@ SYSTEM:
 }}
     """
 
-def get_data_analysis_prompt(query, refined_query, data):
+def get_query_result_prompt(query, refined_query, data):
     return f"""
 
 SYSTEM:
@@ -376,8 +375,33 @@ SYSTEM:
 2. この目的を達成するためのデータ分析計画が以下です。
 {refined_query}
 
-3. 以下のデータを上記の方針計画を元にデータ分析して結果を回答してください。
+3. 以下のデータを使って、上記の分析計画を元に結果を生成してください。
 {data}
+
+### OUTPUT FORMAT(json形式で出力)
+{{
+  "data_analysis_result": "<データ分析結果>",
+  "summary": "<データ分析結果の要約>"
+}}
+    """
+
+def get_data_analysis_prompt(query, data_plan_list):
+
+    data_plan_list_json = json.dumps(data_plan_list, ensure_ascii=False, indent=2)
+
+    return f"""
+
+SYSTEM:
+あなたは、データエージェントの実行結果を要約する AI アシスタントです。
+
+### TASK
+1. 以下のデータを取得するという目的があります。
+{query}
+
+2. この目的を達成するためのデータ取得状況は以下の通りです。
+{data_plan_list_json}
+
+3. データ分析の結果を生成してください。
 
 ### OUTPUT FORMAT(json形式で出力)
 {{
@@ -449,3 +473,63 @@ def get_summarize_verification_prompt(hypothesis, collected_results):
 ### OUTPUT FORMAT (DO NOT WRAP IN CODE BLOCK)
 {{"verification_status":"<status>","risk_score":0.##,"reasoning":"..."}}
     """
+
+def get_query_data_first_step_prompt(state,query_list):
+    available_agents = state.get("available_data_agents_and_skills", [])
+    available_agents_json = json.dumps(available_agents, ensure_ascii=False, indent=2)
+
+    return f"""
+### ROLE
+あなたはフォレンジック・データアナリスト AI です。次の TASK を達成するためのデータ取得計画を立案します。
+
+### TASK
+1. 以下のデータをステップバイステップで取得するという目的があります。
+{query_list}
+
+2. あなたが使えるデータエージェントは以下です。
+{available_agents_json}
+
+3. 目的を達成するために、まずはじめにどのデータエージェントからデータを取得するかを選択してください。
+
+### OUTPUT FORMAT (Answer in JSON format)
+{{
+  "skill_id": "<selected_agent_skill_id>",
+  "query": "<generated_query_for_initial_data>",
+  "reasoning": "<選択理由を述べる。>"
+}}
+    """
+
+def get_query_data_step_prompt(state,query_list,data_plan_list):
+    available_agents = state.get("available_data_agents_and_skills", [])
+    available_agents_json = json.dumps(available_agents, ensure_ascii=False, indent=2)
+
+    data_plan_list_json = json.dumps(data_plan_list, ensure_ascii=False, indent=2)
+
+    return f"""
+
+SYSTEM:
+あなたはフォレンジック・データアナリスト AI です。次の TASK を達成するためのデータ取得計画を立案します。
+
+### TASK
+1. 以下のデータをステップバイステップで取得するという目的があります。
+{query_list} 
+
+2. 以下のCONTEXTをよく読み、目的を達成するために次のステップとしてどのデータエージェントからどのデータを取得するかを選択してください。
+既に目的の達成に必要なデータを取得していると思われる場合はskill_idとqueryを空にしてください。
+
+### CONTEXT
+- 利用可能なデータエージェント
+{available_agents_json}
+
+- これまでのデータ取得状況
+{data_plan_list_json}
+
+### OUTPUT FORMAT (Answer in JSON format)
+{{
+  "skill_id": "<selected_agent_skill_id or empty(if already collected)>",
+  "query": "<generated_query_for_data_collection or empty(if already collected)>",
+  "reasoning": "<選択理由を述べる。>"
+}}
+    """
+
+

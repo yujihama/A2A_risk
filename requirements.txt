@@ -10,7 +10,7 @@ langchain-core
 httpx # For A2AClient
 httpx_sse # For streaming A2A events
 sse-starlette # For streaming (if implemented)
-pydantic
+pydantic>=2
 starlette
 
 # Utilities
@@ -21,3 +21,10 @@ pandas
 pyyaml
 numpy
 argparse 
+
+# Visualization & Formatting
+graphviz
+rich
+
+# Async rate limiting
+aiolimiter 
