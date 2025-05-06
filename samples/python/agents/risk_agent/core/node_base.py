@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import abc
 from typing import Any, Dict, Optional, List
+import datetime
 
 from pydantic import BaseModel, Field
 
@@ -31,3 +32,23 @@ class Node(abc.ABC):
     async def run(self, state: "DynamicAgentState", toolbox: "ToolBox") -> NodeResult:  # noqa: F821
         """ノードのメイン処理。state を直接 mutate しない。"""
         raise NotImplementedError 
+    
+class ToolBox: 
+    def __init__(self, *, llm=None, eval_llm=None, smart_a2a_client=None, data_analyzer=None):
+        self.llm = llm
+        self.eval_llm = eval_llm
+        self.smart_a2a_client = smart_a2a_client
+        self.data_client = smart_a2a_client
+        self.data_analyzer = data_analyzer
+
+def make_history_entry(entry_type: str, content: Any, state: dict) -> dict:
+    """
+    履歴エントリを共通生成するユーティリティ。
+    必須: type, content, timestamp, currently_investigating_hypothesis_id
+    """
+    return {
+        "type": entry_type,
+        "content": content,
+        "timestamp": datetime.datetime.now().isoformat(),
+        "currently_investigating_hypothesis_id": state.get("currently_investigating_hypothesis_id")
+    }

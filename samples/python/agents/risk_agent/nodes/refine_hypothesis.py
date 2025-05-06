@@ -2,7 +2,7 @@ import logging
 import uuid
 from typing import Any, Dict, List
 
-from ..core.node_base import Node, NodeResult
+from ..core.node_base import Node, NodeResult, make_history_entry
 
 logger = logging.getLogger(__name__)
 
@@ -47,6 +47,6 @@ class RefineHypothesisNode(Node):
         hyps.extend(new_hyps)
 
         patch = {"current_hypotheses": hyps, "next_action": None}
-        events = [{"type": "node", "name": "refine_hypothesis", "new_count": len(new_hyps)}]
+        events = [make_history_entry("node", {"name": "refine_hypothesis", "new_count": len(new_hyps)}, state)]
 
         return NodeResult(observation=new_hyps, patch=patch, events=events) 

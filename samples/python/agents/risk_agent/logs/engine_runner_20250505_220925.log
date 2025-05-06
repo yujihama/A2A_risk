@@ -1,0 +1,10 @@
+2025-05-05 22:09:25,687 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Discovering agent at: http://localhost:8002/.well-known/agent.json
+2025-05-05 22:09:26,107 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Agent '発注データ管理エージェント' registered with URL: http://localhost:8002
+2025-05-05 22:09:26,108 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Discovering agent at: http://localhost:8006/.well-known/agent.json
+2025-05-05 22:09:26,588 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Agent '従業員データ管理エージェント' registered with URL: http://localhost:8006
+2025-05-05 22:09:26,589 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Discovering agent at: http://localhost:8009/.well-known/agent.json
+2025-05-05 22:09:27,069 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Agent '稟議書・申請書データ管理エージェント' registered with URL: http://localhost:8009
+2025-05-05 22:09:27,069 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Discovering agent at: http://localhost:8010/.well-known/agent.json
+2025-05-05 22:09:27,540 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Agent '不正事例管理エージェント' registered with URL: http://localhost:8010
+2025-05-05 22:09:27,541 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Discovered 4 agents from 4 URLs.
+2025-05-05 22:09:28,380 - A2A_risk.samples.python.common.client.smart_client - INFO - SmartA2AClient initialized with registry and skill selector.

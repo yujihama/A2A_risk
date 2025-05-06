@@ -21,8 +21,6 @@ skills:
     name: "従業員データ分析"
     description: |
       従業員データを自然言語で分析します。従業員ID,氏名,所属部署,役職,入社年月日,最終異動日,懲戒歴フラグの情報を保持しています。
-      以下の操作を組み合わせた分析が可能です。
-        "filter","select","sum","mean","count","max","min","sort","head","tail","group_by"
     examples:
       - "従業員IDがXXXの情報を教えてください"
       - "部門別の平均勤続年数を分析してください"

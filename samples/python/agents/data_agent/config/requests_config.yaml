@@ -21,8 +21,6 @@ skills:
     name: "稟議書・申請書傾向分析"
     description: |
       稟議書・申請書データを自然言語で分析します。稟議ID,申請日,申請者ID,申請者名,取引先ID,取引先名,件名,申請金額,承認状況,承認日,選定理由コメントの情報を保持しています。
-      以下の操作を組み合わせた分析が可能です。
-        "filter","select","sum","mean","count","max","min","sort","head","tail","group_by"
     examples:
       - "申請者IDがXXXの稟議書を教えてください"
       - "取引先IDがXXXの稟議書を教えてください"

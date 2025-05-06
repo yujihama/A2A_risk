@@ -17,22 +17,12 @@ defaultOutputModes: ["text"]
 
 # スキル定義
 skills:
-  - id: "query_expense"
-    name: "経費情報検索"
-    description: "経費情報を自然言語で検索します"
-    examples:
-      - "申請番号E001の経費詳細を教えてください"
-      - "先月の出張費総額はいくらですか？"
-      - "承認待ちの経費申請を一覧表示してください"
-    inputModes: ["text"]
-    outputModes: ["text"]
-  
   - id: "analyze_expenses"
-    name: "経費傾向分析"
-    description: "経費データの傾向分析を行います"
+    name: "経費情報分析"
+    description: "経費データに関する情報を自然言語で分析します。精算ID,申請日,申請者ID,申請者名,経費種別,支払先,利用日,金額,目的,参加者,関連取引先IDの情報を保持しています。"
     examples:
       - "部門別の経費使用状況を分析してください"
       - "経費カテゴリ別の使用割合を教えてください"
-      - "異常な経費申請パターンがないか確認してください"
+      - "経費の多い取引先を教えてください"
     inputModes: ["text"]
     outputModes: ["text"] 

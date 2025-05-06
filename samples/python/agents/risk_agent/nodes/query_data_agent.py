@@ -4,12 +4,66 @@ from typing import Any, Dict
 
 import pandas as pd
 
-from ..core.node_base import Node, NodeResult
+from ..core.node_base import Node, NodeResult, make_history_entry
 from ..agent import execute_step, PlanStep
 from ..prompts import get_query_data_first_step_prompt, get_query_data_step_prompt
-from ..prompts import get_query_refinement_prompt, get_query_result_prompt
+from ..prompts import get_query_refinement_prompt, get_query_result_prompt, get_query_data_react_prompt, get_query_data_analysis_prompt
+
+from langgraph.prebuilt import create_react_agent
+from langchain_openai import ChatOpenAI
+
+import json
 
 logger = logging.getLogger(__name__)
+
+async def call_data_agent(skill_id,query):
+    """
+    指定されたスキルのデータエージェントからデータを取得する
+    Args:
+        skill_id: クエリを渡すスキルのID
+        query: データエージェントに渡すクエリ（重要：クエリは複雑すぎず、シンプルなデータ取得にしてください）
+    Returns:
+        str: データエージェントから取得したデータ
+    
+    """
+    logger.info(f"[QDA] call_data_agent skill_id: {skill_id}, query: {query}")
+
+    step = PlanStep(
+        id=f"step_{skill_id}",
+        description=f"データエージェントへのクエリ: {str(query)}",
+        skill_id=skill_id,
+        input_data={"input": str(query)},
+        parameters={}
+    )
+    try:
+        step_result = await execute_step(step)
+    except Exception as e:
+        logger.error(f"[QDA] call_data_agent error: {e}")
+        step_result = {"error": "データエージェントからデータを取得できませんでした。クエリを変更して再度実行してください。"}
+
+    logger.info(f"[QDA] call_data_agent result: {step_result}")
+
+    return step_result
+
+async def analyze_data(query, output_from_data_agent):
+    """
+    データエージェントから取得したデータを使ってデータ分析をして、分析結果を返す
+    Args:
+        query: データエージェントから取得したデータを使って何を分析するかを示す。
+        output_from_data_agent: データエージェントから取得したデータ（複数ある場合はdict形式で、それぞれが何のデータかを示す）
+    Returns:
+        str: データ分析結果
+    """
+    logger.info(f"[QDA] analyze_data: {query[:50]}")
+
+    tool_llm = ChatOpenAI(model="o3-mini", temperature=0)
+    prompt_for_data_analysis = get_query_data_analysis_prompt(query, output_from_data_agent)
+
+    analysis_result = await tool_llm.ainvoke(prompt_for_data_analysis)
+
+    logger.info(f"[QDA] analyze_data result: {analysis_result}")
+
+    return analysis_result
 
 
 class QueryDataAgentNode(Node):
@@ -33,122 +87,54 @@ class QueryDataAgentNode(Node):
         # 現在フォーカスしている仮説 ID（無い場合は None）
         hyp_id = state.get("currently_investigating_hypothesis_id")
 
-        iteration = 0
-
         data_summary: Dict[str, Any] = {}
-        summary_text = None
-        data_plan_list = []
 
-        while iteration < 10:
-            if iteration == 0:
-                prompt_for_query = get_query_data_first_step_prompt(state,query_list)
-                logger.info(f"[QDA] LLM first step prompt: {prompt_for_query}")
-                data_plan = await toolbox.llm.ainvoke(prompt_for_query)
-                logger.info(f"[QDA] LLM first step response: {data_plan}")
+        prompt_for_query = get_query_data_react_prompt(state,query_list)
+        react_llm = ChatOpenAI(model="gpt-4.1-mini", temperature=0)
+        react_agent = create_react_agent(
+            model=react_llm, 
+            tools=[call_data_agent, analyze_data],
+            prompt="ステップバイステップでcall_data_agentツールを使ってエージェントからデータを取得し、結果を回答してください。必要に応じて、analyze_dataツールを使って分析を行い結果を回答してください。データ取得手順ではなく、必ずデータ取得結果を回答してください。",
 
-            else:
-                prompt_for_query = get_query_data_step_prompt(state,query_list,data_plan_list)
-                # logger.info(f"[QDA] LLM step prompt: {prompt_for_query}")
-                data_plan = await toolbox.llm.ainvoke(prompt_for_query)
-                logger.info(f"[QDA] LLM step response: {data_plan}")
-                
-            skill_id = data_plan.get("skill_id", "")
-            query = data_plan.get("query", "")
-            if skill_id == "" and query == "":
-                break
+        )
+        # agent_executor を使用して呼び出す
+        resp_data = await react_agent.ainvoke({"messages": [("human", prompt_for_query)]})
         
-            logger.info("Performing data query via skill_id=%s query=%s (hyp_id=%s)", skill_id, query, hyp_id)
-
-            # --- クエリリファインメント（複数クエリ抽出） ---
-            refined_query_data = None
-            required_data_list = []
-            if toolbox.llm:
-                try:
-                    prompt_template = get_query_refinement_prompt(query)
-                    refined_query_data = await toolbox.llm.ainvoke(prompt_template)
-                    logger.info(f"[QDA] query細分化LLM出力: {refined_query_data}")
-                    if isinstance(refined_query_data, dict) and "answer" in refined_query_data:
-                        for pattern in refined_query_data["answer"]:
-                            step_id = pattern.get("step_id", "")
-                            required_data = pattern.get("required_data", {}).get("new", {})
-                            if required_data != {}:
-                                found = False
-                                for item in required_data_list:
-                                    if item["required_data"] == required_data:
-                                        if isinstance(item["step_id"], list):
-                                            item["step_id"].append(step_id)
-                                        else:
-                                            item["step_id"] = [item["step_id"], step_id]
-                                        found = True
-                                        break
-                                if not found:
-                                    required_data_list.append({"step_id": step_id, "required_data": required_data})
-                    logger.info(f"[QDA] refined required_data_list: {required_data_list}")
-                except Exception as e:
-                    logger.warning(f"[QDA] クエリリファインメント失敗: {e}")
-
-            # --- データ取得・実行（複数クエリ対応） ---
-            
-            if required_data_list:
-                try:
-                    result_text = []
-                    raw_data = []
-                    for required_data in required_data_list:
-                        step = PlanStep(
-                            id=f"step_{skill_id}_{required_data['step_id']}",
-                            description=f"データエージェントへのクエリ: {str(required_data['required_data'])}",
-                            skill_id=skill_id,
-                            input_data={"input": str(required_data['required_data']), "return_type": "df"},
-                            parameters=params
-                        )
-                        step_result = await execute_step(step)
-                        text = None
-                        data = None
-                        if hasattr(step_result, 'output_parts') and step_result.output_parts:
-                            for part in step_result.output_parts:
-                                if hasattr(part, 'type') and part.type == 'text':
-                                    text = getattr(part, 'text', None)
-                                elif hasattr(part, 'type') and part.type == 'data':
-                                    data = getattr(part, 'data', None)
-                        elif isinstance(step_result.output_data, dict):
-                            text = step_result.output_data.get("text", "")
-                            data = step_result.output_data.get("data", None)
-                        else:
-                            text = str(step_result.output_data)
-                            data = None
-                        result_text.append(text)
-                        raw_data.append({"step_id": required_data['step_id'], "data": data})
-                    # LLMでresult_textを要約
-                    prompt_template = get_query_result_prompt(query, refined_query_data, result_text) #get_query_result_summary_prompt(result_text, required_data_list)から変更
-                    # logger.info(f"[QDA] LLM data analysis prompt: {prompt_template}")
-                    result = await toolbox.llm.ainvoke(prompt_template)
-                    # logger.info(f"[QDA] LLM data analysis result: {result}")
-                    data_summary = {f"text": result_text, "raw_data": raw_data}
-                    data_plan["result"] = result
-                except Exception as e:
-                    logger.warning(f"execute_step failed (multi): {e}")
-                    data_summary = {"error": str(e)}
-                    data_plan["result"] = data_summary
-                finally:
-                    data_plan_list.append(data_plan)
-                    iteration += 1
-
+        data_summary = resp_data["messages"][-1].content
+        logger.info(f"[QDA] data_summary: {data_summary}")
     
         # 既存の collected_data_summary を仮説 ID ごとに更新
         current_summary = state.get("collected_data_summary", {})
         updated_summary = current_summary.copy() if isinstance(current_summary, dict) else {}
         if hyp_id:
-            updated_summary[hyp_id] = data_summary  # 仮説ごとに上書き／保存
+            if hyp_id not in updated_summary:
+                updated_summary[hyp_id] = []
+            updated_summary[hyp_id].append(data_summary)
         else:
             # フォーカスが無い場合は __global__ に退避
             updated_summary["__global__"] = data_summary
 
+        next_action = None
+        if hyp_id:
+            next_action = {
+                "action_type": "evaluate_hypothesis",
+                "parameters": {"hypothesis_id": hyp_id},
+            }
+
         patch = {
             "hyp_id": hyp_id,
             "collected_data_summary": updated_summary,
-            "next_action": {"action_type": "data_analysis", "parameters": {"query": query_list, "data_plan_list": data_plan_list}},
+            "next_action": next_action
         }
 
-        events = [{"type": "node", "name": "query_data_agent", "query": query, "refined_query": data_plan_list if data_plan_list else query}]
+        events = [make_history_entry(
+            "node",
+            {
+                "name": "query_data_agent",
+                "query": query_list,
+                "process":[step.content for step in resp_data["messages"]]
+            },
+            state
+        )]
 
         return NodeResult(observation=data_summary, patch=patch, events=events) 

@@ -1,0 +1,28 @@
+{
+  "name": "risk-agent-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3000",
+    "build": "next build",
+    "start": "next start -p 3000"
+  },
+  "dependencies": {
+    "next": "14.1.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "swr": "^2.2.0",
+    "@chakra-ui/react": "^2.8.2",
+    "@chakra-ui/icons": "^2.0.18",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "framer-motion": "^11.1.7",
+    "reactflow": "^11.8.6"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.2",
+    "@types/node": "^20.8.2",
+    "@types/react": "^18.2.14",
+    "@types/react-dom": "^18.2.7"
+  }
+} 

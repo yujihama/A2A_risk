@@ -1,7 +1,7 @@
 import logging
 from typing import Any, Dict
 
-from ..core.node_base import Node, NodeResult
+from ..core.node_base import Node, NodeResult, make_history_entry
 
 logger = logging.getLogger(__name__)
 
@@ -14,5 +14,5 @@ class ErrorNode(Node):
 
         message = state.get("error_message", "Unknown error")
         patch = {"final_result": {"error": message}}
-        events = [{"type": "node", "name": "error", "msg": message}]
+        events = [make_history_entry("node", {"name": "error", "msg": message}, state)]
         return NodeResult(observation=message, patch=patch, events=events) 

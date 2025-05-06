@@ -37,8 +37,7 @@ if parent_dir not in sys.path:
 
 # このエージェント固有の実装
 try:
-    from A2A_risk.samples.python.agents.data_agent.query_agent import QueryAgent
-    from A2A_risk.samples.python.agents.data_agent.agent import run_agent, initialize_agent_config
+    from A2A_risk.samples.python.agents.data_agent.agent import QueryAgent, run_agent, initialize_agent_config, get_agent_instance
     from A2A_risk.samples.python.agents.data_agent.task_manager.task_manager_impl import DataAgentTaskManager
 except ImportError as e:
     logger.critical(f"必要なモジュールが見つかりません: {e}")
@@ -244,6 +243,14 @@ def main(args: argparse.Namespace):
         )
         logger.info(f"A2AServer initialized. Agent card available at {agent_url}/.well-known/agent.json")
         logger.info(f"A2A endpoint configured at: {agent_url}{a2a_server.endpoint}")
+
+        # ★ここでデータロードを明示的に実行
+        try:
+            get_agent_instance()
+            logger.info("QueryAgentのデータロードが完了しました。")
+        except Exception as e:
+            logger.error(f"QueryAgentの初期化・データロードに失敗しました: {e}")
+            raise
 
         # サーバー起動
         logger.info(f"Starting A2A server on {host}:{port}...")

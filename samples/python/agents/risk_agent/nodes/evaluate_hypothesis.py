@@ -3,7 +3,7 @@ import random
 from typing import Any, Dict, List
 import datetime
 
-from ..core.node_base import Node, NodeResult
+from ..core.node_base import Node, NodeResult, make_history_entry
 from ..prompts import get_evaluate_hypothesis_prompt
 
 logger = logging.getLogger(__name__)
@@ -37,7 +37,7 @@ class EvaluateHypothesisNode(Node):
                 parameters = {"hypothesis_id": h["id"]}
                 prompt = get_evaluate_hypothesis_prompt(state, h, parameters)
                 try:
-                    resp = await toolbox.llm.ainvoke(prompt)
+                    resp = await toolbox.eval_llm.ainvoke(prompt)
                     if isinstance(resp, dict) and "evaluation_status" in resp:
                         h["status"] = resp["evaluation_status"]
                         h["evaluation_reason"] = resp.get("reasoning", resp.get("reason", ""))
@@ -61,17 +61,23 @@ class EvaluateHypothesisNode(Node):
             logger.error("LLM is not available")
             raise Exception("LLM is not available")
 
-        events = [{"type": "node", "name": "evaluate_hypothesis", "count": len(hyps)}]
+        events = [make_history_entry(
+            "node",
+            {"name": "evaluate_hypothesis", "count": len(hyps)},
+            state
+        )]
         # 各仮説の評価結果を observation として追加
         for h in hyps:
-            events.append({
-                "type": "observation",
-                "timestamp": datetime.datetime.now().isoformat(),
-                "hypothesis_id": h["id"],
-                "status": h.get("status"),
-                "evaluation_reason": h.get("evaluation_reason"),
-                "required_next_data": h.get("required_next_data"),
-            })
+            events.append(make_history_entry(
+                "observation",
+                {
+                    "hypothesis_id": h["id"],
+                    "status": h.get("status"),
+                    "evaluation_reason": h.get("evaluation_reason"),
+                    "required_next_data": h.get("required_next_data")
+                },
+                state
+            ))
 
         # 評価済みの仮説を state に反映させる
         # patch = {"current_hypotheses": hyps}

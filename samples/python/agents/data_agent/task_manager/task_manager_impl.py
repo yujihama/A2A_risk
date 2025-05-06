@@ -2,6 +2,8 @@ import asyncio
 import logging
 import os  # 追加
 from typing import Callable, Coroutine, Any, Union, AsyncIterable, Dict
+import pandas as pd
+import numpy as np
 
 # --- ロギング設定 ---
 LOGS_DIR = "logs"
@@ -51,7 +53,7 @@ from A2A_risk.samples.python.common.types import (
 from A2A_risk.samples.python.common.server.utils import new_not_implemented_error
 
 # agent.py から run_agent をインポート (相対インポートはそのまま)
-from data_agent.agent import run_agent 
+from A2A_risk.samples.python.agents.data_agent.agent import run_agent 
 
 logger = logging.getLogger(__name__)
 
@@ -130,15 +132,48 @@ class DataAgentTaskManager(InMemoryTaskManager):
             if isinstance(output_text, dict):
                 text_for_message = output_text.get("text", str(output_text))
                 parts.append(TextPart(text=text_for_message))
-                if output_text.get("data") is not None:
-                    def df_to_serializable_dict(df):
-                        df_copy = df.copy()
-                        for col in df_copy.select_dtypes(include=["datetime64[ns]", "datetime64[ns, UTC]"]):
-                            df_copy[col] = df_copy[col].dt.strftime("%Y-%m-%d %H:%M:%S")
-                        return df_copy.to_dict(orient="records")
-                    data_dict = {k: (df_to_serializable_dict(v) if hasattr(v, "to_dict") else v)
-                                 for k, v in output_text["data"].items()}
-                    parts.append(DataPart(data=data_dict))
+                # if output_text.get("data") is not None:
+                #     print(f"output_text['data'] type: {type(output_text['data'])}")
+                #     try:
+                #         if isinstance(output_text["data"], dict):
+                #             data_dict = output_text["data"]
+                #         elif isinstance(output_text["data"], list):
+                #             data_dict = {"items": output_text["data"]} 
+                #         elif isinstance(output_text["data"], str):
+                #             data_dict = {"value": output_text["data"]}
+                #         else:
+                #             # DataFrame型の場合、カラムの型を表示
+                #             if isinstance(output_text["data"], pd.DataFrame):
+                #                 print("[DEBUG] DataFrame columns and dtypes:")
+                #                 print(output_text["data"].dtypes)
+                #             def to_serializable(obj):
+                #                 # print(f"DEBUG: type(obj) = {type(obj)}, value = {obj}")
+                #                 if isinstance(obj, pd.DataFrame):
+                #                     df_copy = obj.copy()
+                #                     for col in df_copy.select_dtypes(include=["datetime64[ns]", "datetime64[ns, UTC]"]):
+                #                         df_copy[col] = df_copy[col].dt.strftime("%Y-%m-%d %H:%M:%S")
+                #                     df_copy = df_copy.where(pd.notnull(df_copy), None)  
+                #                     return df_copy.to_dict(orient="records")
+                #                 elif isinstance(obj, pd.Series):
+                #                     # Seriesのdtypeがdatetime64[ns]なら、各要素を文字列に変換
+                #                     if pd.api.types.is_datetime64_any_dtype(obj):
+                #                         return obj.dt.strftime("%Y-%m-%d %H:%M:%S").tolist()
+                #                     else:
+                #                         return obj.to_dict()
+                #                 elif isinstance(obj, (pd.Timestamp, np.datetime64)):
+                #                     print(f"obj type: pd.Timestamp, np.datetime64")
+                #                     return obj.strftime("%Y-%m-%d %H:%M:%S")
+                #                 elif isinstance(obj, dict):
+                #                     return {k: to_serializable(v) for k, v in obj.items()}
+                #                 elif isinstance(obj, list):
+                #                     return [to_serializable(v) for v in obj]
+                #                 else:
+                #                     return obj
+                #             data_dict = {k: (to_serializable(v) if hasattr(v, "to_dict") else v)
+                #                         for k, v in output_text["data"].items()}
+                #         parts.append(DataPart(data=data_dict))
+                #     except Exception as e:
+                #         logger.error(f"Error processing task {task_id}: {e}", exc_info=True)
             else:
                 parts.append(TextPart(text=output_text))
             result_message = Message(role="agent", parts=parts)

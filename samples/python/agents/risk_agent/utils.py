@@ -3,17 +3,11 @@ import yaml
 import os
 
 def _all_hypotheses_resolved(hypotheses: List[Dict[str, Any]]) -> bool:
-    if not hypotheses:
+    if len(hypotheses) == 0:
         return False
     for h in hypotheses:
         status = h.get('status')
-        # supported でも verification が未完了なら未解決とみなす
-        if status == 'supported':
-            verif = h.get('verification', {}) if isinstance(h, dict) else {}
-            if verif.get('status') not in ['verified', 'disproved']:
-                return False
-        elif status not in ['rejected', 'needs_revision']:
-            # new / inconclusive / investigating など
+        if status not in ['supported', 'rejected', 'needs_revision']:
             return False
     return True
 

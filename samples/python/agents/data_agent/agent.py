@@ -7,7 +7,7 @@ from typing import Dict, Any, Optional, Union
 import argparse # argparse をインポート
 
 # query_agentを明示的にインポート
-from .query_agent import QueryAgent
+from A2A_risk.samples.python.agents.data_agent.agent.query_processor import QueryAgent
 
 # ロガー設定
 logger = logging.getLogger(__name__)
@@ -18,7 +18,7 @@ load_dotenv()
 # 設定ファイルとデータファイルのデフォルトパス
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 DEFAULT_DATA_PATH = os.path.join(CURRENT_DIR, "data", "dummy_data.csv")
-DEFAULT_LLM_MODEL = 'gpt-4o' # デフォルトLLMモデルを定数化
+DEFAULT_LLM_MODEL = 'gpt-4.1-mini' # デフォルトLLMモデルを定数化
 
 # QueryAgentのシングルトンインスタンスと設定
 _agent_instance: Optional[QueryAgent] = None
@@ -70,9 +70,9 @@ def get_agent_instance() -> QueryAgent:
             _agent_instance = QueryAgent(model=llm_model)
 
             # データをロード
-            logger.info(f"データソースをロードします: {data_source}")
+            logger.info(f"データソースをロードします_old: {data_source}")
             _agent_instance.load_data(data_source)
-            logger.info(f"データロード完了 (ソース: {data_source})。")
+            logger.info(f"データロード完了_old (ソース: {data_source})。")
 
         except ImportError as e:
              logger.error(f"エージェントの初期化に必要なライブラリが不足しています: {e}", exc_info=True)
@@ -143,9 +143,3 @@ async def run_agent(input_data: Union[str, Dict[str, Any]]) -> Dict[str, Any]:
         logger.error(f"クエリ処理中にエラーが発生しました: {e}", exc_info=True)
         error_message = f"クエリ処理中にエラーが発生しました: {str(e)}"
         return {"output": error_message, "error": str(e)}
-
-# (test_agent 関数は __main__ や test_run_agent に役割を移譲するため削除またはコメントアウト)
-# async def test_agent():
-#     ...
-
-# (if __name__ == "__main__" ブロックも通常は削除)

@@ -1,0 +1,32 @@
+# 基本設定
+agent_name: "不正事例管理エージェント"
+agent_description: "不正事例の分析と情報提供を行います"
+host: "localhost"
+port: 8010
+llm_model: "gpt-4o"
+data_source: "../data/不正事例"
+
+# A2A設定
+organization: "あなたの会社名"
+version: "1.0.0"
+endpoint: "/a2a"
+
+# UI/UX設定
+defaultInputModes: ["text"]
+defaultOutputModes: ["text"]
+
+# スキル定義
+skills:
+  - id: "analyze_fraud_case"
+    name: "不正事例抽出・分析"
+    description: |
+      不正事例に関する情報を自然言語で抽出・分析します。
+      以下の情報を保持しています。
+        過去の具体的な不正事例、第三者報告書、不正事例の背景、不正事例の内容、不正事例の影響、不正事例の対応、不正事例の防止策
+        
+    examples:
+      - "XXXX年のA社の不正事例の背景と不正内容を教えてください"
+      - "YYYのようなリスクシナリオに関連する不正の背景として代表的なものを教えてください"
+    inputModes: ["text"]
+    outputModes: ["text"]
+  

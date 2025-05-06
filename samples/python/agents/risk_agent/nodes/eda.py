@@ -5,7 +5,7 @@ from typing import Any, Dict, List
 import pandas as pd
 import numpy as np
 
-from ..core.node_base import Node, NodeResult
+from ..core.node_base import Node, NodeResult, make_history_entry
 from ..prompts import get_initial_data_query_prompt
 
 logger = logging.getLogger(__name__)
@@ -45,7 +45,7 @@ class EDANode(Node):
             "data_collected": True,
         }
 
-        events = [{"type": "node", "name": "eda"}]
+        events = [make_history_entry("node", {"name": "eda"}, state)]
 
         # データが無い場合は LLM に問い合わせ
         if not data_summary:

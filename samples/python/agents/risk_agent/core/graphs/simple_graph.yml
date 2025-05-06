@@ -24,7 +24,7 @@ edges:
     type: rule
     expr: "True"
   - src: query_data_agent
-    dst: data_analysis
+    dst: decision_maker
     type: rule
     expr: "True"
   - src: generate_hypothesis
@@ -63,6 +63,10 @@ edges:
     dst: refine_hypothesis
     type: rule
     expr: "state.get('next_action', {}).get('action_type') == 'refine_hypothesis'"
+  - src: decision_maker
+    dst: decision_maker
+    type: rule
+    expr: "state.get('next_action', {}).get('action_type') == 'decision_maker'"
   - src: decision_maker
     dst: conclude
     type: rule

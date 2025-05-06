@@ -12,8 +12,8 @@ import argparse
 # .envファイル読み込みのために必要
 from dotenv import load_dotenv
 
-# 同じディレクトリにある query_agent を直接インポート
-from ..query_agent import QueryAgent
+# agent ディレクトリ内の query_processor をインポート
+from ..agent.query_processor import QueryAgent
 
 # ロガー設定
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -75,7 +75,7 @@ async def main(config_filename: str):
 
         # データをロード (設定ファイルまたはデフォルトのデータソースを使用)
         logger.info(f"テスト用データをロードします: {data_source}")
-        agent.load_data(data_source)
+        agent.load_data(data_source, build_embedding=True)
 
         print("\n===== データ対話エージェント (テストモード) =====")
         print(f"使用データ: {data_source}")

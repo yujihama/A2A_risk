@@ -15,12 +15,16 @@ from langgraph.checkpoint.sqlite.aio import AsyncSqliteSaver
 from importlib import import_module
 import uuid
 from collections import defaultdict
-
+from .core.node_base import ToolBox
 from .core.graph_loader import load_graph
-from .リファクタ前.engine import Engine, ToolBox
+from datetime import datetime # 追加
+# from .backend.main import broadcast # ★ broadcast 関数をインポート
+import httpx # ★ httpx をインポート
+
 from .core.llm_provider import OpenAILLMWrapper
 from .agent import initialize_registry, registry
 from .state import DynamicAgentState
+from langchain_openai import ChatOpenAI
 
 logger = logging.getLogger(__name__)
 
@@ -31,22 +35,6 @@ for parent in Path(__file__).resolve().parents:
     if env_path.exists():
         load_dotenv(env_path, override=False)
         break
-
-
-# def build_engine(graph_path: Optional[str] = None) -> Engine:  # noqa: ANN001
-#     if graph_path is None:
-#         base_dir = Path(__file__).parent / "core" / "graphs"
-#         if os.getenv("USE_OPENAI", "0") == "1":
-#             candidate = base_dir / "llm_graph.yml"
-#             graph_path = candidate.as_posix() if candidate.exists() else None
-
-#         if not graph_path:
-#             graph_path = (base_dir / "simple_graph.yml").as_posix()
-#     nodes, edges, start = load_graph(graph_path)
-#     return Engine(nodes, edges, start_node=start)
-
-
-# Fallback Dummy client if SmartA2A client unavailable
 
 
 class DummyClient:  # noqa: D101
@@ -142,13 +130,29 @@ async def get_thread_id_from_checkpoint(conn: aiosqlite.Connection, checkpoint_i
         return None
 # --- ここまで追加 ---
 
+# ★ バックエンドへの通知用関数
+BACKEND_UPDATE_URL = "http://localhost:8000/state/update"
+async def notify_backend(state: dict):
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.post(BACKEND_UPDATE_URL, json=state, timeout=5.0) # タイムアウト設定
+            response.raise_for_status() # エラーがあれば例外発生
+            logger.info(f"Successfully notified backend. Status: {response.status_code}")
+    except httpx.RequestError as e:
+        logger.error(f"Failed to connect to backend at {BACKEND_UPDATE_URL}: {e}", exc_info=True)
+    except httpx.HTTPStatusError as e:
+        logger.error(f"Backend returned an error: {e.response.status_code} - {e.response.text}", exc_info=True)
+    except Exception as e:
+        logger.error(f"An unexpected error occurred while notifying backend: {e}", exc_info=True)
+
 async def run_with_checkpoint(yaml_path, resume_checkpoint_id=None, initial_state=None):
     # --- ここで checkpointer を初期化 ---
     conn = await aiosqlite.connect("checkpoints.sqlite3") # 変更後: aiosqlite を使う
     checkpointer = AsyncSqliteSaver(conn=conn)
     # ------------------------------------
 
-    llm = OpenAILLMWrapper() if os.getenv("USE_OPENAI", "0") == "1" else None
+    llm = ChatOpenAI(model="gpt-4.1-mini", temperature=0).with_structured_output(method="json_mode")
+    eval_llm = ChatOpenAI(model="gpt-4.1", temperature=0).with_structured_output(method="json_mode")
     data_client = None
     try:
         from A2A_risk.samples.python.common.client.client import SmartA2AClient
@@ -156,7 +160,7 @@ async def run_with_checkpoint(yaml_path, resume_checkpoint_id=None, initial_stat
     except Exception:
         # from .engine_runner import DummyClient # 同じモジュール内なので直接参照できる
         data_client = DummyClient()
-    toolbox = ToolBox(llm=llm, smart_a2a_client=data_client)
+    toolbox = ToolBox(llm=llm, eval_llm = eval_llm, smart_a2a_client=data_client)
 
     graph = build_langgraph_from_yaml(yaml_path, toolbox, checkpointer)
     # --- thread_id の決定と実行 ---
@@ -174,16 +178,71 @@ async def run_with_checkpoint(yaml_path, resume_checkpoint_id=None, initial_stat
             resume_config = {"configurable": {
                 "thread_id": thread_id,
                 "checkpoint_id": resume_checkpoint_id
-            }}
+            },
+            "recursion_limit": 100
+            }
             print(f"[再開] thread_id: {thread_id} (指定した checkpoint_id: {resume_checkpoint_id} に対応)")
-            # state_patch = initial_state or {} # 再開時は initial_state を渡さない
-            await graph.ainvoke(None, resume_config) # 第1引数を None に変更
+            # ★ astream を使用して再開・実行し、状態をブロードキャスト
+            async for output in graph.astream(None, resume_config):
+                # astream は {'node_name': state_after_node} の形式で返す
+                node_name = list(output.keys())[0]
+                # 再開の場合、ENDノードやSTARTノードの扱いは新規実行と同じでよい
+                if node_name == END:
+                    print("--- Graph finished (resumed run) ---")
+                    break
+                elif node_name == START:
+                    continue
+
+                # partial_state_after_node = output[node_name] # 部分的な状態はここでは使わない
+                print(f"--- Node {node_name} completed (resumed run) ---")
+                # ★ 完全な最新の状態を取得する
+                try:
+                    latest_full_state = await graph.aget_state(resume_config)
+                    if latest_full_state:
+                        # ★ 完全な状態 (latest_full_state.values) をバックエンドに通知
+                        logger.info(f"Notifying backend with full state after node {node_name} (resumed run)...")
+                        await notify_backend(latest_full_state.values)
+                    else:
+                        logger.warning(f"Could not retrieve full state after node {node_name} (resumed run). Thread ID: {resume_config['configurable']['thread_id']}")
+                except Exception as e:
+                    logger.error(f"Error getting or notifying full state after node {node_name} (resumed run): {e}", exc_info=True)
         else:
-            # 新規実行時は新しい UUID を生成
+            # 新規実行
             thread_id = str(uuid.uuid4())
             print(f"[新規実行] thread_id: {thread_id}")
-            config = {"configurable": {"thread_id": thread_id},"recursion_limit": 50}
-            await graph.ainvoke(initial_state or {}, config) # initial_state が None の場合 {} を使う
+            config = {"configurable": {"thread_id": thread_id}, "recursion_limit":100}
+            # ★ astream を使用して実行し、状態をブロードキャスト
+            async for output in graph.astream(initial_state or {}, config):
+                 # astream は {'node_name': state_after_node} の形式で返す
+                node_name = list(output.keys())[0]
+                # ENDノードの場合は state が含まれないことがあるのでチェック
+                if node_name == END:
+                    print("--- Graph finished ---")
+                    # 最終状態を取得して通知 (任意)
+                    try:
+                        final_state_full = await graph.aget_state(config)
+                        if final_state_full:
+                            logger.info(f"Notifying backend with final full state...")
+                            await notify_backend(final_state_full.values)
+                    except Exception as e:
+                        logger.error(f"Error getting or notifying final full state: {e}", exc_info=True)
+                    break # ループを抜ける
+                elif node_name == START: # STARTノードは無視してもよい
+                    continue
+
+                # partial_state_after_node = output[node_name] # 部分的な状態はここでは使わない
+                print(f"--- Node {node_name} completed ---")
+                 # ★ 完全な最新の状態を取得する
+                try:
+                    latest_full_state = await graph.aget_state(config)
+                    if latest_full_state:
+                        # ★ 完全な状態 (latest_full_state.values) をバックエンドに通知
+                        logger.info(f"Notifying backend with full state after node {node_name}...")
+                        await notify_backend(latest_full_state.values)
+                    else:
+                        logger.warning(f"Could not retrieve full state after node {node_name}. Thread ID: {config['configurable']['thread_id']}")
+                except Exception as e:
+                    logger.error(f"Error getting or notifying full state after node {node_name}: {e}", exc_info=True)
 
         # --- 履歴取得時の config ---
         # 実行に使った thread_id を含む config を用意する必要がある
@@ -199,15 +258,17 @@ async def run_with_checkpoint(yaml_path, resume_checkpoint_id=None, initial_stat
         print("--- Checkpoint History ---")
         history = []
         i = 0
-        async for snapshot in graph.aget_state_history(history_config): # thread_id を含む config を使用
+        # ★ get_state_history の代わりに aget_state_history を使う
+        async for snapshot in graph.aget_state_history(history_config, limit=100): # limit を追加推奨
             checkpoint_id = snapshot.config.get("configurable", {}).get("checkpoint_id", "unknown")
-            # thread_id が snapshot.config に含まれているか確認 (通常は history_config で指定したものと同じはず)
             current_thread_id = snapshot.config.get("configurable", {}).get("thread_id", "unknown")
-            print(f"{i}: thread_id={current_thread_id}, checkpoint_id={checkpoint_id}, node={snapshot.next}")
-            logging.info(f"[CHECKPOINT] {i}: thread_id={current_thread_id}, checkpoint_id={checkpoint_id}, node={snapshot.next}")
+            # snapshot.values にその時点の状態が含まれる
+            # snapshot.next に次に実行されるノード名が含まれる
+            print(f"{i}: thread_id={current_thread_id}, checkpoint_id={checkpoint_id}, next_node={snapshot.next}")
+            logging.info(f"[CHECKPOINT] {i}: thread_id={current_thread_id}, checkpoint_id={checkpoint_id}, next_node={snapshot.next}")
             history.append(snapshot)
             i += 1
-        print("--- 各ノード完了時のcheckpoint_idを上記に出力しました ---")
+        print(f"--- {i} 件のチェックポイント履歴を上記に出力しました ---")
 
     finally:
         # --- DB接続を閉じる ---
@@ -225,7 +286,25 @@ if __name__ == "__main__":
     parser.add_argument("--checkpoint_id", help="再開するチェックポイントID", default=None)
     args = parser.parse_args()
 
-    logging.basicConfig(level=logging.INFO)
+    # --- ログ設定 --- 
+    log_dir = Path(__file__).parent / "logs"
+    os.makedirs(log_dir, exist_ok=True) # ログディレクトリ作成
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    log_filename = log_dir / f"engine_runner_{timestamp}.log"
+
+    logging.basicConfig(
+        level=logging.INFO, # ルートの基本レベルは INFO
+        filename=log_filename,
+        encoding='utf-8',
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    )
+    # ★ 主要なライブラリのログレベルを個別に設定して抑制
+    logging.getLogger("httpx").setLevel(logging.WARNING)
+    logging.getLogger("httpcore").setLevel(logging.WARNING)
+    logging.getLogger("urllib3").setLevel(logging.WARNING)
+    logging.getLogger("aiosqlite").setLevel(logging.WARNING)
+    logging.getLogger("asyncio").setLevel(logging.INFO) # asyncio は INFO にしておく (必要なら WARNING)
+    # --------------- 
 
     async def main():
         yaml_path = args.graph

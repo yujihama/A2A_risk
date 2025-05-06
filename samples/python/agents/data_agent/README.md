@@ -44,7 +44,8 @@ QueryAgentの機能を対話的にテストするには、以下のコマンド�
 cd A2A_risk/samples/python/agents
 
 # パッケージとしてテストを実行
-python -m data_agent.tests.test_run_agent purchase_orders_config.yaml
+python -m A2A_risk.samples.python.agents.data_agent.tests.test_run_agent purchase_orders_config.yaml
+python -m A2A_risk.samples.python.agents.data_agent.tests.test_run_agent 不正事例.yaml
 ```
 
 - 設定ファイル（YAML）は `data_agent/config/` ディレクトリ内のファイル名を指定してください。

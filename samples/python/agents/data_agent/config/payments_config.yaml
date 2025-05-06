@@ -17,22 +17,11 @@ defaultOutputModes: ["text"]
 
 # スキル定義
 skills:
-  - id: "query_payment"
-    name: "支払情報検索"
-    description: "支払情報を自然言語で検索します"
-    examples:
-      - "請求書番号C789の支払状況を教えてください"
-      - "先月の総支払額はいくらですか？"
-      - "取引先Bへの支払予定を教えてください"
-    inputModes: ["text"]
-    outputModes: ["text"]
-  
   - id: "analyze_payments"
-    name: "支払傾向分析"
-    description: "支払データの傾向分析を行います"
+    name: "支払情報分析"
+    description: "支払データに関する情報を自然言語で分析します。支払ID,支払日,取引先ID,取引先名,支払金額,支払先口座名義,関連請求書ID,支払方法の情報を保持しています。"
     examples:
       - "支払遅延が発生している取引先を教えてください"
-      - "支払額の月次推移を分析してください"
-      - "異常な支払パターンがないか確認してください"
+      - "従業員Aの支払履歴を表示してください"
     inputModes: ["text"]
     outputModes: ["text"] 

@@ -17,22 +17,11 @@ defaultOutputModes: ["text"]
 
 # スキル定義
 skills:
-  - id: "query_call"
-    name: "通話情報検索"
-    description: "通話記録を自然言語で検索します"
-    examples:
-      - "従業員IDがE001の先月の通話履歴を表示してください"
-      - "取引先V003との通話頻度はどれくらいですか？"
-      - "業務時間外の通話が多い従業員を教えてください"
-    inputModes: ["text"]
-    outputModes: ["text"]
-  
   - id: "analyze_calls"
-    name: "通話傾向分析"
-    description: "通話データの傾向分析を行います"
+    name: "通話情報分析"
+    description: "通話データに関する情報を自然言語で分析します。ログID,発信日時,発信者ID,発信者電話番号,着信者ID(取引先等),着信者電話番号,通話時間(秒)の情報を保持しています。"
     examples:
       - "部門別の外部通話量を分析してください"
-      - "通話時間の長さに基づいて異常を検出してください"
-      - "特定の通話パターンが見られる従業員を特定してください"
+      - "従業員Aの通話履歴を表示してください"
     inputModes: ["text"]
     outputModes: ["text"] 

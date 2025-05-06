@@ -1,7 +1,7 @@
 import logging
 from typing import Any, Dict, List
 
-from ..core.node_base import Node, NodeResult
+from ..core.node_base import Node, NodeResult, make_history_entry
 
 logger = logging.getLogger(__name__)
 
@@ -33,5 +33,5 @@ class ConcludeNode(Node):
                 logger.warning("LLM conclusion failed: %s", e)
 
         patch = {"final_result": {"summary": summary}, "next_action": None}
-        events = [{"type": "node", "name": "conclude"}]
+        events = [make_history_entry("node", {"name": "conclude"}, state)]
         return NodeResult(observation=summary, patch=patch, events=events) 

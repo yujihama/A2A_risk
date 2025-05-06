@@ -49,7 +49,7 @@ class FilePart(BaseModel):
 
 class DataPart(BaseModel):
     type: Literal["data"] = "data"
-    data: dict[str, Any]
+    data: Any
     metadata: dict[str, Any] | None = None
 
 

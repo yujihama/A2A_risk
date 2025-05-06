@@ -8,17 +8,22 @@ def get_decision_maker_prompt(state, focused_hypothesis, currently_investigating
         'id': focused_hypothesis['id'],
         'text': focused_hypothesis['text'],
         'status': focused_hypothesis['status'],
-        'metric_definition': focused_hypothesis['metric_definition']
+        'metric_definition': focused_hypothesis['metric_definition'],
+        'supporting_evidence_keys': focused_hypothesis['supporting_evidence_keys'],
+        'next_validation_step_suggestion': focused_hypothesis['next_validation_step_suggestion'],
+        'evaluation_reason': focused_hypothesis['evaluation_reason']
     }
     # 現在フォーカスしている仮説（currently_investigating_hypothesis_id）に紐づくobservationのみを抽出し、最新1件のみをプロンプト用に整形
     observation_history = [
         h for h in state.get('history', [])
-        if h.get('type') == 'observation' and h.get('hypothesis_id') == currently_investigating_hypothesis_id
+        if h.get('currently_investigating_hypothesis_id') == currently_investigating_hypothesis_id
     ]
-    history_for_prompt = json.dumps(observation_history[-1:], ensure_ascii=False, indent=2)
-    print("-----------------------")
-    print(f"history_for_prompt:{history_for_prompt}")
-    print("-----------------------")
+    history_for_prompt = json.dumps(observation_history[-3:], ensure_ascii=False, indent=2)
+    
+    collected_data_summary = state.get('collected_data_summary', {}).get(currently_investigating_hypothesis_id, {})
+    collected_data_summary_for_prompt = json.dumps(collected_data_summary, ensure_ascii=False, indent=2)
+
+
     return f"""
 ### ROLE
 あなたは経験豊富な内部監査人／調査エージェント AI です。仮説駆動型アプローチに従ってください。現在フォーカスしている仮説の検証を進めます。
@@ -31,7 +36,7 @@ def get_decision_maker_prompt(state, focused_hypothesis, currently_investigating
 
 ### CONTEXT
 - HISTORY_JSON: {history_for_prompt}
-
+- COLLECTED_DATA_SUMMARY: {collected_data_summary_for_prompt}
 ### AVAILABLE_RESOURCES
 - ACTION_TYPES_JSON: {json.dumps(available_actions, ensure_ascii=False, indent=2)}
 
@@ -40,15 +45,10 @@ def get_decision_maker_prompt(state, focused_hypothesis, currently_investigating
 *   If focus_hypothesis.status == "new" → **must** select "evaluate_hypothesis" for this hypothesis_id ({currently_investigating_hypothesis_id}).
 *   If focus_hypothesis.status ∈ {{"inconclusive"}}:
         *   Look at the latest entry in HISTORY_JSON.
-        *   If the latest entry is an Observation from 'query_data_agent' related to the focus_hypothesis → **Analyze if the collected data (in observation.content.result) is sufficient to evaluate the hypothesis.**
-            *   If **sufficient** → **must** select "evaluate_hypothesis" for this hypothesis_id ({currently_investigating_hypothesis_id}).
-            *   If **insufficient** → **must** determine **what specific information is still missing** based on the focus_hypothesis.text, focus_hypothesis.required_next_data, and the collected data. Then, select "query_data_agent" with a **new, more specific query** (or queries) to obtain the missing information. Avoid repeating the exact same query.
-            *   If multiple pieces of information are missing, **create a list of queries** (each query should address only one missing information) and pass this list to "query_data_agent". Do not combine multiple missing items into a single query; instead, enumerate them as a list of simple queries, each targeting a single missing item.
-        *   If the latest entry is NOT a relevant Observation → **must** select "query_data_agent" based on focus_hypothesis.required_next_data to get the initially requested data.
+        *   If the latest entry is a hypothesis evaluation → **must** select "query_data_agent" and copy the content of focus_hypothesis.required_next_data directly into the query parameter to obtain the requested data.
 *   If focus_hypothesis.status == "investigating" → **must** select "evaluate_hypothesis" for this hypothesis_id ({currently_investigating_hypothesis_id}).
 *   *Do not select "generate_hypothesis" or "conclude" while focusing on a hypothesis.*
 *   **If the hypothesis is large or complex (complexity_score >= 0.7), you may select 'refine_plan' to break down the investigation into steps.**
-
 ### TASK
 1. 上記 ACTION-SELECTION POLICY と状況に基づき、現在フォーカスしている仮説 ({currently_investigating_hypothesis_id}) の検証を進めるための *単一* の行動 (action_type) を選定し、必要パラメータを具体値で生成せよ。
 2. 選定理由を "thought" フィールドに 1–3 文で要約せよ (POLICY をどう解釈したか、Focus の状態、履歴の考慮点を含めること)。
@@ -118,7 +118,7 @@ def get_generate_hypothesis_prompt(state):
 ### ROLE
 あなたは洞察力のあるデータアナリスト／リスク分析官 AI です。
 ### GOAL
-新規または改訂リスク仮説を生成し、優先度づけせよ。
+EDAの内容をもとに、以下のOBJECTIVEを検知するための仮説を2つ程度作成し、優先度づけせよ。
 ### CONTEXT
 - ANALYSIS_DATE: {analysis_date}
 - OBJECTIVE: {state['objective']}
@@ -144,7 +144,7 @@ def get_generate_hypothesis_prompt(state):
     "text": "IF ... THEN ...",
     "priority": 0.##,
     "status": "new",
-    "time_window": {{ "start": "YYYY-MM-DD", "end": "YYYY-MM-DD" }},
+    "time_window": "YYYY-MM-DD〜YYYY-MM-DD",
     "supporting_evidence_keys": ["..."],
     "next_validation_step_suggestion": "...",
     "metric_definition": "<SQL/Pseudo-code for metric calculation>"
@@ -155,7 +155,7 @@ def get_generate_hypothesis_prompt(state):
 def get_evaluate_hypothesis_prompt(state, hypothesis_to_evaluate, parameters):
     observation_history = [
         h for h in state.get('history', [])
-        if h.get('type') == 'observation' and h.get('hypothesis_id') == hypothesis_to_evaluate['id']
+        if h.get('currently_investigating_hypothesis_id') == hypothesis_to_evaluate['id']
     ]
     history_for_prompt = json.dumps(observation_history, ensure_ascii=False, indent=2)
     # hypothesis_to_evaluate['id']と重複したキーのものだけに絞る
@@ -173,27 +173,63 @@ def get_evaluate_hypothesis_prompt(state, hypothesis_to_evaluate, parameters):
 
     latest_analysis_result_json = json.dumps(latest_analysis_result, ensure_ascii=False, indent=2) if latest_analysis_result is not None else 'null'
     
+    hypothesis_to_evaluate_for_prompt = {
+        "id": hypothesis_to_evaluate['id'],
+        "text": hypothesis_to_evaluate['text'],
+        "status": hypothesis_to_evaluate['status'],
+        "time_window": hypothesis_to_evaluate['time_window'],
+    }
 
     return f"""
 ### ROLE
 あなたは客観的かつ批判的な監査評価者 AI です。
 ### TARGET_HYPOTHESIS
-{json.dumps(hypothesis_to_evaluate, ensure_ascii=False, indent=2)}
+{json.dumps(hypothesis_to_evaluate_for_prompt, ensure_ascii=False, indent=2)}
 ### CONTEXT
-- OBJECTIVE: {state['objective']}
-- RELATED_HISTORY_JSON: {history_for_prompt}
-- DATA_SUMMARY_JSON: {collected_data_summary_for_prompt}
-- LATEST_DATA_ANALYSIS_RESULT_JSON: {latest_analysis_result_json}
+- RELATED_HISTORY: {history_for_prompt}
+- DATA_SUMMARY: {collected_data_summary_for_prompt}
 
 ### TASK
 1. 利用可能なデータおよび最新のデータ分析結果に基づき、TARGET_HYPOTHESIS を評価せよ。
 2. evaluation_status を supported | rejected | needs_revision | inconclusive から選べ。
-3. reasoning は評価の根拠を 2–4 文で述べよ。
-4. inconclusive(十分なデータが取得できていない) または needs_revision(データ取得が繰り返し不十分であり仮説の見直しを推奨する) の場合は、評価に必要な次のデータ (required_next_data) を具体的に示せ (null も可)。
-   - inconclusive: 十分なデータが得られていない場合は、評価に必要な次のデータを明記せよ。
-   - needs_revision:DATA_SUMMARY_JSONに "取得できない" 旨の記述など十分なデータが得られていない兆候がある場合はhypothesis の見直しを推奨する理由を明記せよ。
-### OUTPUT FORMAT (DO NOT WRAP IN CODE BLOCK)
+3. supportedと評価され場合、後続でさらに深堀りした仮説生成がされます。そのため、データから断言できなくても少しでも兆候が見られる場合はsupportedとしてください。
+3. reasoning は評価の根拠を 2–4 文で述べよ。statusがsupportedの場合は、兆候が見られたデータを具体的を挙げて具体的に説明してください。
+4. inconclusiveが今回含め3回目の場合はneeds_revisionとすること。
+4. inconclusive(十分なデータが取得できていない) の場合は、評価に必要な次のデータ (required_next_data) を具体的に示せ (null も可)。
+   - required_next_data は、仮説検証に必要だが今回取得できていない情報を具体的に記載すること。
+   
+### OUTPUT FORMAT (JSON)
 {{ "hypothesis_id": "{hypothesis_to_evaluate['id']}", "evaluation_status": "<status>", "reasoning": "...", "required_next_data": "<null_or_specific_data_needed>" }}
+
+### FEW-SHOT EXAMPLES
+Example 1:
+{{
+  "hypothesis_id": "hyp_001",
+  "evaluation_status": "supported",
+  "reasoning": "...の理由により仮説は支持されると判断した。具体的には<データA>と<データB>...では...の傾向が見られ、...の兆候が見られた。",
+  "required_next_data": null
+}}
+Example 2:
+{{
+  "hypothesis_id": "hyp_002",
+  "evaluation_status": "rejected",
+  "reasoning": "...の理由により仮説は支持されないと判断した。",
+  "required_next_data": null
+}}
+Example 3:
+{{
+  "hypothesis_id": "hyp_003",
+  "evaluation_status": "inconclusive",
+  "reasoning": "...についてはデータが確認できたが、...についてはデータが確認できなかったため。",
+  "required_next_data": "...と...についての....のデータ"
+}}
+Example 4:
+{{
+  "hypothesis_id": "hyp_004",
+  "evaluation_status": "needs_revision",
+  "reasoning": "データの取得を試みているが、エラーやタイムアウトのため取得できていないため。また、該当のデータないことが確認できたため。",
+  "required_next_data": "SELECT 申請者ID, 申請金額, 申請日 FROM requests"
+}}
     """
 
 def get_refine_hypothesis_prompt(hypothesis):
@@ -248,13 +284,19 @@ def get_initial_data_query_prompt(objective, available_agents, analysis_date=Non
 def get_query_refinement_prompt(query):
     return f"""
 
-SYSTEM:
+### SYSTEM
 You are an internal-audit hypothesis‐to‐rule selector AI.
+
+### TASK
 以下の "PATTERN CATALOG" と "JSON SCHEMA" のルールに **厳密** に従い、  
 以下のデータを取得するために適切なパターン（複数可）とパラメータを **JSON 配列** で出力してください。  
 必要なデータ：{query}
 
-PATTERN CATALOG:
+### PATTERN CATALOG
+0. get_data
+   • params:  
+     - query (string ※SELECTから始まるSQLライクなクエリ)  
+
 1. value_threshold  
    • params:  
      - target_col (string)  
@@ -265,19 +307,14 @@ PATTERN CATALOG:
      - operator (one of ">","=","<",">=","<=")  
 2. duplicate_key  
    • params:  
-     - key_cols (array of string)  
-3. derive_month  
-   • params:  
-     - date_col (string)  
-     - format (string, e.g. "%Y-%m")  
-     - new_col (string)  
-4. group_agg_generate  
+     - key_cols (array of string)   
+3. group_agg_generate  
    • params:  
      - source_col (string)  
      - group_cols (array of string)  
      - agg_func ("mean"|"sum"|"count")  
      - new_col (string)  
-5. cross_compare  
+4. cross_compare  
    • params:  
      - left_ds (string)  
      - right_ds (string)  
@@ -285,16 +322,15 @@ PATTERN CATALOG:
      - compare_cols (array of {{left:string, right:string}})  
      - tolerance_pct (number)  
 
-JSON SCHEMA(answerキーにJSON配列を出力):
-```json
-"answer":
+### OUTPUT FORMAT (DO NOT WRAP IN CODE BLOCK)
+  "answer":
     [
     {{
     "step_id":"<1,2,3...>",
     "required_data":
         {{
-            "new":<パターンに必要なデータ、カラムの一覧>,※新たにデータベースから取得が必要なデータ
-            "other_step_output":<パターンに必要なデータ>※他のstepの出力結果を使用する場合は、「1」のように`step_id` のみを回答する
+            "new":<パターンの実施に必要なインプットデータを新たにデータベースから取得する場合は、SELECTから始まるSQLライクなクエリ>,
+            "other_step_output":<他のstepのアウトプットデータを使用する場合は、「1」のように`step_id` のみを回答する>
              }},
     "pattern_id":"<パターンID>",
     "params":{{<選択したパターンのパラメータ>}}
@@ -308,15 +344,79 @@ JSON SCHEMA(answerキーにJSON配列を出力):
     ...
     ]
 
-```
-
-VALIDATION RULES:
+### VALIDATION RULES
 - `pattern_id` は必ず上記 `enum` のいずれか
 - `required_data` は'new'か'other_step_output'のいずれかを設定
 - `other_step_output` は他のstepの出力結果を使用する場合は、「1」のように`step_id` のみを回答する
 - `params` はそのパターンが定義する **必須キー** をすべて含む
 - `params` に余分なキーを含めない
 - 型チェックを必ず通過する（string/number/list）
+
+### FEW-SHOT EXAMPLES
+
+例1:
+[
+  {{
+    "step_id": "1",
+    "required_data": {{
+      "new": "SELECT 申請者ID, 申請金額 FROM requests WHERE 申請金額 > 100000"
+    }},
+    "pattern_id": "group_agg_generate",
+    "params": {{
+      "source_col": "申請金額",
+      "group_cols": ["申請者ID"],
+      "agg_func": "count",
+      "new_col": "高額申請件数"
+    }}
+  }},
+  {{
+    "step_id": "2",
+    "required_data": {{
+      "other_step_output": "1"
+    }},
+    "pattern_id": "group_agg_generate",
+    "params": {{
+      "source_col": "申請金額",
+      "group_cols": ["申請者ID"],
+      "agg_func": "sum",
+      "new_col": "高額申請合計金額"
+    }}
+  }}
+]
+
+例2:
+[
+  {{
+    "step_id": "1",
+    "required_data": {{
+      "new": "SELECT 申請者ID, 申請金額, 申請日 FROM requests"
+    }},
+    "pattern_id": "group_agg_generate",
+    "params": {{
+      "source_col": "申請金額",
+      "group_cols": ["申請者ID"],
+      "agg_func": "mean",
+      "new_col": "平均申請金額"
+    }}
+  }},
+  {{
+    "step_id": "2",
+    "required_data": {{
+      "new": "SELECT 申請者ID, 申請金額, 申請日 FROM requests_昨年度"
+    }},
+    "pattern_id": "cross_compare",
+    "params": {{
+      "left_ds": "requests",
+      "right_ds": "requests_昨年度",
+      "join_keys": ["申請者ID"],
+      "compare_cols": [
+        {{"left": "申請金額", "right": "申請金額"}}
+      ],
+      "tolerance_pct": 5
+    }}
+  }}
+]
+
 
     """
 
@@ -385,28 +485,26 @@ SYSTEM:
 }}
     """
 
-def get_data_analysis_prompt(query, data_plan_list):
-
-    data_plan_list_json = json.dumps(data_plan_list, ensure_ascii=False, indent=2)
+def get_query_data_analysis_prompt(query, output_from_data_agent):
 
     return f"""
 
 SYSTEM:
-あなたは、データエージェントの実行結果を要約する AI アシスタントです。
+あなたは、データサイエンティストです。
 
 ### TASK
-1. 以下のデータを取得するという目的があります。
+1. 以下のデータ分析して結果を生成するという目的があります。
 {query}
 
-2. この目的を達成するためのデータ取得状況は以下の通りです。
-{data_plan_list_json}
+2. この目的を達成するために取得したデータは以下の通りです。
+{output_from_data_agent}
 
-3. データ分析の結果を生成してください。
+3. データ分析の結果を生成してください。与えられたデータから結果を生成できない場合はその旨を回答してください。
 
 ### OUTPUT FORMAT(json形式で出力)
 {{
   "data_analysis_result": "<データ分析の結果>",
-  "reasoning": "<データ分析の根拠を述べる。>"
+  "reasoning": "<データ分析の根拠を述べる。結果を生成できない場合はその旨を述べる。>"
 }}
     """
 
@@ -529,6 +627,134 @@ SYSTEM:
   "skill_id": "<selected_agent_skill_id or empty(if already collected)>",
   "query": "<generated_query_for_data_collection or empty(if already collected)>",
   "reasoning": "<選択理由を述べる。>"
+}}
+
+### Notice
+- queryは独立したクエリであること。これまで取得したデータや状況を参照するようなクエリは作成不可。
+
+    """
+
+# --- Supporting Hypothesis Generation Prompt ---
+
+def get_supporting_hypothesis_prompt(state, parent_hypothesis):
+    """
+    Supported となった親仮説に基づいて、それを深掘りまたは裏付けるための
+    追加仮説を生成するためのプロンプトを生成します。
+
+    Args:
+        state (Dict): 現在のエージェントの状態。
+        parent_hypothesis (Dict): 支持された親仮説。
+
+    Returns:
+        str: LLM向けのプロンプト文字列。
+    """
+    parent_hypothesis_json = json.dumps({
+        "id": parent_hypothesis.get("id"),
+        "text": parent_hypothesis.get("text")
+    }, ensure_ascii=False, indent=2)
+
+    parent_hypothesis_reasoning_json = json.dumps(parent_hypothesis.get("evaluation_reason"), ensure_ascii=False, indent=2)
+
+    # 親仮説の評価に使われた分析結果を取得
+    analysis_result_json = json.dumps(state.get('analysis_result', {}).get(parent_hypothesis.get("id"), {}), ensure_ascii=False, indent=2)
+    # 利用可能なデータソース情報を取得
+    available_agents_json = json.dumps(state.get('available_data_agents_and_skills', []), ensure_ascii=False, indent=2)
+
+    return f"""
+### ROLE
+あなたは洞察力のある調査分析官 AI です。提示された仮説が支持されたことを受け、その確証度を高めるための追加仮説を考案します。
+
+### GOAL
+以下のPARENT_HYPOTHESISをさらに裏付ける、あるいはその背景要因を深掘りするための、具体的で検証可能な追加仮説を生成してください。
+- PARENT_HYPOTHESIS (Supported): {parent_hypothesis_json} # この仮説を深掘りします
+- PARENT_HYPOTHESIS_EVALUATION_REASON: {parent_hypothesis_reasoning_json} # 親仮説が支持された根拠: 
+
+### CONTEXT
+- OBJECTIVE: {state['objective']}
+- AVAILABLE_DATA_AGENTS_AND_SKILLS # 利用可能なデータソースとスキル（追加仮説の着想源）:
+{available_agents_json} 
+
+### TASK
+1. PARENT_HYPOTHESISの内容、およびそれが支持された根拠 (PARENT_HYPOTHESIS_EVALUATION_REASON) を踏まえてください。
+2. その上で、**利用可能な他のデータソース (AVAILABLE_DATA_AGENTS_AND_SKILLS を参照) も考慮**し、親仮説を**さらに補強する**、または**関連する新たなリスク側面を探る**ための追加仮説を 1〜2 件生成してください。
+3. **着眼点のヒント:** 親仮説に関連する人物やエンティティの**他の行動**、関連する**プロセスの不備**（例：承認プロセス）、**比較対象との差異**（例：同僚、他部署、過去期間）、データの**時間的な変化**や**相関関係**などに着目すると、有効な追加仮説が見つかることがあります。
+4. 各仮説は、PARENT_HYPOTHESIS とは異なる**新しい視点**を提供する必要があります。
+5. 各仮説は、**IF (条件) THEN (結果)** 形式の明確なステートメントで記述してください（疑問形は不可）。
+6. 各仮説には以下を含めてください:
+    - `id`: 新しいユニークなID (例: sub_hyp_001)
+    - `text`: IF...THEN... 形式の仮説文
+    - `priority`: 0.0〜1.0 の優先度 (親仮説の重要度や、裏付けの必要性から判断)
+    - `status`: "new" (固定)
+    - `parent_hypothesis_id`: "{parent_hypothesis.get('id')}" (固定 - この値は変更しないでください)
+    - `time_window` (Optional): 親仮説の時間枠を引き継ぐか、必要なら再定義 ({{"start":"YYYY-MM-DD","end":"YYYY-MM-DD"}})
+    - `supporting_evidence_keys` (Optional): 検証に必要となりそうなデータキーのリスト (AVAILABLE_DATA_AGENTS_AND_SKILLS を参考に具体的に)
+    - `next_validation_step_suggestion` (Optional): 検証の次のステップの提案
+    - `metric_definition` (Optional): 仮説内の指標の定義 (SQL/Pseudo-code)
+7. 時間範囲やしきい値を含む場合は、具体的かつ明確な数値で示してください。曖昧な表現は避けてください。
+
+### FEW-SHOT EXAMPLE (着想の参考にしてください)
+(親仮説: 「従業員Aの経費精算で交際費が急増している」が Supported)
+{{ "hypotheses": [
+    {{
+      "id": "sub_hyp_001",
+      "text": "IF 従業員Aの高額交際費申請が、対応する承認者の承認記録において申請から5分以内に行われている割合が50%以上 THEN 承認プロセスが形骸化している可能性がある",
+      "priority": 0.8,
+      "status": "new",
+      "parent_hypothesis_id": "parent_hyp_123",
+      "supporting_evidence_keys": ["経費精算データ", "ワークフロー承認ログ"],
+      "metric_definition": "COUNT(CASE WHEN approval_timestamp - request_timestamp <= interval '5 minutes' THEN 1 END) / COUNT(*) > 0.5 PARTITION BY employee_id='A', expense_type='交際費'"
+    }},
+    {{
+      "id": "sub_hyp_002",
+      "text": "IF 従業員Aの高額交際費申請の日時に、従業員Aのカレンダーに関連する会議やアポイントメント記録が存在しない割合が30%以上 THEN 申請内容の信憑性に疑いがある",
+      "priority": 0.7,
+      "status": "new",
+      "parent_hypothesis_id": "parent_hyp_123",
+      "supporting_evidence_keys": ["経費精算データ", "カレンダーデータ"]
+    }}
+]}}
+
+### OUTPUT FORMAT (必ず "hypotheses" キーを持つ JSON リスト形式で出力してください)
+{{
+  "hypotheses": [
+    {{
+      "id": "sub_hyp_###",
+      "text": "IF [追加の条件/観測 from 関連データ] THEN [PARENT_HYPOTHESIS を補強する、または新たな側面を示す結果]",
+      "priority": 0.##,
+      "status": "new",
+      "parent_hypothesis_id": "{parent_hypothesis.get('id')}",
+      "time_window": "YYYY-MM-DD〜YYYY-MM-DD", // Optional
+      "supporting_evidence_keys": ["..."], // Optional & Specific
+      "next_validation_step_suggestion": "...", // Optional
+      "metric_definition": "<SQL/Pseudo-code>" // Optional
+    }},
+    // ... (さらに追加仮説があれば)
+  ]
+}}
+    """
+def get_query_data_react_prompt(state,query_list):
+    available_agents = state.get("available_data_agents_and_skills", [])
+    available_agents_json = json.dumps(available_agents, ensure_ascii=False, indent=2)
+
+    return f"""
+### ROLE
+あなたはフォレンジック・データアナリスト AI です。次の TASK を達成するためのデータ取得計画を立案します。
+
+### TASK
+1. 以下のデータをステップバイステップで取得するという目的があります。
+{query_list}
+
+2. あなたが使えるデータエージェントは以下です。
+{available_agents_json}
+
+3. 目的をデータを漏れなく取得するために、データエージェントを使って漏れなく正確にデータを取得してください。
+どのデータエージェントを使っても目的のデータが取得できない場合はその旨を回答してください。
+
+### OUTPUT FORMAT (Answer in JSON format)
+{{
+  "data":<取得したデータ>,
+  "description":<取得したデータの説明>,
+  "background":<取得経緯>
 }}
     """
 

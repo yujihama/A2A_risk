@@ -4,8 +4,8 @@ from typing import Any, Dict
 import pandas as pd
 import numpy as np
 
-from ..core.node_base import Node, NodeResult
-from ..prompts import get_data_analysis_prompt
+from ..core.node_base import Node, NodeResult, make_history_entry
+from ..prompts import get_query_data_analysis_prompt  
 
 logger = logging.getLogger(__name__)
 
@@ -50,12 +50,12 @@ class DataAnalysisNode(Node):
         # LLM が利用可能なら詳細分析を依頼
         if toolbox.llm:
             try:
-                prompt = get_data_analysis_prompt(query, data_plan_list)
+                prompt = get_query_data_analysis_prompt(query, data_plan_list)
                 resp = await toolbox.llm.ainvoke(prompt)
                 # --- LLM 応答直後に変換 ---
                 analysis = convert_numpy_types(resp) if resp else analysis
                 # ------------------------
-                logger.info(f"[DataAnalysis] analysis: {analysis}")
+                logger.info(f"[DataAnalysis] analysis: {analysis['reasoning']}")
             except Exception as exc:  # noqa: BLE001
                 logger.warning("LLM data analysis failed: %s", exc)
                 # エラー時も analysis がシリアライズ可能であることを保証
@@ -92,12 +92,8 @@ class DataAnalysisNode(Node):
 
         # events 作成 (中の analysis は変換済み)
         events = [
-            {"type": "node", "name": "data_analysis"},
-            {
-                "type": "observation",
-                "hypothesis_id": hyp_id,
-                "content": {"data_analysis_result": analysis},
-            },
+            make_history_entry("node", {"name": "data_analysis"}, state),
+            make_history_entry("observation", {"hypothesis_id": hyp_id, "data_analysis_result": analysis}, state)
         ]
         # observation にも変換済みの analysis を渡す
         return NodeResult(observation=analysis, patch=patch, events=events) 

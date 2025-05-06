@@ -21,8 +21,6 @@ skills:
     name: "発注情報分析"
     description: |
       発注に関する情報を自然言語で分析します。発注ID,発注日,担当者ID,担当者名,取引先ID,取引先名,品目名,単価,数量,発注金額,稟議IDの情報を保持しています。
-      以下の操作を組み合わせた分析が可能です。
-        "filter","select","sum","mean","count","max","min","sort","head","tail","group_by"
     examples:
       - "2023年の総発注額はいくらですか？"
       - "取引先Aに対する発注件数を教えてください"

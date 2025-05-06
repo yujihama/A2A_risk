@@ -11,6 +11,7 @@ class Hypothesis(TypedDict):
     required_next_data: Optional[str]
     complexity_score: Optional[float]
     verification: Optional[Dict]
+    parent_hypothesis_id: Optional[str]
 
 class NextAction(TypedDict):
     action_type: Literal[

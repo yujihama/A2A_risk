@@ -17,22 +17,12 @@ defaultOutputModes: ["text"]
 
 # スキル定義
 skills:
-  - id: "query_communication"
-    name: "メール情報検索"
-    description: "メール記録を自然言語で検索します"
-    examples:
-      - "従業員IDがE001の先月のメール送信数を教えてください"
-      - "取引先V002との最近のメール履歴を表示してください"
-      - "業務時間外のメールが多い従業員を特定してください"
-    inputModes: ["text"]
-    outputModes: ["text"]
-  
   - id: "analyze_communications"
-    name: "メール分析"
-    description: "メールデータの傾向分析を行います"
+    name: "メール情報分析"
+    description: "メールデータに関する情報を自然言語で分析します。ログID,日時,送信者ID,送信者アドレス,受信者ID,受信者アドレス/グループ名,種別,件名,キーワードフラグ,業務外フラグの情報を保持しています。"
     examples:
-      - "部門間のメール頻度を分析してください"
       - "社外とのメール量の推移を教えてください"
       - "特定キーワードを含むメールを検出してください"
+      - "業務外メールを検出してください"
     inputModes: ["text"]
     outputModes: ["text"]
