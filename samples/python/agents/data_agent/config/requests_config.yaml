@@ -4,7 +4,7 @@ agent_description: " 稟議書・申請書データの分析と情報提供を�
 host: "localhost"
 port: 8009
 llm_model: "gpt-4o-mini"
-data_source: "../data/requests.csv"
+data_source: "../data/稟議書"
 
 # A2A設定
 organization: "あなたの会社名"
@@ -18,13 +18,12 @@ defaultOutputModes: ["text"]
 # スキル定義
 skills:
   - id: "analyze_requests"
-    name: "稟議書・申請書傾向分析"
+    name: "稟議書データ取得"
     description: |
-      稟議書・申請書データを自然言語で分析します。稟議ID,申請日,申請者ID,申請者名,取引先ID,取引先名,件名,申請金額,承認状況,承認日,選定理由コメントの情報を保持しています。
+      稟議書データを自然言語で取得できます。
     examples:
       - "申請者IDがXXXの稟議書を教えてください"
       - "取引先IDがXXXの稟議書を教えてください"
       - "承認状況が承認済みの稟議書を教えてください"
-      - "異常な処理遅延が発生しているケースを特定してください"
     inputModes: ["text"]
     outputModes: ["text"] 

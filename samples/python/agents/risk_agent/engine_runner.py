@@ -151,8 +151,8 @@ async def run_with_checkpoint(yaml_path, resume_checkpoint_id=None, initial_stat
     checkpointer = AsyncSqliteSaver(conn=conn)
     # ------------------------------------
 
-    llm = ChatOpenAI(model="gpt-4.1-mini", temperature=0).with_structured_output(method="json_mode")
-    eval_llm = ChatOpenAI(model="gpt-4.1", temperature=0).with_structured_output(method="json_mode")
+    llm = ChatOpenAI(model="gpt-4.1", temperature=0).with_structured_output(method="json_mode")
+    eval_llm = ChatOpenAI(model="o3-mini").with_structured_output(method="json_mode")
     data_client = None
     try:
         from A2A_risk.samples.python.common.client.client import SmartA2AClient

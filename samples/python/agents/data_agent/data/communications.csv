@@ -19,3 +19,21 @@ COM00017,2025-02-09 09:50:15,EMP002,b.user@example.com,V00056-PIC,kobayashi@desi
 COM00018,2025-02-11 10:30:00,EMP002,b.user@example.com,V00055-PIC,tanaka@consult-y.co.jp,Email,Re: 追加調査見積もり依頼,0,0
 COM00019,2025-03-02 16:00:20,EMP005,e.user@example.com,V00045-PIC,nakamura@event-r.co.jp,Chat,展示会ブースデザイン確認,0,0
 COM00020,2025-03-19 08:45:55,EMP001,a.user@example.com,V00001-PIC,yamada@supplier-x.com,Email,至急！部品HHH納期の件,0,0
+COM00021,2024-09-08 21:20:00,EMP001,a.user@personal-a.com,V00001-PIC,yamada@personal-x.com,Email,昨晩のお礼です,1,1
+COM00022,2024-09-08 21:23:05,EMP001,a.user@personal-a.com,V00001-PIC,yamada@personal-x.com,Chat,来月もよろしくお願いします,1,1
+COM00023,2025-04-20 19:50:00,EMP001,a.user@personal-a.com,V00001-PIC,yamada@personal-x.com,Email,来週の件よろしく,1,1
+COM00024,2025-04-26 22:10:05,EMP001,a.user@personal-a.com,V00001-PIC,yamada@personal-x.com,Chat,昨日はありがとう,1,1
+COM00025,2025-05-25 21:00:00,EMP001,a.user@personal-a.com,V00070-PIC,yamada@personal-x.com,Email,例の分割の件,1,1
+COM00026,2025-05-31 23:30:20,EMP001,a.user@personal-a.com,V00070-PIC,yamada@personal-x.com,Chat,おつかれさま,1,1
+COM00027,2025-06-13 20:15:00,EMP001,a.user@personal-a.com,V00001-PIC,yamada@personal-x.com,Email,例の書類,1,1
+COM00028,2025-06-19 23:45:50,EMP001,a.user@personal-a.com,V00071-PIC,yamada@personal-x.com,Chat,来月もお願い,1,1
+COM00029,2025-07-04 10:00:05,EMP003,c.user@example.com,V00027-PIC,kato@vendor-y.co.jp,Email,納期確認,0,0
+COM00030,2025-07-11 14:20:15,EMP004,d.user@example.com,V00030-PIC,suzuki@vendor-w.co.jp,Chat,打合せ日程,0,0
+COM00031,2025-07-15 09:50:30,EMP005,e.user@example.com,V00035-PIC,takahashi@vendor-v.co.jp,Email,研修内容確認,0,0
+COM00032,2025-07-20 13:05:40,EMP002,b.user@example.com,V00055-PIC,tanaka@consult-y.co.jp,Email,調査報告共有,0,0
+COM00033,2025-07-26 15:40:25,EMP003,c.user@example.com,V00026-PIC,sato@vendor-z.co.jp,Email,追加部品発注,0,0
+COM00034,2025-08-02 11:15:05,EMP004,d.user@example.com,V00058-PIC,kimura@vendor-p.co.jp,Chat,見積依頼,0,0
+COM00035,2025-08-10 16:30:45,EMP006,t.user@example.com,V00057-PIC,yamamoto@vendor-q.co.jp,Email,サービス利用料請求書,0,0
+COM00036,2025-08-18 09:45:12,EMP007,f.user@example.com,V00027-PIC,kato@vendor-y.co.jp,Email,部品KKK仕様確認,0,0
+COM00037,2025-08-25 17:55:33,EMP008,g.user@example.com,V00056-PIC,kobayashi@design-s.jp,Chat,デザイン修正,0,0
+COM00038,2025-09-01 10:05:01,EMP004,d.user@example.com,V00030-PIC,suzuki@vendor-w.co.jp,Email,更新作業開始,0,0
