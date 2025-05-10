@@ -43,12 +43,13 @@ def get_decision_maker_prompt(state, focused_hypothesis, currently_investigating
 ### ACTION-SELECTION POLICY (このポリシーに従ってください)
 **Focus Hypothesis is {focused_hypothesis['status']}. Determine the next step:**
 *   If focus_hypothesis.status == "new" → **must** select "evaluate_hypothesis" for this hypothesis_id ({currently_investigating_hypothesis_id}).
-*   If focus_hypothesis.status ∈ {{"inconclusive"}}:
+*   If focus_hypothesis.status =="inconclusive":
         *   Look at the latest entry in HISTORY_JSON.
         *   If the latest entry is a hypothesis evaluation → **must** select "query_data_agent" and copy the content of focus_hypothesis.required_next_data directly into the query parameter to obtain the requested data.
-*   If focus_hypothesis.status == "investigating" → **must** select "evaluate_hypothesis" for this hypothesis_id ({currently_investigating_hypothesis_id}).
-*   *Do not select "generate_hypothesis" or "conclude" while focusing on a hypothesis.*
-*   **If the hypothesis is large or complex (complexity_score >= 0.7), you may select 'refine_plan' to break down the investigation into steps.**
+*   If focus_hypothesis.status =="needs_revision":
+        *   **If you need to revise the hypothesis, please select 'refine_hypothesis'.**
+        *   **If the hypothesis is large or complex, you may select 'refine_hypothesis' to break down the investigation into steps.**
+        
 ### TASK
 1. 上記 ACTION-SELECTION POLICY と状況に基づき、現在フォーカスしている仮説 ({currently_investigating_hypothesis_id}) の検証を進めるための *単一* の行動 (action_type) を選定し、必要パラメータを具体値で生成せよ。
 2. 選定理由を "thought" フィールドに 1–3 文で要約せよ (POLICY をどう解釈したか、Focus の状態、履歴の考慮点を含めること)。
@@ -56,8 +57,7 @@ def get_decision_maker_prompt(state, focused_hypothesis, currently_investigating
 4. 各 action_type の parameters は以下の形式で出力せよ：
    - "evaluate_hypothesis": {{ "hypothesis_id": {currently_investigating_hypothesis_id} }}
    - "query_data_agent": {{ "query": ["<具体的で新しい問い合わせ内容>",...] }}（queryには既取得情報を含めないこと）
-   - "refine_plan": {{ "hypothesis_id": "{currently_investigating_hypothesis_id}" }}
-   - "execute_plan_step": {{ "step_id": "<ステップID>" }}
+   - "refine_hypothesis": {{ "hypothesis_id": "{currently_investigating_hypothesis_id}" }}
 
 ### FEW-SHOT EXAMPLES
 （以下の例は、すべて現在の仮説にフォーカスしている前提で記載されています）
@@ -85,11 +85,11 @@ Example 3: Status inconclusive, **recent observation data is insufficient** (e.g
     "parameters": {{ "query": ["Retrieve specific field 'ABC' details for the records related to {currently_investigating_hypothesis_id} obtained in the previous query."] }}
   }}
 }}
-Example 4: Status is complex, select refine_plan.
+Example 4: Status is 'needs_revision', select refine_hypothesis.
 {{
-  "thought": "Large/complex (complexity_score >= 0.7). Policy allows breaking down the investigation. Selecting 'refine_plan'.",
+  "thought": "Status is 'needs_revision'. Policy allows revising the hypothesis. Selecting 'refine_hypothesis'.",
   "action": {{
-    "action_type": "refine_plan",
+    "action_type": "refine_hypothesis",
     "parameters": {{ "hypothesis_id": "{currently_investigating_hypothesis_id}" }}
   }}
 }}
@@ -118,7 +118,7 @@ def get_generate_hypothesis_prompt(state):
 ### ROLE
 あなたは洞察力のあるデータアナリスト／リスク分析官 AI です。
 ### GOAL
-EDAの内容をもとに、以下のOBJECTIVEを検知するための仮説を2つ程度作成し、優先度づけせよ。
+EDAの内容をもとに、以下のOBJECTIVEを検知するための仮説を2～5つ程度作成し、優先度づけせよ。
 ### CONTEXT
 - ANALYSIS_DATE: {analysis_date}
 - OBJECTIVE: {state['objective']}
@@ -132,7 +132,7 @@ EDAの内容をもとに、以下のOBJECTIVEを検知するための仮説を2�
 1. 0 個以上の仮説オブジェクトを生成せよ。既存仮説と **重複しない** ように考慮すること。
 2. 各仮説は必ず IF … THEN … 形式の１文で記述し、疑問形は禁止。
 3. 時間を示す語句は **直接的に数値で示せ**。例: "{analysis_date} から遡って 365 日間 (期間: 2024-04-28〜{analysis_date})" のように開始日・終了日を明示する。"最新" や "過去1年" など曖昧な語は禁止。
-4. しきい値や比較条件は必ず **数値＋単位** を含める (例: "1.5 倍", "20%", "50,000 円")。
+4. しきい値や比較条件は必ず **数値＋単位** を含める (例: "X 倍", "Y%", "Z 円")。
 5. 各仮説には以下フィールドを含めよ: id (例: hyp_00X), text, priority (0–1), status='new', time_window={{"start":"YYYY-MM-DD","end":"YYYY-MM-DD"}}, supporting_evidence_keys, next_validation_step_suggestion, metric_definition.
 6. priority は SMART 原則に基づき 0.5〜1.0 で設定。
 7. EDA_SUMMARY_TEXT が null の場合は、まず代表サンプルを抽出して傾向把握する仮説を１件以上含めること。
@@ -155,14 +155,17 @@ EDAの内容をもとに、以下のOBJECTIVEを検知するための仮説を2�
 def get_evaluate_hypothesis_prompt(state, hypothesis_to_evaluate, parameters):
     observation_history = [
         h for h in state.get('history', [])
-        if h.get('currently_investigating_hypothesis_id') == hypothesis_to_evaluate['id']
+        if ((h.get('type') == 'node' and h.get('content').get('name') in ('evaluate_hypothesis', 'query_data_agent')) or (h.get('type') in ('observation', 'thought'))) 
+            and h.get('currently_investigating_hypothesis_id') == hypothesis_to_evaluate['id']            
     ]
-    history_for_prompt = json.dumps(observation_history, ensure_ascii=False, indent=2)
-    # hypothesis_to_evaluate['id']と重複したキーのものだけに絞る
-    collected_data_summary = state.get('collected_data_summary', {})
+    history_for_prompt = observation_history #json.dumps(observation_history, ensure_ascii=False, indent=2)
     
+    # evaluate_hypothesisの結果がinconclusiveだった回数
+    inconclusive_count = sum(1 for h in observation_history if h.get('type') == 'observation' and h.get('content').get('status') == 'inconclusive')
+    
+    collected_data_summary = state.get('collected_data_summary', {})
     filtered_data_summary = {k: v for k, v in collected_data_summary.items() if k == hypothesis_to_evaluate['id']}
-    collected_data_summary_for_prompt = json.dumps(filtered_data_summary, ensure_ascii=False, indent=2)
+    collected_data_summary_for_prompt = filtered_data_summary #json.dumps(filtered_data_summary, ensure_ascii=False, indent=2)
 
     # 最新の data_analysis_result (該当仮説) を抽出
     # 以前は history から逆順探索していたが、analysis_result に最新が保持されているため直接参照する。
@@ -184,23 +187,28 @@ def get_evaluate_hypothesis_prompt(state, hypothesis_to_evaluate, parameters):
 ### ROLE
 あなたは客観的かつ批判的な監査評価者 AI です。
 ### TARGET_HYPOTHESIS
-{json.dumps(hypothesis_to_evaluate_for_prompt, ensure_ascii=False, indent=2)}
+{hypothesis_to_evaluate_for_prompt}
 ### CONTEXT
 - RELATED_HISTORY: {history_for_prompt}
 - DATA_SUMMARY: {collected_data_summary_for_prompt}
+- INCONCLUSIVE_COUNT: {inconclusive_count}
 
 ### TASK
 1. 利用可能なデータおよび最新のデータ分析結果に基づき、TARGET_HYPOTHESIS を評価せよ。
 2. evaluation_status を supported | rejected | needs_revision | inconclusive から選べ。
 3. supportedと評価され場合、後続でさらに深堀りした仮説生成がされます。そのため、データから断言できなくても少しでも兆候が見られる場合はsupportedとしてください。
 3. reasoning は評価の根拠を 2–4 文で述べよ。statusがsupportedの場合は、兆候が見られたデータを具体的を挙げて具体的に説明してください。
-4. inconclusiveが今回含め3回目の場合はneeds_revisionとすること。
+4. inconclusiveが今回含め3回目の場合、またはデータ取得が停滞していると判断される場合はneeds_revisionとすること。
 4. inconclusive(十分なデータが取得できていない) の場合は、評価に必要な次のデータ (required_next_data) を具体的に示せ (null も可)。
    - required_next_data は、仮説検証に必要だが今回取得できていない情報を具体的に記載すること。
    
 ### OUTPUT FORMAT (JSON)
 {{ "hypothesis_id": "{hypothesis_to_evaluate['id']}", "evaluation_status": "<status>", "reasoning": "...", "required_next_data": "<null_or_specific_data_needed>" }}
 
+"""
+
+# 以下コメントアウト
+"""
 ### FEW-SHOT EXAMPLES
 Example 1:
 {{
@@ -232,10 +240,55 @@ Example 4:
 }}
     """
 
-def get_refine_hypothesis_prompt(hypothesis):
+def get_refine_hypothesis_prompt(state, hypothesis):
+    observation_history = [
+        h for h in state.get('history', [])
+        if h.get('type') == 'observation' and h.get('currently_investigating_hypothesis_id') == hypothesis['id']            
+    ]
+    hypothesis_for_prompt = {
+        "id": hypothesis['id'],
+        "text": hypothesis['text'],
+        "time_window": hypothesis['time_window'],
+        "supporting_evidence_keys": hypothesis['supporting_evidence_keys'],
+        "metric_definition": hypothesis['metric_definition'],
+    }
+
     return f"""
-あなたは監査人です。以下の仮説を、\n- 意味的に重複しない\n- 検証しやすいサブ仮説\nへ分割してください。\n{{ "hypothesis": {json.dumps(hypothesis, ensure_ascii=False)} }}
-\n【必ずJSON形式（Pythonのlist of dict）で出力してください。コードブロックや説明文は不要です。】
+### ROLE
+あなたは、監査の計画を作成するエージェントです。
+
+### GOAL
+以下の見直しが必要（needs_revision）と判断された仮説の見直しをして新しい仮説を生成してください。
+
+### CONTEXT
+- 見直す仮説: 
+    {hypothesis_for_prompt}
+- 見直しが必要となった理由: 
+    {observation_history[-1].get('content').get('evaluation_reason')}
+
+### TASK
+1. 見直しが必要となった理由をよく理解し、仮説を見直してください。複数の仮説を生成することも可能です。
+2. 各仮説は必ず IF … THEN … 形式の１文で記述し、疑問形は禁止。
+3. 時間を示す語句は **直接的に数値で示せ**。例:開始日・終了日を明示する。"最新" や "過去1年" など曖昧な語は禁止。
+4. しきい値や比較条件は必ず **数値＋単位** を含める (例: "X 倍", "Y%", "Z 円")。
+5. 各仮説には以下フィールドを含めよ: id, text, priority (0–1), status='new', time_window={{"start":"YYYY-MM-DD","end":"YYYY-MM-DD"}}, supporting_evidence_keys, next_validation_step_suggestion, metric_definition.
+6. priority は SMART 原則に基づき 0.5〜1.0 で設定。
+7. 平均・最新などの指標を用いる場合は、その算出方法（集計単位・対象範囲・数式）を **metric_definition** フィールドで SQL 風あるいは Python 疑似コードで具体的に示すこと。例: `AVG(unit_price) OVER (PARTITION BY employee_id, vendor_id WHERE order_date BETWEEN '2024-04-28' AND '2025-04-28')`。
+
+### OUTPUT FORMAT (hypothesisキーでJSON配列を出力)
+"hypothesis": [
+  {{
+    "id": "hyp_###",
+    "text": "IF ... THEN ...",
+    "priority": 0.##,
+    "status": "new",
+    "time_window": "YYYY-MM-DD〜YYYY-MM-DD",
+    "supporting_evidence_keys": ["..."],
+    "next_validation_step_suggestion": "...",
+    "metric_definition": "<SQL/Pseudo-code for metric calculation>"
+  }}, ...
+]
+
     """
 
 
@@ -676,7 +729,7 @@ def get_supporting_hypothesis_prompt(state, parent_hypothesis):
 
 ### TASK
 1. PARENT_HYPOTHESISの内容、およびそれが支持された根拠 (PARENT_HYPOTHESIS_EVALUATION_REASON) を踏まえてください。
-2. その上で、**利用可能な他のデータソース (AVAILABLE_DATA_AGENTS_AND_SKILLS を参照) も考慮**し、親仮説を**さらに補強する**、または**関連する新たなリスク側面を探る**ための追加仮説を 1〜2 件生成してください。
+2. その上で、**利用可能な他のデータソース (AVAILABLE_DATA_AGENTS_AND_SKILLS を参照) も考慮**し、親仮説で支持された**具体的な根拠を補強する**具体的な追加仮説を 1〜3 件生成してください。
 3. **着眼点のヒント:** 親仮説に関連する人物やエンティティの**他の行動**、関連する**プロセスの不備**（例：承認プロセス）、**比較対象との差異**（例：同僚、他部署、過去期間）、データの**時間的な変化**や**相関関係**などに着目すると、有効な追加仮説が見つかることがあります。
 4. 各仮説は、PARENT_HYPOTHESIS とは異なる**新しい視点**を提供する必要があります。
 5. 各仮説は、**IF (条件) THEN (結果)** 形式の明確なステートメントで記述してください（疑問形は不可）。
@@ -691,7 +744,10 @@ def get_supporting_hypothesis_prompt(state, parent_hypothesis):
     - `next_validation_step_suggestion` (Optional): 検証の次のステップの提案
     - `metric_definition` (Optional): 仮説内の指標の定義 (SQL/Pseudo-code)
 7. 時間範囲やしきい値を含む場合は、具体的かつ明確な数値で示してください。曖昧な表現は避けてください。
+"""
 
+# 一時的にコメントアウト
+"""
 ### FEW-SHOT EXAMPLE (着想の参考にしてください)
 (親仮説: 「従業員Aの経費精算で交際費が急増している」が Supported)
 {{ "hypotheses": [

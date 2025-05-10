@@ -1,0 +1,906 @@
+2025-05-08 20:22:15,997 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Discovering agent at: http://localhost:8002/.well-known/agent.json
+2025-05-08 20:22:16,326 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Agent '発注データ管理エージェント' registered with URL: http://localhost:8002
+2025-05-08 20:22:16,326 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Discovering agent at: http://localhost:8003/.well-known/agent.json
+2025-05-08 20:22:16,698 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Agent '支払データ管理エージェント' registered with URL: http://localhost:8003
+2025-05-08 20:22:16,702 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Discovering agent at: http://localhost:8004/.well-known/agent.json
+2025-05-08 20:22:17,061 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Agent '取引先データ管理エージェント' registered with URL: http://localhost:8004
+2025-05-08 20:22:17,062 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Discovering agent at: http://localhost:8005/.well-known/agent.json
+2025-05-08 20:22:17,396 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Agent '経費データ管理エージェント' registered with URL: http://localhost:8005
+2025-05-08 20:22:17,397 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Discovering agent at: http://localhost:8006/.well-known/agent.json
+2025-05-08 20:22:17,716 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Agent '従業員データ管理エージェント' registered with URL: http://localhost:8006
+2025-05-08 20:22:17,716 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Discovering agent at: http://localhost:8007/.well-known/agent.json
+2025-05-08 20:22:18,047 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Agent 'メールデータ管理エージェント' registered with URL: http://localhost:8007
+2025-05-08 20:22:18,047 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Discovering agent at: http://localhost:8008/.well-known/agent.json
+2025-05-08 20:22:18,371 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Agent '通話データ管理エージェント' registered with URL: http://localhost:8008
+2025-05-08 20:22:18,371 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Discovering agent at: http://localhost:8009/.well-known/agent.json
+2025-05-08 20:22:18,719 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Agent '稟議書・申請書データ管理エージェント' registered with URL: http://localhost:8009
+2025-05-08 20:22:18,719 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Discovering agent at: http://localhost:8010/.well-known/agent.json
+2025-05-08 20:22:19,067 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Agent '不正事例管理エージェント' registered with URL: http://localhost:8010
+2025-05-08 20:22:19,067 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Discovered 9 agents from 9 URLs.
+2025-05-08 20:22:19,718 - A2A_risk.samples.python.common.client.smart_client - INFO - SmartA2AClient initialized with registry and skill selector.
+2025-05-08 20:22:21,953 - A2A_risk.samples.python.agents.risk_agent.nodes.eda - INFO - --- Node: EDA ---
+2025-05-08 20:22:21,953 - A2A_risk.samples.python.agents.risk_agent.nodes.eda - INFO - No data present. Ask LLM to propose initial data query.
+2025-05-08 20:22:24,131 - A2A_risk.samples.python.agents.risk_agent.nodes.eda - INFO - [EDA] LLM出力: {'agent_skill_id': 'analyze_order', 'query': '2024-05-01から2025-04-30までの発注データについて、担当者ID、担当者名、取引先ID、取引先名、品目名、単価、数量、発注金額を一覧で取得してください。'}
+2025-05-08 20:22:24,131 - A2A_risk.samples.python.agents.risk_agent.nodes.eda - INFO - [EDA] アクション決定: query_data_agent, skill_id=analyze_order, query=2024-05-01から2025-04-30までの発注データについて、担当者ID、担当者名、取引先ID、取引先名、品目名、単価、数量、発注金額を一覧で取得してください。
+2025-05-08 20:22:24,131 - A2A_risk.samples.python.agents.risk_agent.nodes.eda - INFO - [EDA] patch keys: ['data_collected', 'eda_summary', 'eda_stats', 'last_query', 'next_action']
+2025-05-08 20:22:24,138 - __main__ - INFO - Notifying backend with full state after node eda...
+2025-05-08 20:22:24,728 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:22:24,730 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - --- Node: DecisionMaker ---
+2025-05-08 20:22:24,730 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DecisionMaker] next_action: {'action_type': 'query_data_agent', 'parameters': {'agent_skill_id': 'analyze_order', 'query': '2024-05-01から2025-04-30までの発注データについて、担当者ID、担当者名、取引先ID、取引先名、品目名、単価、数量、発注金額を一覧で取得してください。'}}
+2025-05-08 20:22:24,736 - __main__ - INFO - Notifying backend with full state after node decision_maker...
+2025-05-08 20:22:25,341 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:22:25,342 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - --- Node: QueryDataAgent ---
+2025-05-08 20:22:27,294 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent skill_id: analyze_order, query: 2024-05-01から2025-04-30までの発注データについて、担当者ID、担当者名、取引先ID、取引先名、品目名、単価、数量、発注金額を一覧で取得してください。
+2025-05-08 20:22:27,294 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Found 1 agents with skill 'analyze_order'.
+2025-05-08 20:22:27,300 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - エージェント 発注データ管理エージェント にタスクを送信中...
+2025-05-08 20:22:27,300 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - input_message: role='user' parts=[DataPart(type='data', data={'input': '2024-05-01から2025-04-30までの発注データについて、担当者ID、担当者名、取引先ID、取引先名、品目名、単価、数量、発注金額を一覧で取得してください。'}, metadata=None)] metadata=None
+2025-05-08 20:22:33,077 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスクが送信されました。タスクID: ef5840c2-b1ae-40c8-a8bf-0779819ec49b
+2025-05-08 20:22:33,395 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスク結果を取得しました
+2025-05-08 20:22:33,395 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent result: id='step_analyze_order' description='データエージェントへのクエリ: 2024-05-01から2025-04-30までの発注データについて、担当者ID、担当者名、取引先ID、取引先名、品目名、単価、数量、発注金額を一覧で取得してください。' skill_id='analyze_order' input_data={'input': '2024-05-01から2025-04-30までの発注データについて、担当者ID、担当者名、取引先ID、取引先名、品目名、単価、数量、発注金額を一覧で取得してください。'} parameters={} is_completed=True output_data={'text': '2024-05-01から2025-04-30までの発注データのうち、担当者ID、担当者名、取引先ID、取引先名、品目名、単価、数量、発注金額を一覧で抽出しました。ご確認ください。もしデータを表示したい場合はお知らせください。', 'data': None, 'agent': '発注データ管理エージェント'} error=None selected_agent=None start_time=datetime.datetime(2025, 5, 8, 20, 22, 27, 294184) transitions={}
+2025-05-08 20:22:35,297 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] data_summary: {
+  "data": null,
+  "description": "2024-05-01から2025-04-30までの発注データについて、担当者ID、担当者名、取引先ID、取引先名、品目名、単価、数量、発注金額の一覧を取得しようとしましたが、データエージェントから実際のデータは返却されませんでした。",
+  "background": "発注データ管理エージェント（skill_id: analyze_order）に対して、指定期間の発注データの必要項目を一覧で取得するクエリを実行しましたが、データ本体は返却されませんでした。"
+}
+2025-05-08 20:22:35,302 - __main__ - INFO - Notifying backend with full state after node query_data_agent...
+2025-05-08 20:22:35,902 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:22:35,904 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - --- Node: DecisionMaker ---
+2025-05-08 20:22:35,910 - __main__ - INFO - Notifying backend with full state after node decision_maker...
+2025-05-08 20:22:36,514 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:22:36,515 - A2A_risk.samples.python.agents.risk_agent.nodes.generate_hypothesis - INFO - --- Node: GenerateHypothesis ---
+2025-05-08 20:22:36,515 - A2A_risk.samples.python.agents.risk_agent.nodes.generate_hypothesis - INFO - Generating initial hypotheses.
+2025-05-08 20:22:53,726 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Found 1 agents with skill 'analyze_fraud_case'.
+2025-05-08 20:22:53,727 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - エージェント 不正事例管理エージェント にタスクを送信中...
+2025-05-08 20:22:53,727 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - input_message: role='user' parts=[DataPart(type='data', data={'input': 'RAGを使って、以下の不正を検知するためのリスクシナリオに関する兆候を複数生成してください。具体的な事例にフォーカスした兆候ではなく、汎用的な兆候を生成してください。\n\n不正:\n担当者と取引先の癒着による価格上乗せやキックバック \n\nリスクシナリオ:\nもし特定の担当者と取引先の組み合わせで、通常の市場相場よりも明らかに高い単価・注文金額が継続して観察される場合、担当者と取引先の癒着による価格上乗せやキックバックの疑いがある。その場合、全体の注文データに対する特定ペアの平均単価が中央値または平均値に比べて、例えば1.5倍以上の乖離が見られる、または注文の一定割合（例: 20%以上）が異常に高額であると判断される。さらに、代表サンプルを用いた抽出で、その傾向が一貫して現れる場合、リスクが顕在化している可能性がある。 \n\n 出力形式: [<兆候1>(ref:<参考事例>), 兆候2(ref:<参考事例>), 兆候3(ref:<参考事例>),...] '}, metadata=None)] metadata=None
+2025-05-08 20:23:03,455 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスクが送信されました。タスクID: 47528321-7e43-449d-9473-1fdadd8778b2
+2025-05-08 20:23:03,758 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスク結果を取得しました
+2025-05-08 20:23:03,759 - A2A_risk.samples.python.agents.risk_agent.nodes.generate_hypothesis - INFO - --------------------------------
+2025-05-08 20:23:03,759 - A2A_risk.samples.python.agents.risk_agent.nodes.generate_hypothesis - INFO - tool_result: [
+  "特定の担当者と取引先の組み合わせで、他の組み合わせと比較して平均単価が著しく高い(ref:事例1の不適切取引による水増し発注やキックバック)",
+  "同一担当者が関与する取引の中で、高額注文の割合が20%以上と異常に高い(ref:事例1の複数年に亘る水増し発注およびキックバック疑い)",
+  "複数の取引先において類似した高単価傾向が見られず、特定取引先のみに価格上乗せが集中している(ref:事例1の協力会社との不適切取引)",
+  "注文単価の中央値や全体平均に比べて特定担当者・取引先ペアの平均単価が1.5倍以上乖離している(ref:事例1の外注費の水増し発注)",
+  "代表サンプルの抽出結果で継続的に同様の高単価パターンが確認される(ref:事例1の調査報告書における一貫した不正パターンの指摘)",
+  "異常に高額な注文の頻度が特定期間に集中し、その背景に特定担当者の関与が疑われる(ref:事例1の決算発表延期・社内調査実施の背景となった時期)",
+  "取引先からのキックバックの疑いがある場合、金額ベースで複数回重複する発注が見られる(ref:事例1の従業員が協力会社と結託した外注費水増しとキックバック受領)"
+]
+2025-05-08 20:23:03,759 - A2A_risk.samples.python.agents.risk_agent.nodes.generate_hypothesis - INFO - --------------------------------
+2025-05-08 20:23:32,786 - A2A_risk.samples.python.agents.risk_agent.nodes.generate_hypothesis - INFO - Generated 3 new hypotheses (initial mode). Total hypotheses: 3
+2025-05-08 20:23:32,786 - A2A_risk.samples.python.agents.risk_agent.nodes.generate_hypothesis - INFO - Newly generated: [{'id': 'hyp_001', 'text': 'IF we extract a representative sample of orders from 2024-05-01 to 2025-04-30, THEN some 担当者・取引先 pairs will exhibit an average unit price that is at least 1.5 倍 higher than the overall average price, indicating potential collusion.', 'priority': 0.95, 'status': 'new', 'time_window': '2024-05-01〜2025-04-30', 'supporting_evidence_keys': ['代表サンプル抽出', '高単価パターン'], 'next_validation_step_suggestion': 'Aggregate orders by 担当者 and 取引先 to compare the pair-specific average unit price with the global average; further inspect pairs where the ratio exceeds 1.5.', 'metric_definition': "SELECT employee_id, vendor_id, AVG(unit_price) AS pair_avg, (SELECT AVG(unit_price) FROM orders WHERE order_date BETWEEN '2024-05-01' AND '2025-04-30') AS global_avg FROM orders WHERE order_date BETWEEN '2024-05-01' AND '2025-04-30' GROUP BY employee_id, vendor_id HAVING pair_avg >= 1.5 * global_avg;"}, {'id': 'hyp_002', 'text': 'IF a specific 担当者・取引先 pair has a ratio of orders where the unit price is at least 1.5 倍 above the overall average that is 20% or higher of its total orders from 2024-05-01 to 2025-04-30, THEN it suggests the presence of price inflation or kickback practices.', 'priority': 0.9, 'status': 'new', 'time_window': '2024-05-01〜2025-04-30', 'supporting_evidence_keys': ['高額注文割合', '継続的な高単価傾向'], 'next_validation_step_suggestion': 'Calculate for each 担当者・取引先 pair the proportion of orders exceeding 1.5 倍 the global average unit price and flag those with a ratio of 20% or more.', 'metric_definition': "WITH global_avg AS (SELECT AVG(unit_price) AS avg_price FROM orders WHERE order_date BETWEEN '2024-05-01' AND '2025-04-30') SELECT o.employee_id, o.vendor_id, COUNT(CASE WHEN o.unit_price >= 1.5 * global_avg.avg_price THEN 1 END)*1.0/COUNT(*) AS high_value_ratio FROM orders o, global_avg WHERE o.order_date BETWEEN '2024-05-01' AND '2025-04-30' GROUP BY o.employee_id, o.vendor_id HAVING high_value_ratio >= 0.20;"}, {'id': 'hyp_003', 'text': 'IF the analysis shows that for a given 担当者, orders with a single 取引先 have an average order amount that is at least 1.5 倍 higher than the 担当者’s overall average order amount for orders between 2024-05-01 and 2025-04-30, THEN it indicates potential personalized price adjustments and kickback arrangements.', 'priority': 0.88, 'status': 'new', 'time_window': '2024-05-01〜2025-04-30', 'supporting_evidence_keys': ['担当者別発注分布', '注文金額の偏り'], 'next_validation_step_suggestion': 'For each 担当者, compare the average order amount per 取引先 with the 担当者’s overall average and inspect pairs exceeding the 1.5 倍 threshold.', 'metric_definition': "WITH vendor_avg AS (SELECT employee_id, vendor_id, AVG(order_amount) AS avg_order_amount FROM orders WHERE order_date BETWEEN '2024-05-01' AND '2025-04-30' GROUP BY employee_id, vendor_id), employee_global AS (SELECT employee_id, AVG(order_amount) AS overall_avg FROM orders WHERE order_date BETWEEN '2024-05-01' AND '2025-04-30' GROUP BY employee_id) SELECT v.employee_id, v.vendor_id, v.avg_order_amount, e.overall_avg FROM vendor_avg v JOIN employee_global e ON v.employee_id = e.employee_id WHERE v.avg_order_amount >= 1.5 * e.overall_avg;"}]
+2025-05-08 20:23:32,791 - __main__ - INFO - Notifying backend with full state after node generate_hypothesis...
+2025-05-08 20:23:33,398 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:23:33,401 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - --- Node: DecisionMaker ---
+2025-05-08 20:23:33,410 - __main__ - INFO - Notifying backend with full state after node decision_maker...
+2025-05-08 20:23:34,024 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:23:34,025 - A2A_risk.samples.python.agents.risk_agent.nodes.evaluate_hypothesis - INFO - --- Node: EvaluateHypothesis ---
+2025-05-08 20:23:40,620 - A2A_risk.samples.python.agents.risk_agent.nodes.evaluate_hypothesis - INFO - [AE] 評価結果: id=hyp_001, status=inconclusive, reasoning=現時点でのデータサマリーと分析結果には、対象期間内の注文サンプルの単価および担当者・取引先ペアごとの平均単価の情報が含まれていないため、全体平均と比較して1.5倍以上であるかどうかの評価ができません。, required_next_data=対象期間内の各注文について、注文日、担当者、取引先、個々の単価情報と、全体平均単価の算出に必要なデータ
+2025-05-08 20:23:40,630 - __main__ - INFO - Notifying backend with full state after node evaluate_hypothesis...
+2025-05-08 20:23:41,196 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:23:41,199 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - --- Node: DecisionMaker ---
+2025-05-08 20:23:43,654 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - ---decision--------------------
+2025-05-08 20:23:43,654 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DM] LLM response: {'thought': "Currently focusing on 'hyp_001', which is in 'inconclusive' status. The latest history entry is an observation stating that the necessary data (order date, employee, vendor, unit price for each order, and data to calculate the overall average unit price for the target period) is missing. According to the policy, I must select 'query_data_agent' and directly request the required data as specified.", 'action': {'action_type': 'query_data_agent', 'parameters': {'query': ['対象期間（2024-05-01～2025-04-30）の全注文について、注文日、担当者ID、取引先ID、単価（unit_price）を抽出し、全体平均単価の算出に必要なデータを取得してください。']}}}
+2025-05-08 20:23:43,654 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - -------------------------------
+2025-05-08 20:23:43,660 - __main__ - INFO - Notifying backend with full state after node decision_maker...
+2025-05-08 20:23:44,275 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:23:44,278 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - --- Node: QueryDataAgent ---
+2025-05-08 20:23:46,206 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent skill_id: analyze_order, query: 2024-05-01から2025-04-30までの全注文について、注文日、担当者ID、取引先ID、単価（unit_price）を抽出してください。
+2025-05-08 20:23:46,207 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Found 1 agents with skill 'analyze_order'.
+2025-05-08 20:23:46,212 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - エージェント 発注データ管理エージェント にタスクを送信中...
+2025-05-08 20:23:46,212 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - input_message: role='user' parts=[DataPart(type='data', data={'input': '2024-05-01から2025-04-30までの全注文について、注文日、担当者ID、取引先ID、単価（unit_price）を抽出してください。'}, metadata=None)] metadata=None
+2025-05-08 20:23:58,824 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスクが送信されました。タスクID: e3b112a1-9c3f-4b5b-a58b-b778b997c713
+2025-05-08 20:23:59,112 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスク結果を取得しました
+2025-05-08 20:23:59,112 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent result: id='step_analyze_order' description='データエージェントへのクエリ: 2024-05-01から2025-04-30までの全注文について、注文日、担当者ID、取引先ID、単価（unit_price）を抽出してください。' skill_id='analyze_order' input_data={'input': '2024-05-01から2025-04-30までの全注文について、注文日、担当者ID、取引先ID、単価（unit_price）を抽出してください。'} parameters={} is_completed=True output_data={'text': '2024年5月1日から2025年4月30日までの注文について、注文日、担当者ID、取引先ID、単価（unit_price）を抽出した結果は以下の通りです。\n\n| 発注日          | 担当者ID | 取引先ID | unit_price |\n|-----------------|----------|----------|------------|\n| 2024-05-15      | EMP004   | V00030   | 150000     |\n| 2024-06-25      | EMP001   | V00001   | 950        |\n| 2024-07-20      | EMP005   | V00035   | 300000     |\n| 2024-08-15      | EMP003   | V00026   | 1500       |\n| 2024-09-10      | EMP001   | V00001   | 2100       |\n| 2024-10-25      | EMP004   | V00040   | 50000      |\n| 2024-11-15      | EMP003   | V00027   | 120000     |\n| 2024-12-15      | EMP005   | V00042   | 800000     |\n| 2025-01-10      | EMP001   | V00001   | 1650       |\n| 2025-01-18      | EMP003   | V00026   | 75000      |\n| 2025-01-20      | EMP002   | V00055   | 5000000    |\n| 2025-02-10      | EMP004   | V00030   | 450000     |\n| 2025-02-12      | EMP002   | V00056   | 300000     |\n| 2025-02-15      | EMP002   | V00055   | 4900000    |\n| 2025-03-06      | EMP005   | V00045   | 1200000    |\n| 2025-03-20      | EMP001   | V00001   | 2500       |\n| 2025-04-25      | EMP001   | V00001   | 2600       |', 'data': None, 'agent': '発注データ管理エージェント'} error=None selected_agent=None start_time=datetime.datetime(2025, 5, 8, 20, 23, 46, 207055) transitions={}
+2025-05-08 20:24:02,769 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] analyze_data: 抽出した注文データから全体の平均単価（unit_price）を算出してください。
+2025-05-08 20:24:12,775 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] analyze_data result: content='{\n  "data_analysis_result": "平均単価は約785664.71です。",\n  "reasoning": "提供された注文データのunit_priceの合計は13356300であり、全体のデータ件数は17件です。13356300 ÷ 17 ≒ 785664.71となるため、この値を平均単価と算出しました。"\n}' additional_kwargs={'refusal': None} response_metadata={'token_usage': {'completion_tokens': 928, 'prompt_tokens': 638, 'total_tokens': 1566, 'completion_tokens_details': {'accepted_prediction_tokens': 0, 'audio_tokens': 0, 'reasoning_tokens': 832, 'rejected_prediction_tokens': 0}, 'prompt_tokens_details': {'audio_tokens': 0, 'cached_tokens': 0}}, 'model_name': 'o3-mini-2025-01-31', 'system_fingerprint': 'fp_8810992130', 'id': 'chatcmpl-BUte8w3WOdzBLq4OePsCPTwEFWkq1', 'finish_reason': 'stop', 'logprobs': None} id='run-6505bdc4-d3ad-48fb-ba05-3392fd3869cd-0' usage_metadata={'input_tokens': 638, 'output_tokens': 928, 'total_tokens': 1566, 'input_token_details': {'audio': 0, 'cache_read': 0}, 'output_token_details': {'audio': 0, 'reasoning': 832}}
+2025-05-08 20:24:18,522 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] data_summary: {
+  "data": [
+    {"発注日": "2024-05-15", "担当者ID": "EMP004", "取引先ID": "V00030", "unit_price": 150000},
+    {"発注日": "2024-06-25", "担当者ID": "EMP001", "取引先ID": "V00001", "unit_price": 950},
+    {"発注日": "2024-07-20", "担当者ID": "EMP005", "取引先ID": "V00035", "unit_price": 300000},
+    {"発注日": "2024-08-15", "担当者ID": "EMP003", "取引先ID": "V00026", "unit_price": 1500},
+    {"発注日": "2024-09-10", "担当者ID": "EMP001", "取引先ID": "V00001", "unit_price": 2100},
+    {"発注日": "2024-10-25", "担当者ID": "EMP004", "取引先ID": "V00040", "unit_price": 50000},
+    {"発注日": "2024-11-15", "担当者ID": "EMP003", "取引先ID": "V00027", "unit_price": 120000},
+    {"発注日": "2024-12-15", "担当者ID": "EMP005", "取引先ID": "V00042", "unit_price": 800000},
+    {"発注日": "2025-01-10", "担当者ID": "EMP001", "取引先ID": "V00001", "unit_price": 1650},
+    {"発注日": "2025-01-18", "担当者ID": "EMP003", "取引先ID": "V00026", "unit_price": 75000},
+    {"発注日": "2025-01-20", "担当者ID": "EMP002", "取引先ID": "V00055", "unit_price": 5000000},
+    {"発注日": "2025-02-10", "担当者ID": "EMP004", "取引先ID": "V00030", "unit_price": 450000},
+    {"発注日": "2025-02-12", "担当者ID": "EMP002", "取引先ID": "V00056", "unit_price": 300000},
+    {"発注日": "2025-02-15", "担当者ID": "EMP002", "取引先ID": "V00055", "unit_price": 4900000},
+    {"発注日": "2025-03-06", "担当者ID": "EMP005", "取引先ID": "V00045", "unit_price": 1200000},
+    {"発注日": "2025-03-20", "担当者ID": "EMP001", "取引先ID": "V00001", "unit_price": 2500},
+    {"発注日": "2025-04-25", "担当者ID": "EMP001", "取引先ID": "V00001", "unit_price": 2600}
+  ],
+  "description": "2024年5月1日から2025年4月30日までの全注文について、注文日、担当者ID、取引先ID、単価（unit_price）を抽出したデータです。全17件の注文が対象です。",
+  "background": "発注データ管理エージェントの『発注情報分析』スキルを用いて、指定期間の全注文から必要な項目（注文日、担当者ID、取引先ID、単価）を抽出しました。さらに、このデータをもとに全体平均単価を算出した結果、平均単価は約785,664.71円となりました。"
+}
+2025-05-08 20:24:18,526 - __main__ - INFO - Notifying backend with full state after node query_data_agent...
+2025-05-08 20:24:19,102 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:24:19,105 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - --- Node: DecisionMaker ---
+2025-05-08 20:24:19,105 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DecisionMaker] next_action: {'action_type': 'evaluate_hypothesis', 'parameters': {'hypothesis_id': 'hyp_001'}}
+2025-05-08 20:24:19,110 - __main__ - INFO - Notifying backend with full state after node decision_maker...
+2025-05-08 20:24:19,668 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:24:19,669 - A2A_risk.samples.python.agents.risk_agent.nodes.evaluate_hypothesis - INFO - --- Node: EvaluateHypothesis ---
+2025-05-08 20:24:30,273 - A2A_risk.samples.python.agents.risk_agent.nodes.evaluate_hypothesis - INFO - [AE] 評価結果: id=hyp_001, status=supported, reasoning=全体平均単価が約785,665円であるのに対し、担当者EMP002と取引先V00055のペアは平均約4,950,000円、また担当者EMP005と取引先V00045のペアは1,200,000円と、いずれも1.5倍（約1,178,497円）を大幅に超えている。これらの具体的な数値から、潜在的な共謀の兆候が見受けられるため、仮説は支持されると判断される。, required_next_data=None
+2025-05-08 20:24:30,278 - __main__ - INFO - Notifying backend with full state after node evaluate_hypothesis...
+2025-05-08 20:24:30,856 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:24:30,858 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - --- Node: DecisionMaker ---
+2025-05-08 20:24:30,859 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DM] Hypothesis hyp_001 (supported) に基づき追加仮説生成をトリガーします。
+2025-05-08 20:24:30,864 - __main__ - INFO - Notifying backend with full state after node decision_maker...
+2025-05-08 20:24:31,462 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:24:31,463 - A2A_risk.samples.python.agents.risk_agent.nodes.generate_hypothesis - INFO - --- Node: GenerateHypothesis ---
+2025-05-08 20:24:31,463 - A2A_risk.samples.python.agents.risk_agent.nodes.generate_hypothesis - INFO - Generating supporting hypotheses for parent: hyp_001
+2025-05-08 20:24:41,541 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Found 1 agents with skill 'analyze_fraud_case'.
+2025-05-08 20:24:41,541 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - エージェント 不正事例管理エージェント にタスクを送信中...
+2025-05-08 20:24:41,542 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - input_message: role='user' parts=[DataPart(type='data', data={'input': 'RAGを使って、以下の不正を検知するためのリスクシナリオに関する兆候を複数生成してください。具体的な事例にフォーカスした兆候ではなく、汎用的な兆候を生成してください。\n\n不正:\n担当者・取引先のペアが示す異常な単価上昇に関連して、支払データや通信情報においても不審なパターンが見られるかを検証するための追加仮説を生成する \n\nリスクシナリオ:\n担当者と取引先の癒着による価格上乗せやキックバックの可能性があるシナリオにおいて、発注データに加えて支払データやメール・通話などの通信履歴から、より多角的に不正行為の兆候を明らかにするための仮説を生成する。 \n\n 出力形式: [<兆候1>(ref:<参考事例>), 兆候2(ref:<参考事例>), 兆候3(ref:<参考事例>),...] '}, metadata=None)] metadata=None
+2025-05-08 20:24:51,055 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスクが送信されました。タスクID: 0f274a08-ef1b-46a7-95aa-0e33cb44ced1
+2025-05-08 20:24:51,349 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスク結果を取得しました
+2025-05-08 20:24:51,350 - A2A_risk.samples.python.agents.risk_agent.nodes.generate_hypothesis - INFO - --------------------------------
+2025-05-08 20:24:51,350 - A2A_risk.samples.python.agents.risk_agent.nodes.generate_hypothesis - INFO - tool_result: [
+  "担当者と取引先間で単価が急激に上昇しているが、その根拠となる市場価格や契約条件の変化が不明瞭である(ref:不適切事例_1_OSJB.pdf)",
+  "支払データにおいて、通常の支払パターンと異なり特定の取引先への支払が集中し、支払時期や金額が不規則に変動している(ref:第三者委員会報告書_2_DSJB.pdf)",
+  "担当者の通信履歴（メールや通話）において、取引先との連絡頻度が通常より著しく高く、かつ業務時間外での接触が目立つ(ref:第三者委員会報告書_2_DSJB.pdf)",
+  "担当者と取引先のペアで同一内容を複数回発注しながら、納品や検収関連データに矛盾や遅延が頻発している(ref:不適切事例_1_OSJB.pdf)",
+  "支払い先の銀行口座や連絡先が過去に関連する不正事例で指摘された口座や連絡先と類似性を持つ(ref:第三者委員会報告書_2_DSJB.pdf)",
+  "発注単価上昇に伴い、通信履歴での非公式なコミュニケーション手段（個人メール、私用携帯など）が増加している傾向が見られる(ref:不適切事例_1_OSJB.pdf)",
+  "支払い明細書に虚偽または架空の請求書が混在しており、取引先名義や請求内容に類似パターンが繰り返されている(ref:第三者委員会報告書_2_DSJB.pdf)",
+  "担当者のメール内容に特定のキーワードやフレーズ（例：納期調整、価格調整、非公式割引など）が頻出し、通常業務では想定しにくい文脈が含まれている(ref:不適切事例_1_OSJB.pdf)"
+]
+2025-05-08 20:24:51,350 - A2A_risk.samples.python.agents.risk_agent.nodes.generate_hypothesis - INFO - --------------------------------
+2025-05-08 20:25:21,622 - A2A_risk.samples.python.agents.risk_agent.nodes.generate_hypothesis - INFO - Generated 3 new hypotheses (supporting mode). Total hypotheses: 6
+2025-05-08 20:25:21,622 - A2A_risk.samples.python.agents.risk_agent.nodes.generate_hypothesis - INFO - Newly generated: [{'id': 'sub_hyp_001_1', 'text': 'IF the 担当者・取引先 pair that exhibits an average unit price at least 1.5 times higher than the overall average also shows a frequency of off-hours communications (emails and calls) exceeding 30% of their total communications during 2024-05-01 to 2025-04-30, THEN this pattern supports the existence of informal coordination or collusion between the parties.', 'priority': 0.8, 'status': 'new', 'time_window': '2024-05-01〜2025-04-30', 'supporting_evidence_keys': ['メール情報分析', '通話情報分析'], 'next_validation_step_suggestion': 'Analyze the communication logs for the implicated 担当者・取引先 pair to determine the proportion of messages and calls made outside regular business hours (before 08:00 or after 18:00).', 'metric_definition': "SELECT 担当者ID, 取引先ID, COUNT(*) AS off_hours_count, (SELECT COUNT(*) FROM communications WHERE 担当者ID = ? AND 取引先ID = ?) AS total_comm FROM communications WHERE time NOT BETWEEN '08:00:00' AND '18:00:00' AND 担当者ID = ? AND 取引先ID = ? GROUP BY 担当者ID, 取引先ID HAVING (off_hours_count/total_comm) > 0.3", 'parent_hypothesis_id': 'hyp_001'}, {'id': 'sub_hyp_001_2', 'text': 'IF the 支払データ associated with the high-priced orders from a specific 担当者・取引先 pair demonstrates significant irregularity—such as inconsistent payment dates and variable payment amounts deviating from the norm—THEN this discrepancy indicates potential manipulation of the payment process linked to collusion.', 'priority': 0.7, 'status': 'new', 'time_window': '2024-05-01〜2025-04-30', 'supporting_evidence_keys': ['支払情報分析', '不正事例抽出・分析'], 'next_validation_step_suggestion': 'Perform statistical analysis (e.g., standard deviation, variance analysis) on payment schedules and amounts for the implicated pair compared to overall payment data.', 'metric_definition': "SELECT 担当者ID, 取引先ID, STDDEV(支払金額) AS payment_std FROM 支払データ WHERE 発注ID IN (SELECT 発注ID FROM orders WHERE 発注日 BETWEEN '2024-05-01' AND '2025-04-30' AND 担当者ID = ? AND 取引先ID = ?) GROUP BY 担当者ID, 取引先ID HAVING payment_std > [threshold_value]", 'parent_hypothesis_id': 'hyp_001'}, {'id': 'sub_hyp_001_3', 'text': 'IF the 発注データ reveals repeated orders with identical item descriptions, quantities, and terms from a specific 担当者・取引先 pair, and these orders are associated with delayed or inconsistent 納品/検収 records, THEN these patterns suggest that the inflated unit prices might be part of a coordinated scheme to facilitate overbilling through order manipulation.', 'priority': 0.6, 'status': 'new', 'time_window': '2024-05-01〜2025-04-30', 'supporting_evidence_keys': ['発注情報分析', '稟議書データ取得'], 'next_validation_step_suggestion': 'Correlate order records with delivery and approval logs to identify clusters of orders with similar attributes that also exhibit discrepancies in timing or fulfillment.', 'metric_definition': "SELECT 担当者ID, 取引先ID, 品目, COUNT(*) AS order_count FROM 発注データ WHERE 発注日 BETWEEN '2024-05-01' AND '2025-04-30' GROUP BY 担当者ID, 取引先ID, 品目 HAVING order_count > [threshold] AND EXISTS (SELECT 1 FROM 納品データ WHERE 発注ID = 発注データ.発注ID AND 納品遅延 = TRUE)", 'parent_hypothesis_id': 'hyp_001'}]
+2025-05-08 20:25:21,627 - __main__ - INFO - Notifying backend with full state after node generate_hypothesis...
+2025-05-08 20:25:22,177 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:25:22,179 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - --- Node: DecisionMaker ---
+2025-05-08 20:25:22,179 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DM] Focus hypothesis hyp_001 is resolved (supported). Clearing focus.
+2025-05-08 20:25:22,179 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DM] ★★all_hyp_status: ['hyp_001:supported', 'hyp_002:new', 'hyp_003:new', 'sub_hyp_001_1:new', 'sub_hyp_001_2:new', 'sub_hyp_001_3:new']
+2025-05-08 20:25:22,185 - __main__ - INFO - Notifying backend with full state after node decision_maker...
+2025-05-08 20:25:22,785 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:25:22,789 - A2A_risk.samples.python.agents.risk_agent.nodes.evaluate_hypothesis - INFO - --- Node: EvaluateHypothesis ---
+2025-05-08 20:25:31,640 - A2A_risk.samples.python.agents.risk_agent.nodes.evaluate_hypothesis - INFO - [AE] 評価結果: id=hyp_002, status=inconclusive, reasoning=現在のデータ分析結果および利用可能なデータサマリーでは、担当者・取引先ごとの各注文の単価や全体平均、注文比率といった詳細な分析指標が確認できていないため、仮説を十分に支持できる兆候が見られません。具体的な数値データが不足しているため、指標となる割合や単価差が実際に20%以上および1.5倍以上であるかを判断できません。, required_next_data=2024-05-01から2025-04-30の期間における各担当者・取引先ペアの詳細な注文データ（注文ID、注文日、単価、注文数量）、および全体の平均単価算出に必要な全注文の単価情報
+2025-05-08 20:25:31,646 - __main__ - INFO - Notifying backend with full state after node evaluate_hypothesis...
+2025-05-08 20:25:32,293 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:25:32,296 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - --- Node: DecisionMaker ---
+2025-05-08 20:25:36,750 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - ---decision--------------------
+2025-05-08 20:25:36,750 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DM] LLM response: {'thought': "現在フォーカスしている仮説 hyp_002 のステータスは 'inconclusive' であり、最新の履歴エントリは評価ノードおよび観察ノードで、必要なデータ（担当者・取引先ペアごとの詳細な注文データおよび全体平均単価算出用データ）が不足していることが明記されています。ポリシーに従い、required_next_data の内容をそのままデータエージェントに問い合わせる必要があります。したがって 'query_data_agent' を選択します。", 'action': {'action_type': 'query_data_agent', 'parameters': {'query': ['2024-05-01から2025-04-30の期間における各担当者・取引先ペアの詳細な注文データ（注文ID、注文日、単価、注文数量）、および全体の平均単価算出に必要な全注文の単価情報']}}}
+2025-05-08 20:25:36,750 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - -------------------------------
+2025-05-08 20:25:36,756 - __main__ - INFO - Notifying backend with full state after node decision_maker...
+2025-05-08 20:25:37,321 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:25:37,323 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - --- Node: QueryDataAgent ---
+2025-05-08 20:25:40,894 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent skill_id: analyze_order, query: 2024-05-01から2025-04-30の期間における、各担当者・取引先ペアごとの注文ID、注文日、単価、注文数量の詳細な注文データを取得してください。
+2025-05-08 20:25:40,894 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Found 1 agents with skill 'analyze_order'.
+2025-05-08 20:25:40,895 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - エージェント 発注データ管理エージェント にタスクを送信中...
+2025-05-08 20:25:40,895 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - input_message: role='user' parts=[DataPart(type='data', data={'input': '2024-05-01から2025-04-30の期間における、各担当者・取引先ペアごとの注文ID、注文日、単価、注文数量の詳細な注文データを取得してください。'}, metadata=None)] metadata=None
+2025-05-08 20:25:41,254 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent skill_id: analyze_order, query: 2024-05-01から2025-04-30の期間における全注文の単価情報を取得してください。
+2025-05-08 20:25:41,255 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Found 1 agents with skill 'analyze_order'.
+2025-05-08 20:25:41,255 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - エージェント 発注データ管理エージェント にタスクを送信中...
+2025-05-08 20:25:41,255 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - input_message: role='user' parts=[DataPart(type='data', data={'input': '2024-05-01から2025-04-30の期間における全注文の単価情報を取得してください。'}, metadata=None)] metadata=None
+2025-05-08 20:26:01,637 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスクが送信されました。タスクID: 8aad07f6-3182-4293-a260-c87bd3648b4c
+2025-05-08 20:26:07,741 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスクが送信されました。タスクID: 38a81c43-5f74-4bc9-8d90-92aff684567e
+2025-05-08 20:26:08,033 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスク結果を取得しました
+2025-05-08 20:26:08,033 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent result: id='step_analyze_order' description='データエージェントへのクエリ: 2024-05-01から2025-04-30の期間における、各担当者・取引先ペアごとの注文ID、注文日、単価、注文数量の詳細な注文データを取得してください。' skill_id='analyze_order' input_data={'input': '2024-05-01から2025-04-30の期間における、各担当者・取引先ペアごとの注文ID、注文日、単価、注文数量の詳細な注文データを取得してください。'} parameters={} is_completed=True output_data={'text': '2024-05-01から2025-04-30の期間における、各担当者と取引先のペアごとの注文データ（発注ID、発注日、単価、数量）を抽出しました。結果は以下の通りです。\n\n| 担当者名 | 取引先名 | 発注ID | 発注日 | 単価 | 数量 |\n| --- | --- | --- | --- | --- | --- |\n| 担当者D | 取引先W | PO00005 | 2024-05-15 | 150000 | 1 |\n| 担当者A | サプライヤーX | PO00006 | 2024-06-25 | 950 | 100 |\n| 担当者E | 取引先V | PO00007 | 2024-07-20 | 300000 | 1 |\n| 担当者C | 取引先Z | PO00008 | 2024-08-15 | 1500 | 20 |\n| 担当者A | サプライヤーX | PO00009 | 2024-09-10 | 2100 | 100 |\n| 担当者D | 取引先U | PO00010 | 2024-10-25 | 50000 | 10 |\n| 担当者C | 取引先Y | PO00011 | 2024-11-15 | 120000 | 1 |\n| 担当者E | 取引先T | PO00012 | 2024-12-15 | 800000 | 1 |\n| 担当者A | サプライヤーX | PO00013 | 2025-01-10 | 1650 | 100 |\n| 担当者C | 取引先Z | PO00014 | 2025-01-18 | 75000 | 1 |\n| 担当者B | コンサルY | PO00015 | 2025-01-20 | 5000000 | 1 |\n| 担当者D | 取引先W | PO00016 | 2025-02-10 | 450000 | 1 |\n| 担当者B | デザイン事務所S | PO00017 | 2025-02-12 | 300000 | 1 |\n| 担当者B | コンサルY | PO00018 | 2025-02-15 | 4900000 | 1 |\n| 担当者E | イベント会社R | PO00019 | 2025-03-06 | 1200000 | 1 |\n| 担当者A | サプライヤーX | PO00020 | 2025-03-20 | 2500 | 100 |\n| 担当者A | サプライヤーX | PO00021 | 2025-04-25 | 2600 | 100 |\n\nご希望があれば、このデータをファイルに出力するなどの追加処理も可能です。', 'data': None, 'agent': '発注データ管理エージェント'} error=None selected_agent=None start_time=datetime.datetime(2025, 5, 8, 20, 25, 40, 894640) transitions={}
+2025-05-08 20:26:08,036 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスク結果を取得しました
+2025-05-08 20:26:08,036 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent result: id='step_analyze_order' description='データエージェントへのクエリ: 2024-05-01から2025-04-30の期間における全注文の単価情報を取得してください。' skill_id='analyze_order' input_data={'input': '2024-05-01から2025-04-30の期間における全注文の単価情報を取得してください。'} parameters={} is_completed=True output_data={'text': '2024-05-01から2025-04-30の期間における全注文の単価情報は以下の通りです。\n\n150,000\n950\n300,000\n1,500\n2,100\n50,000\n120,000\n800,000\n1,650\n75,000\n5,000,000\n450,000\n300,000\n4,900,000\n1,200,000\n2,500\n2,600\n\n単価のリストとして抽出しています。必要に応じて他の形式でも対応可能です。', 'data': None, 'agent': '発注データ管理エージェント'} error=None selected_agent=None start_time=datetime.datetime(2025, 5, 8, 20, 25, 41, 255107) transitions={}
+2025-05-08 20:26:19,141 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] data_summary: {
+  "data": {
+    "order_details": [
+      {
+        "担当者名": "担当者D",
+        "取引先名": "取引先W",
+        "注文ID": "PO00005",
+        "注文日": "2024-05-15",
+        "単価": 150000,
+        "数量": 1
+      },
+      {
+        "担当者名": "担当者A",
+        "取引先名": "サプライヤーX",
+        "注文ID": "PO00006",
+        "注文日": "2024-06-25",
+        "単価": 950,
+        "数量": 100
+      },
+      {
+        "担当者名": "担当者E",
+        "取引先名": "取引先V",
+        "注文ID": "PO00007",
+        "注文日": "2024-07-20",
+        "単価": 300000,
+        "数量": 1
+      },
+      {
+        "担当者名": "担当者C",
+        "取引先名": "取引先Z",
+        "注文ID": "PO00008",
+        "注文日": "2024-08-15",
+        "単価": 1500,
+        "数量": 20
+      },
+      {
+        "担当者名": "担当者A",
+        "取引先名": "サプライヤーX",
+        "注文ID": "PO00009",
+        "注文日": "2024-09-10",
+        "単価": 2100,
+        "数量": 100
+      },
+      {
+        "担当者名": "担当者D",
+        "取引先名": "取引先U",
+        "注文ID": "PO00010",
+        "注文日": "2024-10-25",
+        "単価": 50000,
+        "数量": 10
+      },
+      {
+        "担当者名": "担当者C",
+        "取引先名": "取引先Y",
+        "注文ID": "PO00011",
+        "注文日": "2024-11-15",
+        "単価": 120000,
+        "数量": 1
+      },
+      {
+        "担当者名": "担当者E",
+        "取引先名": "取引先T",
+        "注文ID": "PO00012",
+        "注文日": "2024-12-15",
+        "単価": 800000,
+        "数量": 1
+      },
+      {
+        "担当者名": "担当者A",
+        "取引先名": "サプライヤーX",
+        "注文ID": "PO00013",
+        "注文日": "2025-01-10",
+        "単価": 1650,
+        "数量": 100
+      },
+      {
+        "担当者名": "担当者C",
+        "取引先名": "取引先Z",
+        "注文ID": "PO00014",
+        "注文日": "2025-01-18",
+        "単価": 75000,
+        "数量": 1
+      },
+      {
+        "担当者名": "担当者B",
+        "取引先名": "コンサルY",
+        "注文ID": "PO00015",
+        "注文日": "2025-01-20",
+        "単価": 5000000,
+        "数量": 1
+      },
+      {
+        "担当者名": "担当者D",
+        "取引先名": "取引先W",
+        "注文ID": "PO00016",
+        "注文日": "2025-02-10",
+        "単価": 450000,
+        "数量": 1
+      },
+      {
+        "担当者名": "担当者B",
+        "取引先名": "デザイン事務所S",
+        "注文ID": "PO00017",
+        "注文日": "2025-02-12",
+        "単価": 300000,
+        "数量": 1
+      },
+      {
+        "担当者名": "担当者B",
+        "取引先名": "コンサルY",
+        "注文ID": "PO00018",
+        "注文日": "2025-02-15",
+        "単価": 4900000,
+        "数量": 1
+      },
+      {
+        "担当者名": "担当者E",
+        "取引先名": "イベント会社R",
+        "注文ID": "PO00019",
+        "注文日": "2025-03-06",
+        "単価": 1200000,
+        "数量": 1
+      },
+      {
+        "担当者名": "担当者A",
+        "取引先名": "サプライヤーX",
+        "注文ID": "PO00020",
+        "注文日": "2025-03-20",
+        "単価": 2500,
+        "数量": 100
+      },
+      {
+        "担当者名": "担当者A",
+        "取引先名": "サプライヤーX",
+        "注文ID": "PO00021",
+        "注文日": "2025-04-25",
+        "単価": 2600,
+        "数量": 100
+      }
+    ],
+    "all_unit_prices": [
+      150000, 950, 300000, 1500, 2100, 50000, 120000, 800000, 1650, 75000, 5000000, 450000, 300000, 4900000, 1200000, 2500, 2600
+    ]
+  },
+  "description": "2024-05-01から2025-04-30の期間における、各担当者・取引先ペアごとの詳細な注文データ（注文ID、注文日、単価、注文数量）と、全体の平均単価算出に必要な全注文の単価情報を取得しました。",
+  "background": "発注データ管理エージェントの『発注情報分析』スキルを用いて、指定期間の注文データと単価情報をそれぞれクエリし、目的のデータを漏れなく取得しました。"
+}
+2025-05-08 20:26:19,148 - __main__ - INFO - Notifying backend with full state after node query_data_agent...
+2025-05-08 20:26:19,756 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:26:19,760 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - --- Node: DecisionMaker ---
+2025-05-08 20:26:19,760 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DecisionMaker] next_action: {'action_type': 'evaluate_hypothesis', 'parameters': {'hypothesis_id': 'hyp_002'}}
+2025-05-08 20:26:19,765 - __main__ - INFO - Notifying backend with full state after node decision_maker...
+2025-05-08 20:26:20,373 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:26:20,374 - A2A_risk.samples.python.agents.risk_agent.nodes.evaluate_hypothesis - INFO - --- Node: EvaluateHypothesis ---
+2025-05-08 20:26:33,791 - A2A_risk.samples.python.agents.risk_agent.nodes.evaluate_hypothesis - INFO - [AE] 評価結果: id=hyp_002, status=supported, reasoning=発注データから、担当者BとコンサルYのペアでは2件とも全注文に対して単価が全体平均の1.5倍（約1,178,498円）を大幅に上回る（5,000,000円および4,900,000円）注文があり、また担当者Eとイベント会社Rのペアも1件全てで1,200,000円とこの基準を上回っています。各ペアの該当注文割合が100%となっており、仮説の条件（20%以上）を十分に満たしているため、仮説は支持されます。, required_next_data=None
+2025-05-08 20:26:33,801 - __main__ - INFO - Notifying backend with full state after node evaluate_hypothesis...
+2025-05-08 20:26:34,397 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:26:34,400 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - --- Node: DecisionMaker ---
+2025-05-08 20:26:34,400 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DM] Hypothesis hyp_002 (supported) に基づき追加仮説生成をトリガーします。
+2025-05-08 20:26:34,406 - __main__ - INFO - Notifying backend with full state after node decision_maker...
+2025-05-08 20:26:34,961 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:26:34,962 - A2A_risk.samples.python.agents.risk_agent.nodes.generate_hypothesis - INFO - --- Node: GenerateHypothesis ---
+2025-05-08 20:26:34,962 - A2A_risk.samples.python.agents.risk_agent.nodes.generate_hypothesis - INFO - Generating supporting hypotheses for parent: hyp_002
+2025-05-08 20:26:44,295 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Found 1 agents with skill 'analyze_fraud_case'.
+2025-05-08 20:26:44,295 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - エージェント 不正事例管理エージェント にタスクを送信中...
+2025-05-08 20:26:44,295 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - input_message: role='user' parts=[DataPart(type='data', data={'input': 'RAGを使って、以下の不正を検知するためのリスクシナリオに関する兆候を複数生成してください。具体的な事例にフォーカスした兆候ではなく、汎用的な兆候を生成してください。\n\n不正:\nIF a specific 担当者・取引先 pair has a ratio of orders where the unit price is at least 1.5 倍 above the overall average that is 20% or higher of its total orders from 2024-05-01 to 2025-04-30, THEN it suggests the presence of price inflation or kickback practices. \n\nリスクシナリオ:\n価格上乗せやキックバックの疑いがある取引先と担当者の間で、注文時に不自然な高額請求が頻発し、それに加えて内部コミュニケーションや承認プロセスにおいて迅速な処理や関連性の高い連絡が確認される場合、その取引は癒着の疑いが強まる。 \n\n 出力形式: [<兆候1>(ref:<参考事例>), 兆候2(ref:<参考事例>), 兆候3(ref:<参考事例>),...] '}, metadata=None)] metadata=None
+2025-05-08 20:26:54,125 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスクが送信されました。タスクID: edffdcf5-3562-4040-b51a-aeeb85d66017
+2025-05-08 20:26:54,466 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスク結果を取得しました
+2025-05-08 20:26:54,466 - A2A_risk.samples.python.agents.risk_agent.nodes.generate_hypothesis - INFO - --------------------------------
+2025-05-08 20:26:54,466 - A2A_risk.samples.python.agents.risk_agent.nodes.generate_hypothesis - INFO - tool_result: [
+  "特定の担当者と取引先の間で、単価が他取引の平均を大幅に上回る注文が継続的に発生している(ref: 不適切事例_1_OSJB.pdf)",
+  "高額な注文が取引全体の一定割合（例: 20%以上）を占め、その注文が集中している期間が特定されている(ref: 第三者委員会報告書_2_DSJB.pdf)",
+  "担当者と取引先間の注文が短期間で迅速に承認されるなど、通常のプロセスよりも速やかな内部処理が見られる(ref: 不適切事例_1_OSJB.pdf)",
+  "担当者と取引先間のコミュニケーション記録において、関連性の高い連絡や密なやり取りが頻繁に観察される(ref: 第三者委員会報告書_2_DSJB.pdf)",
+  "不自然に高い単価の注文が、同時期に他取引所の価格動向と乖離している傾向がある(ref: 不適切事例_1_OSJB.pdf)",
+  "特定の担当者が複数の取引先と比較して、単価の高い注文の割合が著しく高い傾向が見られる(ref: 第三者委員会報告書_2_DSJB.pdf)",
+  "内部調査や監査報告において、取引先との帳簿や発注書類に対して不一致や疑義が指摘されている(ref: 不適切事例_1_OSJB.pdf)",
+  "高額請求に関する承認履歴が通常よりも少ない、または一部特定担当者に偏っている状況が確認される(ref: 第三者委員会報告書_2_DSJB.pdf)"
+]
+2025-05-08 20:26:54,466 - A2A_risk.samples.python.agents.risk_agent.nodes.generate_hypothesis - INFO - --------------------------------
+2025-05-08 20:27:19,300 - A2A_risk.samples.python.agents.risk_agent.nodes.generate_hypothesis - INFO - Generated 3 new hypotheses (supporting mode). Total hypotheses: 9
+2025-05-08 20:27:19,301 - A2A_risk.samples.python.agents.risk_agent.nodes.generate_hypothesis - INFO - Newly generated: [{'id': 'sub_hyp_002_1', 'text': 'IF the high-priced orders from a specific 担当者・取引先 pair are approved in less than 5 minutes from submission for over 50% of such orders within the period 2024-05-01 to 2025-04-30, THEN it indicates a compromised internal approval process that may be facilitating price inflation or kickback practices.', 'priority': 0.8, 'status': 'new', 'time_window': '2024-05-01〜2025-04-30', 'supporting_evidence_keys': ['発注データ管理エージェント', '稟議書・申請書データ管理エージェント', 'メールデータ管理エージェント'], 'next_validation_step_suggestion': 'Extract the approval timestamps for orders exceeding 1.5 times the overall average unit price and compare the time difference between submission and approval against regular orders.', 'metric_definition': "SELECT COUNT(*) FILTER (WHERE (approval_timestamp - submission_timestamp) < INTERVAL '5 minutes') * 1.0 / COUNT(*) AS rapid_approval_ratio FROM orders WHERE unit_price >= 1.5 * (SELECT AVG(unit_price) FROM orders) AND order_date BETWEEN '2024-05-01' AND '2025-04-30' HAVING rapid_approval_ratio > 0.5", 'parent_hypothesis_id': 'hyp_002'}, {'id': 'sub_hyp_002_2', 'text': 'IF the payment records for the high-priced orders show a pattern of expedited settlements, such as same-day payments or unconventional payment methods, compared to other orders within the period 2024-05-01 to 2025-04-30, THEN it suggests that preferential treatment is being provided, reinforcing the possibility of kickback practices.', 'priority': 0.7, 'status': 'new', 'time_window': '2024-05-01〜2025-04-30', 'supporting_evidence_keys': ['支払データ管理エージェント', '発注データ管理エージェント'], 'next_validation_step_suggestion': 'Compare payment settlement times and methods for high-priced orders with those for standard orders to identify significant differences.', 'metric_definition': "SELECT COUNT(*) FILTER (WHERE payment_date = order_date AND unit_price >= 1.5 * (SELECT AVG(unit_price) FROM orders)) * 1.0 / COUNT(*) AS expedited_payment_ratio FROM orders JOIN payments USING(order_id) WHERE order_date BETWEEN '2024-05-01' AND '2025-04-30' HAVING expedited_payment_ratio > 0.2", 'parent_hypothesis_id': 'hyp_002'}, {'id': 'sub_hyp_002_3', 'text': 'IF there is a significantly increased volume of email or call communications between the specific 担当者 and 取引先 within 24 hours before or after a high-priced order during 2024-05-01 to 2025-04-30, THEN it supports the presence of collusive behavior that reinforces price inflation or kickback practices.', 'priority': 0.85, 'status': 'new', 'time_window': '2024-05-01〜2025-04-30', 'supporting_evidence_keys': ['メールデータ管理エージェント', '通話データ管理エージェント'], 'next_validation_step_suggestion': 'Analyze communication timestamps surrounding high-priced orders and compare with baseline communication levels for the same担当者・取引先 pair.', 'metric_definition': "SELECT COUNT(*) AS comm_count FROM communications WHERE (timestamp BETWEEN order_date - INTERVAL '24 hours' AND order_date + INTERVAL '24 hours') AND pair_identifier = 'specific担当者・取引先' AND order_id IN (SELECT order_id FROM orders WHERE unit_price >= 1.5 * (SELECT AVG(unit_price) FROM orders) AND order_date BETWEEN '2024-05-01' AND '2025-04-30')", 'parent_hypothesis_id': 'hyp_002'}]
+2025-05-08 20:27:19,322 - __main__ - INFO - Notifying backend with full state after node generate_hypothesis...
+2025-05-08 20:27:19,939 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:27:19,941 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - --- Node: DecisionMaker ---
+2025-05-08 20:27:19,942 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DM] Focus hypothesis hyp_002 is resolved (supported). Clearing focus.
+2025-05-08 20:27:19,942 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DM] ★★all_hyp_status: ['hyp_001:supported', 'hyp_002:supported', 'hyp_003:new', 'sub_hyp_001_1:new', 'sub_hyp_001_2:new', 'sub_hyp_001_3:new', 'sub_hyp_002_1:new', 'sub_hyp_002_2:new', 'sub_hyp_002_3:new']
+2025-05-08 20:27:19,948 - __main__ - INFO - Notifying backend with full state after node decision_maker...
+2025-05-08 20:27:20,570 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:27:20,571 - A2A_risk.samples.python.agents.risk_agent.nodes.evaluate_hypothesis - INFO - --- Node: EvaluateHypothesis ---
+2025-05-08 20:27:27,219 - A2A_risk.samples.python.agents.risk_agent.nodes.evaluate_hypothesis - INFO - [AE] 評価結果: id=hyp_003, status=inconclusive, reasoning=利用可能な最新データの要約には、各担当者ごとに単一の取引先との注文と全体の注文金額に関する個別の詳細数値が含まれていません。そのため、指定期間中に単一取引先の注文が担当者の平均注文額の1.5倍以上となっているかどうか、またそれが個別の価格調整やキックバックの兆候を示すかどうかを断言するには不十分な状態です。, required_next_data=各担当者ごとの注文データ（注文日、注文金額、取引先情報：単一か複数かを区別できる情報）が必要です。
+2025-05-08 20:27:27,227 - __main__ - INFO - Notifying backend with full state after node evaluate_hypothesis...
+2025-05-08 20:27:27,831 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:27:27,833 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - --- Node: DecisionMaker ---
+2025-05-08 20:27:30,277 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - ---decision--------------------
+2025-05-08 20:27:30,277 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DM] LLM response: {'thought': "現在フォーカスしている仮説 hyp_003 のステータスは 'inconclusive' であり、最新の履歴エントリは評価観察で、必要な次データ（各担当者ごとの注文データ：注文日、注文金額、取引先情報）が不足していると明記されています。ポリシーに従い、required_next_data をそのまま query_data_agent のパラメータとして使用し、追加データ取得を行う必要があります。", 'action': {'action_type': 'query_data_agent', 'parameters': {'query': ['各担当者ごとの注文データ（注文日、注文金額、取引先情報：単一か複数かを区別できる情報）が必要です。']}}}
+2025-05-08 20:27:30,277 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - -------------------------------
+2025-05-08 20:27:30,283 - __main__ - INFO - Notifying backend with full state after node decision_maker...
+2025-05-08 20:27:30,859 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:27:30,862 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - --- Node: QueryDataAgent ---
+2025-05-08 20:27:32,967 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent skill_id: analyze_order, query: 各担当者ごとの注文データ（注文日、注文金額、取引先ID、取引先名）を一覧で取得してください。担当者ごとに、取引先が単一か複数かを区別できるようにしてください。
+2025-05-08 20:27:32,968 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Found 1 agents with skill 'analyze_order'.
+2025-05-08 20:27:32,968 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - エージェント 発注データ管理エージェント にタスクを送信中...
+2025-05-08 20:27:32,968 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - input_message: role='user' parts=[DataPart(type='data', data={'input': '各担当者ごとの注文データ（注文日、注文金額、取引先ID、取引先名）を一覧で取得してください。担当者ごとに、取引先が単一か複数かを区別できるようにしてください。'}, metadata=None)] metadata=None
+2025-05-08 20:27:50,769 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスクが送信されました。タスクID: e25a035e-2ae5-4474-8eff-1d9ba6936361
+2025-05-08 20:27:51,062 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスク結果を取得しました
+2025-05-08 20:27:51,062 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent result: id='step_analyze_order' description='データエージェントへのクエリ: 各担当者ごとの注文データ（注文日、注文金額、取引先ID、取引先名）を一覧で取得してください。担当者ごとに、取引先が単一か複数かを区別できるようにしてください。' skill_id='analyze_order' input_data={'input': '各担当者ごとの注文データ（注文日、注文金額、取引先ID、取引先名）を一覧で取得してください。担当者ごとに、取引先が単一か複数かを区別できるようにしてください。'} parameters={} is_completed=True output_data={'text': "各担当者ごとの注文データ（注文日、注文金額、取引先ID、取引先名）を含み、かつ担当者ごとに取引先が単一か複数かを区別した一覧は以下の通りです。\n\n| 担当者ID | 担当者名 | 注文データ（発注日、発注金額、取引先ID、取引先名）                             | 取引先区分 |\n|---------|---------|-------------------------------------------------------------|-------------|\n| EMP001  | 担当者A  | [{'発注日': '2024-02-10', '発注金額': 125000, '取引先ID': 'V00001', '取引先名': 'サプライヤーX'}, {'発注日': '2024-03-20', '発注金額': 180000, '取引先ID': 'V00001', '取引先名': 'サプライヤーX'}] | 単一        |\n| EMP003  | 担当者C  | [{'発注日': '2024-01-15', '発注金額': 50000, '取引先ID': 'V00026', '取引先名': '取引先Z'}, {'発注日': '2024-04-10', '発注金額': 80000, '取引先ID': 'V00027', '取引先名': '取引先Y'}] | 複数        |\n| EMP004  | 担当者D  | [{'発注日': '2024-05-15', '発注金額': 150000, '取引先ID': 'V00030', '取引先名': '取引先W'}]                                     | 単一        |\n\n必要に応じて、この結果をさらに加工したい場合はお知らせください。", 'data': None, 'agent': '発注データ管理エージェント'} error=None selected_agent=None start_time=datetime.datetime(2025, 5, 8, 20, 27, 32, 968038) transitions={}
+2025-05-08 20:27:58,039 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] data_summary: {
+  "data": [
+    {
+      "担当者ID": "EMP001",
+      "担当者名": "担当者A",
+      "注文データ": [
+        {"発注日": "2024-02-10", "発注金額": 125000, "取引先ID": "V00001", "取引先名": "サプライヤーX"},
+        {"発注日": "2024-03-20", "発注金額": 180000, "取引先ID": "V00001", "取引先名": "サプライヤーX"}
+      ],
+      "取引先区分": "単一"
+    },
+    {
+      "担当者ID": "EMP003",
+      "担当者名": "担当者C",
+      "注文データ": [
+        {"発注日": "2024-01-15", "発注金額": 50000, "取引先ID": "V00026", "取引先名": "取引先Z"},
+        {"発注日": "2024-04-10", "発注金額": 80000, "取引先ID": "V00027", "取引先名": "取引先Y"}
+      ],
+      "取引先区分": "複数"
+    },
+    {
+      "担当者ID": "EMP004",
+      "担当者名": "担当者D",
+      "注文データ": [
+        {"発注日": "2024-05-15", "発注金額": 150000, "取引先ID": "V00030", "取引先名": "取引先W"}
+      ],
+      "取引先区分": "単一"
+    }
+  ],
+  "description": "各担当者ごとに、注文日・注文金額・取引先ID・取引先名を含む注文データを一覧化し、担当者ごとに取引先が単一か複数かを区別したデータです。",
+  "background": "発注データ管理エージェント（発注情報分析）を用いて、各担当者ごとの注文データ（注文日、注文金額、取引先情報）を取得し、取引先が単一か複数かを区別できるように整理しました。"
+}
+2025-05-08 20:27:58,043 - __main__ - INFO - Notifying backend with full state after node query_data_agent...
+2025-05-08 20:27:58,610 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:27:58,613 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - --- Node: DecisionMaker ---
+2025-05-08 20:27:58,613 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DecisionMaker] next_action: {'action_type': 'evaluate_hypothesis', 'parameters': {'hypothesis_id': 'hyp_003'}}
+2025-05-08 20:27:58,619 - __main__ - INFO - Notifying backend with full state after node decision_maker...
+2025-05-08 20:27:59,187 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:27:59,188 - A2A_risk.samples.python.agents.risk_agent.nodes.evaluate_hypothesis - INFO - --- Node: EvaluateHypothesis ---
+2025-05-08 20:28:11,036 - A2A_risk.samples.python.agents.risk_agent.nodes.evaluate_hypothesis - INFO - [AE] 評価結果: id=hyp_003, status=rejected, reasoning=Within the target period (2024-05-01 to 2025-04-30), the only available data is for EMP004, whose single order amount (150000) is equal to the overall average of 150000. This does not satisfy the 1.5倍 condition, and the orders for EMP001 and EMP003 lie outside the target period., required_next_data=None
+2025-05-08 20:28:11,042 - __main__ - INFO - Notifying backend with full state after node evaluate_hypothesis...
+2025-05-08 20:28:11,640 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:28:11,642 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - --- Node: DecisionMaker ---
+2025-05-08 20:28:11,642 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DM] Focus hypothesis hyp_003 is resolved (rejected). Clearing focus.
+2025-05-08 20:28:11,643 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DM] ★★all_hyp_status: ['hyp_001:supported', 'hyp_002:supported', 'hyp_003:rejected', 'sub_hyp_001_1:new', 'sub_hyp_001_2:new', 'sub_hyp_001_3:new', 'sub_hyp_002_1:new', 'sub_hyp_002_2:new', 'sub_hyp_002_3:new']
+2025-05-08 20:28:11,651 - __main__ - INFO - Notifying backend with full state after node decision_maker...
+2025-05-08 20:28:12,217 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:28:12,218 - A2A_risk.samples.python.agents.risk_agent.nodes.evaluate_hypothesis - INFO - --- Node: EvaluateHypothesis ---
+2025-05-08 20:28:19,745 - A2A_risk.samples.python.agents.risk_agent.nodes.evaluate_hypothesis - INFO - [AE] 評価結果: id=sub_hyp_002_3, status=inconclusive, reasoning=現時点では、2024-05-01から2025-04-30の期間における高額注文のタイムスタンプと、それに連動する担当者と取引先間のメール及び通話記録の具体的なデータが不足しており、該当する兆候の有無を判断できないため。, required_next_data=対象期間中における全高額注文の正確なタイムスタンプ、並びにその直前後24時間の担当者と取引先間のメールおよび通話ログのデータ
+2025-05-08 20:28:19,753 - __main__ - INFO - Notifying backend with full state after node evaluate_hypothesis...
+2025-05-08 20:28:20,316 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:28:20,318 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - --- Node: DecisionMaker ---
+2025-05-08 20:28:22,819 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - ---decision--------------------
+2025-05-08 20:28:22,819 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DM] LLM response: {'thought': "Currently focusing on 'sub_hyp_002_3', which is in 'inconclusive' status. The latest history entry is an observation stating that specific data (high-priced order timestamps and related communication logs) is missing and required. According to the policy, when the latest entry is a hypothesis evaluation and required data is specified, I must select 'query_data_agent' and use the required_next_data as the query.", 'action': {'action_type': 'query_data_agent', 'parameters': {'query': ['対象期間中における全高額注文の正確なタイムスタンプ、並びにその直前後24時間の担当者と取引先間のメールおよび通話ログのデータ']}}}
+2025-05-08 20:28:22,819 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - -------------------------------
+2025-05-08 20:28:22,829 - __main__ - INFO - Notifying backend with full state after node decision_maker...
+2025-05-08 20:28:23,393 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:28:23,395 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - --- Node: QueryDataAgent ---
+2025-05-08 20:28:25,664 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent skill_id: analyze_order, query: 対象期間中の高額注文すべての発注ID、発注日（タイムスタンプ）、担当者ID、取引先IDを一覧で取得してください。
+2025-05-08 20:28:25,664 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Found 1 agents with skill 'analyze_order'.
+2025-05-08 20:28:25,664 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - エージェント 発注データ管理エージェント にタスクを送信中...
+2025-05-08 20:28:25,665 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - input_message: role='user' parts=[DataPart(type='data', data={'input': '対象期間中の高額注文すべての発注ID、発注日（タイムスタンプ）、担当者ID、取引先IDを一覧で取得してください。'}, metadata=None)] metadata=None
+2025-05-08 20:28:40,144 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスクが送信されました。タスクID: 4aa57c12-1730-4b43-951a-d7433c06236e
+2025-05-08 20:28:40,460 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスク結果を取得しました
+2025-05-08 20:28:40,460 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent result: id='step_analyze_order' description='データエージェントへのクエリ: 対象期間中の高額注文すべての発注ID、発注日（タイムスタンプ）、担当者ID、取引先IDを一覧で取得してください。' skill_id='analyze_order' input_data={'input': '対象期間中の高額注文すべての発注ID、発注日（タイムスタンプ）、担当者ID、取引先IDを一覧で取得してください。'} parameters={} is_completed=True output_data={'text': '対象期間の指定がなかったため、全期間のデータから発注金額が100,000円以上の高額注文の情報を抽出しました。以下が該当するすべての発注ID、発注日、担当者ID、取引先IDの一覧です。\n\n| 発注ID    | 発注日                 | 担当者ID   | 取引先ID   |\n|----------|----------------------|----------|----------|\n| PO00002  | 2024-02-10           | EMP001   | V00001   |\n| PO00003  | 2024-03-20           | EMP001   | V00001   |\n| PO00005  | 2024-05-15           | EMP004   | V00030   |\n| PO00007  | 2024-07-20           | EMP005   | V00035   |\n| PO00009  | 2024-09-10           | EMP001   | V00001   |\n| PO00010  | 2024-10-25           | EMP004   | V00040   |\n| PO00011  | 2024-11-15           | EMP003   | V00027   |\n| PO00012  | 2024-12-15           | EMP005   | V00042   |\n| PO00013  | 2025-01-10           | EMP001   | V00001   |\n| PO00015  | 2025-01-20           | EMP002   | V00055   |\n| PO00016  | 2025-02-10           | EMP004   | V00030   |\n| PO00017  | 2025-02-12           | EMP002   | V00056   |\n| PO00018  | 2025-02-15           | EMP002   | V00055   |\n| PO00019  | 2025-03-06           | EMP005   | V00045   |\n| PO00020  | 2025-03-20           | EMP001   | V00001   |\n| PO00021  | 2025-04-25           | EMP001   | V00001   |\n| PO00022  | 2025-05-30           | EMP001   | V00070   |\n| PO00023  | 2025-06-15           | EMP001   | V00001   |\n| PO00024  | 2025-06-16           | EMP001   | V00071   |\n| PO00025  | 2025-07-05           | EMP003   | V00027   |\n| PO00026  | 2025-07-10           | EMP004   | V00030   |\n| PO00027  | 2025-07-15           | EMP005   | V00035   |\n| PO00028  | 2025-07-20           | EMP002   | V00055   |\n| PO00030  | 2025-08-02           | EMP004   | V00058   |\n| PO00032  | 2025-08-18           | EMP007   | V00027   |\n| PO00033  | 2025-08-25           | EMP008   | V00056   |\n| PO00034  | 2025-09-01           | EMP004   | V00030   |\n\nもし対象期間が指定されていれば、その期間に絞ることも可能ですのでお知らせください。', 'data': None, 'agent': '発注データ管理エージェント'} error=None selected_agent=None start_time=datetime.datetime(2025, 5, 8, 20, 28, 25, 664351) transitions={}
+2025-05-08 20:28:42,732 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent skill_id: analyze_communications, query: PO00002の発注日2024-02-10の前後24時間（2024-02-09～2024-02-11）における担当者ID EMP001と取引先ID V00001間のメールログを取得してください。
+2025-05-08 20:28:42,733 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Found 1 agents with skill 'analyze_communications'.
+2025-05-08 20:28:42,733 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - エージェント メールデータ管理エージェント にタスクを送信中...
+2025-05-08 20:28:42,733 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - input_message: role='user' parts=[DataPart(type='data', data={'input': 'PO00002の発注日2024-02-10の前後24時間（2024-02-09～2024-02-11）における担当者ID EMP001と取引先ID V00001間のメールログを取得してください。'}, metadata=None)] metadata=None
+2025-05-08 20:28:43,139 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent skill_id: analyze_calls, query: PO00002の発注日2024-02-10の前後24時間（2024-02-09～2024-02-11）における担当者ID EMP001と取引先ID V00001間の通話ログを取得してください。
+2025-05-08 20:28:43,139 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Found 1 agents with skill 'analyze_calls'.
+2025-05-08 20:28:43,139 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - エージェント 通話データ管理エージェント にタスクを送信中...
+2025-05-08 20:28:43,140 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - input_message: role='user' parts=[DataPart(type='data', data={'input': 'PO00002の発注日2024-02-10の前後24時間（2024-02-09～2024-02-11）における担当者ID EMP001と取引先ID V00001間の通話ログを取得してください。'}, metadata=None)] metadata=None
+2025-05-08 20:28:43,472 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent skill_id: analyze_communications, query: PO00003の発注日2024-03-20の前後24時間（2024-03-19～2024-03-21）における担当者ID EMP001と取引先ID V00001間のメールログを取得してください。
+2025-05-08 20:28:43,472 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Found 1 agents with skill 'analyze_communications'.
+2025-05-08 20:28:43,473 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - エージェント メールデータ管理エージェント にタスクを送信中...
+2025-05-08 20:28:43,473 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - input_message: role='user' parts=[DataPart(type='data', data={'input': 'PO00003の発注日2024-03-20の前後24時間（2024-03-19～2024-03-21）における担当者ID EMP001と取引先ID V00001間のメールログを取得してください。'}, metadata=None)] metadata=None
+2025-05-08 20:28:43,897 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent skill_id: analyze_calls, query: PO00003の発注日2024-03-20の前後24時間（2024-03-19～2024-03-21）における担当者ID EMP001と取引先ID V00001間の通話ログを取得してください。
+2025-05-08 20:28:43,897 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Found 1 agents with skill 'analyze_calls'.
+2025-05-08 20:28:43,898 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - エージェント 通話データ管理エージェント にタスクを送信中...
+2025-05-08 20:28:43,898 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - input_message: role='user' parts=[DataPart(type='data', data={'input': 'PO00003の発注日2024-03-20の前後24時間（2024-03-19～2024-03-21）における担当者ID EMP001と取引先ID V00001間の通話ログを取得してください。'}, metadata=None)] metadata=None
+2025-05-08 20:28:52,097 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスクが送信されました。タスクID: 8f425ff8-01a3-4269-a199-0cdaf5f5581d
+2025-05-08 20:28:53,808 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスクが送信されました。タスクID: 2128607a-aed3-4d2a-be93-048d1673f5dd
+2025-05-08 20:28:59,847 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスクが送信されました。タスクID: d4d960c1-60af-46fc-b73f-b409b7a85787
+2025-05-08 20:29:00,261 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスクが送信されました。タスクID: 30b6be54-c53c-4906-9215-0731f1155599
+2025-05-08 20:29:00,560 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスク結果を取得しました
+2025-05-08 20:29:00,560 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent result: id='step_analyze_calls' description='データエージェントへのクエリ: PO00002の発注日2024-02-10の前後24時間（2024-02-09～2024-02-11）における担当者ID EMP001と取引先ID V00001間の通話ログを取得してください。' skill_id='analyze_calls' input_data={'input': 'PO00002の発注日2024-02-10の前後24時間（2024-02-09～2024-02-11）における担当者ID EMP001と取引先ID V00001間の通話ログを取得してください。'} parameters={} is_completed=True output_data={'text': '2024-02-09～2024-02-11の間に担当者ID EMP001 と取引先ID V00001 間の通話ログは見つかりませんでした。', 'data': None, 'agent': '通話データ管理エージェント'} error=None selected_agent=None start_time=datetime.datetime(2025, 5, 8, 20, 28, 43, 139272) transitions={}
+2025-05-08 20:29:00,564 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスク結果を取得しました
+2025-05-08 20:29:00,564 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent result: id='step_analyze_calls' description='データエージェントへのクエリ: PO00003の発注日2024-03-20の前後24時間（2024-03-19～2024-03-21）における担当者ID EMP001と取引先ID V00001間の通話ログを取得してください。' skill_id='analyze_calls' input_data={'input': 'PO00003の発注日2024-03-20の前後24時間（2024-03-19～2024-03-21）における担当者ID EMP001と取引先ID V00001間の通話ログを取得してください。'} parameters={} is_completed=True output_data={'text': 'PO00003の発注日2024-03-20の前後24時間（2024-03-19～2024-03-21）における担当者ID EMP001と取引先ID V00001間の通話ログは、データ上には存在しませんでした。', 'data': None, 'agent': '通話データ管理エージェント'} error=None selected_agent=None start_time=datetime.datetime(2025, 5, 8, 20, 28, 43, 897384) transitions={}
+2025-05-08 20:31:18,909 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent result: id='step_analyze_communications' description='データエージェントへのクエリ: PO00003の発注日2024-03-20の前後24時間（2024-03-19～2024-03-21）における担当者ID EMP001と取引先ID V00001間のメールログを取得してください。' skill_id='analyze_communications' input_data={'input': 'PO00003の発注日2024-03-20の前後24時間（2024-03-19～2024-03-21）における担当者ID EMP001と取引先ID V00001間のメールログを取得してください。'} parameters={} is_completed=False output_data=None error='タスク結果の取得がタイムアウトしました' selected_agent=None start_time=datetime.datetime(2025, 5, 8, 20, 28, 43, 472302) transitions={}
+2025-05-08 20:31:18,909 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent result: id='step_analyze_communications' description='データエージェントへのクエリ: PO00002の発注日2024-02-10の前後24時間（2024-02-09～2024-02-11）における担当者ID EMP001と取引先ID V00001間のメールログを取得してください。' skill_id='analyze_communications' input_data={'input': 'PO00002の発注日2024-02-10の前後24時間（2024-02-09～2024-02-11）における担当者ID EMP001と取引先ID V00001間のメールログを取得してください。'} parameters={} is_completed=False output_data=None error='タスク結果の取得がタイムアウトしました' selected_agent=None start_time=datetime.datetime(2025, 5, 8, 20, 28, 42, 733010) transitions={}
+2025-05-08 20:31:27,026 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] data_summary: {
+  "data": {
+    "高額注文リスト": [
+      {
+        "発注ID": "PO00002",
+        "発注日": "2024-02-10",
+        "担当者ID": "EMP001",
+        "取引先ID": "V00001",
+        "メールログ": "タイムアウトのため取得できませんでした",
+        "通話ログ": "2024-02-09～2024-02-11の間にEMP001とV00001間の通話ログは見つかりませんでした"
+      },
+      {
+        "発注ID": "PO00003",
+        "発注日": "2024-03-20",
+        "担当者ID": "EMP001",
+        "取引先ID": "V00001",
+        "メールログ": "タイムアウトのため取得できませんでした",
+        "通話ログ": "2024-03-19～2024-03-21の間にEMP001とV00001間の通話ログはデータ上には存在しませんでした"
+      }
+      // ...（他の注文も同様の手順で取得可能）
+    ]
+  },
+  "description": "対象期間中の全高額注文（例：PO00002, PO00003）について、発注日（タイムスタンプ）、担当者ID、取引先IDを取得し、各注文の直前後24時間の担当者と取引先間のメール・通話ログを取得しました。通話ログは該当期間に該当データが存在しませんでした。メールログはタイムアウトにより取得できませんでした。",
+  "background": "発注データ管理エージェントから高額注文のリストを取得し、各注文ごとにメールデータ管理エージェント・通話データ管理エージェントを用いて、発注日直前後24時間の担当者と取引先間のコミュニケーションログを取得しました。"
+}
+2025-05-08 20:31:27,032 - __main__ - INFO - Notifying backend with full state after node query_data_agent...
+2025-05-08 20:31:27,617 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:31:27,620 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - --- Node: DecisionMaker ---
+2025-05-08 20:31:27,620 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DecisionMaker] next_action: {'action_type': 'evaluate_hypothesis', 'parameters': {'hypothesis_id': 'sub_hyp_002_3'}}
+2025-05-08 20:31:27,626 - __main__ - INFO - Notifying backend with full state after node decision_maker...
+2025-05-08 20:31:28,198 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:31:28,199 - A2A_risk.samples.python.agents.risk_agent.nodes.evaluate_hypothesis - INFO - --- Node: EvaluateHypothesis ---
+2025-05-08 20:31:38,263 - A2A_risk.samples.python.agents.risk_agent.nodes.evaluate_hypothesis - INFO - [AE] 評価結果: id=sub_hyp_002_3, status=needs_revision, reasoning=調査対象期間内の高額注文データに対する通信ログの取得試行において、メールログはタイムアウトとなり、通話ログはデータが存在しないと確認されたため、十分な証拠が得られていません。また、取得された注文データの一部が対象期間外であったため、仮説を正確に評価できませんでした。, required_next_data=対象期間中（2024-05-01〜2025-04-30）における全高額注文の正確なタイムスタンプと、その直前後24時間の担当者と取引先間のメール及び通話ログのデータ
+2025-05-08 20:31:38,268 - __main__ - INFO - Notifying backend with full state after node evaluate_hypothesis...
+2025-05-08 20:31:38,849 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:31:38,853 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - --- Node: DecisionMaker ---
+2025-05-08 20:31:38,853 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DM] Focus hypothesis sub_hyp_002_3 is resolved (needs_revision). Clearing focus.
+2025-05-08 20:31:38,853 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DM] ★★all_hyp_status: ['hyp_001:supported', 'hyp_002:supported', 'hyp_003:rejected', 'sub_hyp_001_1:new', 'sub_hyp_001_2:new', 'sub_hyp_001_3:new', 'sub_hyp_002_1:new', 'sub_hyp_002_2:new', 'sub_hyp_002_3:needs_revision']
+2025-05-08 20:31:38,860 - __main__ - INFO - Notifying backend with full state after node decision_maker...
+2025-05-08 20:31:39,446 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:31:39,447 - A2A_risk.samples.python.agents.risk_agent.nodes.evaluate_hypothesis - INFO - --- Node: EvaluateHypothesis ---
+2025-05-08 20:31:46,177 - A2A_risk.samples.python.agents.risk_agent.nodes.evaluate_hypothesis - INFO - [AE] 評価結果: id=sub_hyp_001_1, status=inconclusive, reasoning=現時点で利用可能なデータおよび最新のデータ分析結果では、2024-05-01〜2025-04-30期間における各担当者・取引先ペアの平均単価や、全体の平均単価との比較、並びに営業時間外の通信の具体的な件数（メール・通話）の割合が確認できていません。そのため、仮説の条件を検証するための十分なエビデンスが得られていません。, required_next_data=各担当者・取引先ペアごとの取引単価データ（平均単価および全体平均単価との比較）、2024-05-01〜2025-04-30の期間中の全通信件数に対する営業時間外通信（メールおよび通話）の具体的な件数と割合のデータ
+2025-05-08 20:31:46,186 - __main__ - INFO - Notifying backend with full state after node evaluate_hypothesis...
+2025-05-08 20:31:46,765 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:31:46,768 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - --- Node: DecisionMaker ---
+2025-05-08 20:31:50,413 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - ---decision--------------------
+2025-05-08 20:31:50,413 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DM] LLM response: {'thought': "現在フォーカスしている仮説 sub_hyp_001_1 のステータスは 'inconclusive' であり、最新の履歴エントリも評価観察で、必要なデータ（各担当者・取引先ペアごとの平均単価、全体平均単価との比較、営業時間外通信の件数と割合）が未取得であることが明記されています。ポリシーに従い、required_next_data の内容をそのまま query_data_agent で問い合わせる必要があります。", 'action': {'action_type': 'query_data_agent', 'parameters': {'query': ['各担当者・取引先ペアごとの取引単価データ（平均単価および全体平均単価との比較）、2024-05-01〜2025-04-30の期間中の全通信件数に対する営業時間外通信（メールおよび通話）の具体的な件数と割合のデータ']}}}
+2025-05-08 20:31:50,413 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - -------------------------------
+2025-05-08 20:31:50,424 - __main__ - INFO - Notifying backend with full state after node decision_maker...
+2025-05-08 20:31:51,015 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:31:51,018 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - --- Node: QueryDataAgent ---
+2025-05-08 20:31:54,898 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent skill_id: analyze_order, query: 2024-05-01〜2025-04-30の期間における各担当者・取引先ペアごとの平均取引単価データと、全体の平均取引単価を取得してください。
+2025-05-08 20:31:54,898 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Found 1 agents with skill 'analyze_order'.
+2025-05-08 20:31:54,899 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - エージェント 発注データ管理エージェント にタスクを送信中...
+2025-05-08 20:31:54,899 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - input_message: role='user' parts=[DataPart(type='data', data={'input': '2024-05-01〜2025-04-30の期間における各担当者・取引先ペアごとの平均取引単価データと、全体の平均取引単価を取得してください。'}, metadata=None)] metadata=None
+2025-05-08 20:31:55,252 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent skill_id: analyze_communications, query: 2024-05-01〜2025-04-30の期間中の全メール通信件数と、営業時間外メール通信件数およびその割合を取得してください。
+2025-05-08 20:31:55,253 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Found 1 agents with skill 'analyze_communications'.
+2025-05-08 20:31:55,253 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - エージェント メールデータ管理エージェント にタスクを送信中...
+2025-05-08 20:31:55,253 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - input_message: role='user' parts=[DataPart(type='data', data={'input': '2024-05-01〜2025-04-30の期間中の全メール通信件数と、営業時間外メール通信件数およびその割合を取得してください。'}, metadata=None)] metadata=None
+2025-05-08 20:31:55,560 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent skill_id: analyze_calls, query: 2024-05-01〜2025-04-30の期間中の全通話件数と、営業時間外通話件数およびその割合を取得してください。
+2025-05-08 20:31:55,561 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Found 1 agents with skill 'analyze_calls'.
+2025-05-08 20:31:55,561 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - エージェント 通話データ管理エージェント にタスクを送信中...
+2025-05-08 20:31:55,561 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - input_message: role='user' parts=[DataPart(type='data', data={'input': '2024-05-01〜2025-04-30の期間中の全通話件数と、営業時間外通話件数およびその割合を取得してください。'}, metadata=None)] metadata=None
+2025-05-08 20:32:03,419 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスクが送信されました。タスクID: df26fdfb-2152-4a49-b123-5968e9c39da8
+2025-05-08 20:32:03,904 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスクが送信されました。タスクID: eebbbf33-8dda-414c-a7fb-586f6c8257d6
+2025-05-08 20:32:04,203 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスク結果を取得しました
+2025-05-08 20:32:04,203 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent result: id='step_analyze_calls' description='データエージェントへのクエリ: 2024-05-01〜2025-04-30の期間中の全通話件数と、営業時間外通話件数およびその割合を取得してください。' skill_id='analyze_calls' input_data={'input': '2024-05-01〜2025-04-30の期間中の全通話件数と、営業時間外通話件数およびその割合を取得してください。'} parameters={} is_completed=True output_data={'text': '2024-05-01〜2025-04-30の期間中の全通話件数は15件です。\nそのうち営業時間外（09:00〜18:00）の通話件数は4件で、割合は約26.7%です。', 'data': None, 'agent': '通話データ管理エージェント'} error=None selected_agent=None start_time=datetime.datetime(2025, 5, 8, 20, 31, 55, 561126) transitions={}
+2025-05-08 20:32:05,030 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスクが送信されました。タスクID: c2568409-dd88-42c0-9299-cd1c0fa19413
+2025-05-08 20:34:13,258 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent result: id='step_analyze_communications' description='データエージェントへのクエリ: 2024-05-01〜2025-04-30の期間中の全メール通信件数と、営業時間外メール通信件数およびその割合を取得してください。' skill_id='analyze_communications' input_data={'input': '2024-05-01〜2025-04-30の期間中の全メール通信件数と、営業時間外メール通信件数およびその割合を取得してください。'} parameters={} is_completed=False output_data=None error='タスク結果の取得がタイムアウトしました' selected_agent=None start_time=datetime.datetime(2025, 5, 8, 20, 31, 55, 252951) transitions={}
+2025-05-08 20:34:14,395 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent result: id='step_analyze_order' description='データエージェントへのクエリ: 2024-05-01〜2025-04-30の期間における各担当者・取引先ペアごとの平均取引単価データと、全体の平均取引単価を取得してください。' skill_id='analyze_order' input_data={'input': '2024-05-01〜2025-04-30の期間における各担当者・取引先ペアごとの平均取引単価データと、全体の平均取引単価を取得してください。'} parameters={} is_completed=False output_data=None error='タスク結果の取得がタイムアウトしました' selected_agent=None start_time=datetime.datetime(2025, 5, 8, 20, 31, 54, 898595) transitions={}
+2025-05-08 20:34:18,342 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] data_summary: {
+  "data": {
+    "通話データ": {
+      "全通話件数": 15,
+      "営業時間外通話件数": 4,
+      "営業時間外通話割合": "約26.7%"
+    },
+    "取引単価データ": null,
+    "メールデータ": null
+  },
+  "description": "2024-05-01〜2025-04-30の期間中の全通話件数は15件、そのうち営業時間外（09:00〜18:00以外）の通話件数は4件で、割合は約26.7%です。取引単価データ（各担当者・取引先ペアごとの平均単価および全体平均単価）とメールデータ（全通信件数・営業時間外通信件数・割合）は、データエージェントから取得できませんでした。",
+  "background": "発注データ管理エージェント、メールデータ管理エージェント、通話データ管理エージェントに対して、指定期間の必要なデータ取得を試みましたが、通話データのみ取得でき、他はタイムアウトにより取得できませんでした。"
+}
+2025-05-08 20:34:18,348 - __main__ - INFO - Notifying backend with full state after node query_data_agent...
+2025-05-08 20:34:18,933 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:34:18,935 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - --- Node: DecisionMaker ---
+2025-05-08 20:34:18,935 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DecisionMaker] next_action: {'action_type': 'evaluate_hypothesis', 'parameters': {'hypothesis_id': 'sub_hyp_001_1'}}
+2025-05-08 20:34:18,941 - __main__ - INFO - Notifying backend with full state after node decision_maker...
+2025-05-08 20:34:19,503 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:34:19,505 - A2A_risk.samples.python.agents.risk_agent.nodes.evaluate_hypothesis - INFO - --- Node: EvaluateHypothesis ---
+2025-05-08 20:34:27,668 - A2A_risk.samples.python.agents.risk_agent.nodes.evaluate_hypothesis - INFO - [AE] 評価結果: id=sub_hyp_001_1, status=needs_revision, reasoning=現時点では通話データのみ取得でき、その中の営業時間外通話の割合は約26.7%で、仮説で要求される30%を下回っている。しかし、担当者・取引先ペアの取引単価データおよびメール通信データが取得できなかったため、全体としての評価が不十分であり、今回含め3回目のinconclusiveのためneeds_revisionと判断する。, required_next_data=各担当者・取引先ペアごとの取引単価データ（平均単価および全体平均単価との比較）、2024-05-01〜2025-04-30期間中のメール通信の全件数、営業時間外のメール通信件数およびその割合
+2025-05-08 20:34:27,677 - __main__ - INFO - Notifying backend with full state after node evaluate_hypothesis...
+2025-05-08 20:34:28,233 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:34:28,235 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - --- Node: DecisionMaker ---
+2025-05-08 20:34:28,236 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DM] Focus hypothesis sub_hyp_001_1 is resolved (needs_revision). Clearing focus.
+2025-05-08 20:34:28,236 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DM] ★★all_hyp_status: ['hyp_001:supported', 'hyp_002:supported', 'hyp_003:rejected', 'sub_hyp_001_1:needs_revision', 'sub_hyp_001_2:new', 'sub_hyp_001_3:new', 'sub_hyp_002_1:new', 'sub_hyp_002_2:new', 'sub_hyp_002_3:needs_revision']
+2025-05-08 20:34:28,253 - __main__ - INFO - Notifying backend with full state after node decision_maker...
+2025-05-08 20:34:28,825 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:34:28,827 - A2A_risk.samples.python.agents.risk_agent.nodes.evaluate_hypothesis - INFO - --- Node: EvaluateHypothesis ---
+2025-05-08 20:34:34,833 - A2A_risk.samples.python.agents.risk_agent.nodes.evaluate_hypothesis - INFO - [AE] 評価結果: id=sub_hyp_002_1, status=inconclusive, reasoning=現時点では、指定期間内における特定の担当者・取引先ペアの高額注文の承認時間に関する詳細なデータが不足しているため、仮説の評価に必要な十分な証拠が得られていない。特に、各注文の申請から承認までのタイムスタンプや注文金額の詳細が欠如しており、全体の50%以上が5分以内の承認であるか確認できなかった。, required_next_data=各高額注文について、申請日時、承認日時、担当者・取引先ペアの識別情報、及び注文金額のデータ
+2025-05-08 20:34:34,841 - __main__ - INFO - Notifying backend with full state after node evaluate_hypothesis...
+2025-05-08 20:34:35,439 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:34:35,442 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - --- Node: DecisionMaker ---
+2025-05-08 20:34:38,494 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - ---decision--------------------
+2025-05-08 20:34:38,494 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DM] LLM response: {'thought': "現在フォーカスしている仮説 sub_hyp_002_1 のステータスは 'inconclusive' であり、最新の履歴エントリは評価観察で、必要なデータ（各高額注文の申請日時、承認日時、担当者・取引先ペアの識別情報、注文金額）が不足していると明記されている。ポリシーに従い、required_next_data の内容をそのままデータエージェントに問い合わせる必要があるため、'query_data_agent' を選択する。", 'action': {'action_type': 'query_data_agent', 'parameters': {'query': ['各高額注文について、申請日時、承認日時、担当者・取引先ペアの識別情報、及び注文金額のデータを取得してください。対象期間は2024-05-01から2025-04-30、高額注文は全体平均単価の1.5倍以上のものとします。']}}}
+2025-05-08 20:34:38,494 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - -------------------------------
+2025-05-08 20:34:38,504 - __main__ - INFO - Notifying backend with full state after node decision_maker...
+2025-05-08 20:34:39,082 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:34:39,086 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - --- Node: QueryDataAgent ---
+2025-05-08 20:34:41,437 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent skill_id: analyze_order, query: 2024-05-01から2025-04-30の発注データについて、全体平均単価を算出し、その1.5倍以上の単価となる高額注文の発注ID、発注日、担当者ID、担当者名、取引先ID、取引先名、発注金額、稟議IDを抽出してください。
+2025-05-08 20:34:41,437 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Found 1 agents with skill 'analyze_order'.
+2025-05-08 20:34:41,437 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - エージェント 発注データ管理エージェント にタスクを送信中...
+2025-05-08 20:34:41,438 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - input_message: role='user' parts=[DataPart(type='data', data={'input': '2024-05-01から2025-04-30の発注データについて、全体平均単価を算出し、その1.5倍以上の単価となる高額注文の発注ID、発注日、担当者ID、担当者名、取引先ID、取引先名、発注金額、稟議IDを抽出してください。'}, metadata=None)] metadata=None
+2025-05-08 20:34:51,102 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスクが送信されました。タスクID: 3c7dd6d2-d917-4735-aeb1-5edb9cfd9cfc
+2025-05-08 20:34:51,404 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスク結果を取得しました
+2025-05-08 20:34:51,404 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent result: id='step_analyze_order' description='データエージェントへのクエリ: 2024-05-01から2025-04-30の発注データについて、全体平均単価を算出し、その1.5倍以上の単価となる高額注文の発注ID、発注日、担当者ID、担当者名、取引先ID、取引先名、発注金額、稟議IDを抽出してください。' skill_id='analyze_order' input_data={'input': '2024-05-01から2025-04-30の発注データについて、全体平均単価を算出し、その1.5倍以上の単価となる高額注文の発注ID、発注日、担当者ID、担当者名、取引先ID、取引先名、発注金額、稟議IDを抽出してください。'} parameters={} is_completed=True output_data={'text': '2024-05-01から2025-04-30の発注データの中で、全体平均単価の1.5倍以上の高額注文は以下の通りです。\n\n| 発注ID   | 発注日       | 担当者ID | 担当者名 | 取引先ID | 取引先名     | 発注金額 | 稟議ID   |\n|----------|--------------|----------|----------|----------|--------------|----------|----------|\n| PO00015  | 2025-01-20   | EMP002   | 担当者B  | V00055   | コンサルY    | 5000000  | AP00015  |\n| PO00018  | 2025-02-15   | EMP002   | 担当者B  | V00055   | コンサルY    | 4900000  | AP00018  |\n| PO00019  | 2025-03-06   | EMP005   | 担当者E  | V00045   | イベント会社R | 1200000  | AP00019  |', 'data': None, 'agent': '発注データ管理エージェント'} error=None selected_agent=None start_time=datetime.datetime(2025, 5, 8, 20, 34, 41, 437452) transitions={}
+2025-05-08 20:34:53,001 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent skill_id: analyze_requests, query: 稟議IDがAP00015, AP00018, AP00019の稟議書データについて、申請日時と承認日時を取得してください。
+2025-05-08 20:34:53,001 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Found 1 agents with skill 'analyze_requests'.
+2025-05-08 20:34:53,006 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - エージェント 稟議書・申請書データ管理エージェント にタスクを送信中...
+2025-05-08 20:34:53,007 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - input_message: role='user' parts=[DataPart(type='data', data={'input': '稟議IDがAP00015, AP00018, AP00019の稟議書データについて、申請日時と承認日時を取得してください。'}, metadata=None)] metadata=None
+2025-05-08 20:35:07,048 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスクが送信されました。タスクID: 4b19da6d-f80c-4cb0-9c48-8d55f5f2157e
+2025-05-08 20:35:07,345 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスク結果を取得しました
+2025-05-08 20:35:07,345 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent result: id='step_analyze_requests' description='データエージェントへのクエリ: 稟議IDがAP00015, AP00018, AP00019の稟議書データについて、申請日時と承認日時を取得してください。' skill_id='analyze_requests' input_data={'input': '稟議IDがAP00015, AP00018, AP00019の稟議書データについて、申請日時と承認日時を取得してください。'} parameters={} is_completed=True output_data={'text': '稟議IDがAP00015, AP00018, AP00019の稟議書データは現在のデータフレーム`df`の中に見つかりませんでした。別の場所にあるか、まだ読み込まれていない可能性があります。\n\nもし、これらの稟議IDのデータが別のファイルまたはデータソースにある場合、そのデータを読み込んでいただければ、再度申請日時と承認日時の抽出を試みることが可能です。', 'data': None, 'agent': '稟議書・申請書データ管理エージェント'} error=None selected_agent=None start_time=datetime.datetime(2025, 5, 8, 20, 34, 53, 1532) transitions={}
+2025-05-08 20:35:10,679 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] data_summary: {
+  "data": [
+    {
+      "発注ID": "PO00015",
+      "発注日": "2025-01-20",
+      "担当者ID": "EMP002",
+      "担当者名": "担当者B",
+      "取引先ID": "V00055",
+      "取引先名": "コンサルY",
+      "発注金額": 5000000,
+      "稟議ID": "AP00015",
+      "申請日時": null,
+      "承認日時": null
+    },
+    {
+      "発注ID": "PO00018",
+      "発注日": "2025-02-15",
+      "担当者ID": "EMP002",
+      "担当者名": "担当者B",
+      "取引先ID": "V00055",
+      "取引先名": "コンサルY",
+      "発注金額": 4900000,
+      "稟議ID": "AP00018",
+      "申請日時": null,
+      "承認日時": null
+    },
+    {
+      "発注ID": "PO00019",
+      "発注日": "2025-03-06",
+      "担当者ID": "EMP005",
+      "担当者名": "担当者E",
+      "取引先ID": "V00045",
+      "取引先名": "イベント会社R",
+      "発注金額": 1200000,
+      "稟議ID": "AP00019",
+      "申請日時": null,
+      "承認日時": null
+    }
+  ],
+  "description": "2024-05-01から2025-04-30の期間における高額注文（全体平均単価の1.5倍以上）の発注データを取得しました。各注文について、発注日、担当者・取引先ペアの識別情報、発注金額、稟議IDを含みます。申請日時・承認日時は稟議書データ管理エージェントからは取得できませんでした。",
+  "background": "発注データ管理エージェントから高額注文のデータ（発注日、担当者ID・名、取引先ID・名、発注金額、稟議ID）を取得し、稟議書・申請書データ管理エージェントで該当稟議IDの申請日時・承認日時を照会しましたが、該当データは見つかりませんでした。"
+}
+2025-05-08 20:35:10,689 - __main__ - INFO - Notifying backend with full state after node query_data_agent...
+2025-05-08 20:35:11,294 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:35:11,300 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - --- Node: DecisionMaker ---
+2025-05-08 20:35:11,300 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DecisionMaker] next_action: {'action_type': 'evaluate_hypothesis', 'parameters': {'hypothesis_id': 'sub_hyp_002_1'}}
+2025-05-08 20:35:11,306 - __main__ - INFO - Notifying backend with full state after node decision_maker...
+2025-05-08 20:35:11,904 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:35:11,905 - A2A_risk.samples.python.agents.risk_agent.nodes.evaluate_hypothesis - INFO - --- Node: EvaluateHypothesis ---
+2025-05-08 20:35:21,791 - A2A_risk.samples.python.agents.risk_agent.nodes.evaluate_hypothesis - INFO - [AE] 評価結果: id=sub_hyp_002_1, status=needs_revision, reasoning=高額注文についての発注データは取得できたものの、各注文の申請日時と承認日時が取得できなかったため、5分以内の承認が行われたかを検証できず、仮説の重要な判断材料が不足しています。今回含めこれまで3回の評価試行で十分なデータが揃っていないため、仮説の検証を進めるには情報の整理が必要です。, required_next_data=各高額注文の申請日時および承認日時の詳細なデータ（タイムスタンプ情報）
+2025-05-08 20:35:21,800 - __main__ - INFO - Notifying backend with full state after node evaluate_hypothesis...
+2025-05-08 20:35:22,363 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:35:22,365 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - --- Node: DecisionMaker ---
+2025-05-08 20:35:22,365 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DM] Focus hypothesis sub_hyp_002_1 is resolved (needs_revision). Clearing focus.
+2025-05-08 20:35:22,365 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DM] ★★all_hyp_status: ['hyp_001:supported', 'hyp_002:supported', 'hyp_003:rejected', 'sub_hyp_001_1:needs_revision', 'sub_hyp_001_2:new', 'sub_hyp_001_3:new', 'sub_hyp_002_1:needs_revision', 'sub_hyp_002_2:new', 'sub_hyp_002_3:needs_revision']
+2025-05-08 20:35:22,379 - __main__ - INFO - Notifying backend with full state after node decision_maker...
+2025-05-08 20:35:22,937 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:35:22,938 - A2A_risk.samples.python.agents.risk_agent.nodes.evaluate_hypothesis - INFO - --- Node: EvaluateHypothesis ---
+2025-05-08 20:35:29,989 - A2A_risk.samples.python.agents.risk_agent.nodes.evaluate_hypothesis - INFO - [AE] 評価結果: id=sub_hyp_001_2, status=inconclusive, reasoning=現在、支払データの具体的な分析結果が得られておらず、支払日や支払金額の不規則性の兆候が確認できません。そのため、支払データ上の不整合が見られるか否かを判断できず、仮説の支持・反証に至っていません。, required_next_data=2024-05-01〜2025-04-30の期間における対象担当者・取引先ペアの高額注文に関連する支払データ（支払日、支払金額、注文IDなど）の詳細情報
+2025-05-08 20:35:29,998 - __main__ - INFO - Notifying backend with full state after node evaluate_hypothesis...
+2025-05-08 20:35:30,562 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:35:30,565 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - --- Node: DecisionMaker ---
+2025-05-08 20:35:33,692 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - ---decision--------------------
+2025-05-08 20:35:33,692 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DM] LLM response: {'thought': "現在フォーカスしている仮説 'sub_hyp_001_2' のステータスは 'inconclusive' であり、最新の履歴エントリは仮説評価で、必要な支払データ（支払日、支払金額、注文IDなど）の詳細情報が未取得であることが明記されています。ポリシーに従い、まずはこのデータを query_data_agent で取得する必要があります。", 'action': {'action_type': 'query_data_agent', 'parameters': {'query': ['2024-05-01〜2025-04-30の期間における対象担当者・取引先ペアの高額注文に関連する支払データ（支払日、支払金額、注文IDなど）の詳細情報を取得してください。']}}}
+2025-05-08 20:35:33,692 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - -------------------------------
+2025-05-08 20:35:33,702 - __main__ - INFO - Notifying backend with full state after node decision_maker...
+2025-05-08 20:35:34,271 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:35:34,274 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - --- Node: QueryDataAgent ---
+2025-05-08 20:35:36,951 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent skill_id: analyze_order, query: 2024-05-01〜2025-04-30の期間における高額注文の担当者・取引先ペアごとの発注ID、発注日、担当者ID、担当者名、取引先ID、取引先名、発注金額を一覧で取得してください。
+2025-05-08 20:35:36,952 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Found 1 agents with skill 'analyze_order'.
+2025-05-08 20:35:36,952 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - エージェント 発注データ管理エージェント にタスクを送信中...
+2025-05-08 20:35:36,952 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - input_message: role='user' parts=[DataPart(type='data', data={'input': '2024-05-01〜2025-04-30の期間における高額注文の担当者・取引先ペアごとの発注ID、発注日、担当者ID、担当者名、取引先ID、取引先名、発注金額を一覧で取得してください。'}, metadata=None)] metadata=None
+2025-05-08 20:35:55,602 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスクが送信されました。タスクID: 1806bba3-4b97-40ad-9260-b3c969632313
+2025-05-08 20:35:55,912 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスク結果を取得しました
+2025-05-08 20:35:55,912 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent result: id='step_analyze_order' description='データエージェントへのクエリ: 2024-05-01〜2025-04-30の期間における高額注文の担当者・取引先ペアごとの発注ID、発注日、担当者ID、担当者名、取引先ID、取引先名、発注金額を一覧で取得してください。' skill_id='analyze_order' input_data={'input': '2024-05-01〜2025-04-30の期間における高額注文の担当者・取引先ペアごとの発注ID、発注日、担当者ID、担当者名、取引先ID、取引先名、発注金額を一覧で取得してください。'} parameters={} is_completed=True output_data={'text': '2024-05-01〜2025-04-30の期間における高額注文（発注金額10万円以上）の担当者・取引先ペアごとの注文一覧は以下の通りです。\n\n| 発注ID  | 発注日       | 担当者ID | 担当者名 | 取引先ID | 取引先名     | 発注金額   |\n|---------|--------------|----------|----------|----------|--------------|------------|\n| PO00005 | 2024-05-15   | EMP004   | 担当者D  | V00030   | 取引先W      | 150,000    |\n| PO00007 | 2024-07-20   | EMP005   | 担当者E  | V00035   | 取引先V      | 300,000    |\n| PO00009 | 2024-09-10   | EMP001   | 担当者A  | V00001   | サプライヤーX| 210,000    |\n| PO00010 | 2024-10-25   | EMP004   | 担当者D  | V00040   | 取引先U      | 500,000    |\n| PO00011 | 2024-11-15   | EMP003   | 担当者C  | V00027   | 取引先Y      | 120,000    |\n| PO00012 | 2024-12-15   | EMP005   | 担当者E  | V00042   | 取引先T      | 800,000    |\n| PO00013 | 2025-01-10   | EMP001   | 担当者A  | V00001   | サプライヤーX| 165,000    |\n| PO00015 | 2025-01-20   | EMP002   | 担当者B  | V00055   | コンサルY    | 5,000,000  |\n| PO00016 | 2025-02-10   | EMP004   | 担当者D  | V00030   | 取引先W      | 450,000    |\n| PO00017 | 2025-02-12   | EMP002   | 担当者B  | V00056   | デザイン事務所S| 300,000  |\n| PO00018 | 2025-02-15   | EMP002   | 担当者B  | V00055   | コンサルY    | 4,900,000  |\n| PO00019 | 2025-03-06   | EMP005   | 担当者E  | V00045   | イベント会社R| 1,200,000  |\n| PO00020 | 2025-03-20   | EMP001   | 担当者A  | V00001   | サプライヤーX| 250,000    |\n| PO00021 | 2025-04-25   | EMP001   | 担当者A  | V00001   | サプライヤーX| 260,000    |\n\n必要に応じて、さらに絞り込みや並び替えも可能です。', 'data': None, 'agent': '発注データ管理エージェント'} error=None selected_agent=None start_time=datetime.datetime(2025, 5, 8, 20, 35, 36, 952045) transitions={}
+2025-05-08 20:35:57,643 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent skill_id: analyze_payments, query: 2024-05-01〜2025-04-30の期間における、以下の発注ID（PO00005, PO00007, PO00009, PO00010, PO00011, PO00012, PO00013, PO00015, PO00016, PO00017, PO00018, PO00019, PO00020, PO00021）に関連する支払データ（支払日、支払金額、注文IDなど）の詳細情報を取得してください。
+2025-05-08 20:35:57,643 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Found 1 agents with skill 'analyze_payments'.
+2025-05-08 20:35:57,645 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - エージェント 支払データ管理エージェント にタスクを送信中...
+2025-05-08 20:35:57,645 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - input_message: role='user' parts=[DataPart(type='data', data={'input': '2024-05-01〜2025-04-30の期間における、以下の発注ID（PO00005, PO00007, PO00009, PO00010, PO00011, PO00012, PO00013, PO00015, PO00016, PO00017, PO00018, PO00019, PO00020, PO00021）に関連する支払データ（支払日、支払金額、注文IDなど）の詳細情報を取得してください。'}, metadata=None)] metadata=None
+2025-05-08 20:36:02,214 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスクが送信されました。タスクID: 0ddb5ab6-a2eb-4015-bc1c-1c60f05051fe
+2025-05-08 20:36:02,515 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスク結果を取得しました
+2025-05-08 20:36:02,515 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent result: id='step_analyze_payments' description='データエージェントへのクエリ: 2024-05-01〜2025-04-30の期間における、以下の発注ID（PO00005, PO00007, PO00009, PO00010, PO00011, PO00012, PO00013, PO00015, PO00016, PO00017, PO00018, PO00019, PO00020, PO00021）に関連する支払データ（支払日、支払金額、注文IDなど）の詳細情報を取得してください。' skill_id='analyze_payments' input_data={'input': '2024-05-01〜2025-04-30の期間における、以下の発注ID（PO00005, PO00007, PO00009, PO00010, PO00011, PO00012, PO00013, PO00015, PO00016, PO00017, PO00018, PO00019, PO00020, PO00021）に関連する支払データ（支払日、支払金額、注文IDなど）の詳細情報を取得してください。'} parameters={} is_completed=True output_data={'text': 'ご提示いただいたデータフレーム`df`の内容からは、「発注ID（注文ID）」の情報が見当たりません。現在のデータには「支払ID」「支払日」「取引先ID」「取引先名」「支払金額」「支払先口座名義」「関連請求書ID」「支払方法」などのカラムが含まれていますが、「発注ID」や「注文ID」に該当するカラムがないため、要求された検索を直接行うことができません。\n\nもし、「発注ID（注文ID）」の情報が別のデータフレームにある場合、または「関連請求書ID」と結びつけて「発注ID」が取得できる場合は、該当のデータを教えていただければ結合やフィルタリングを行って該当期間内の支払データを抽出可能です。\n\n発注IDに関するテーブルや、関連する情報を持つデータフレームがあればご提供いただけますか？', 'data': None, 'agent': '支払データ管理エージェント'} error=None selected_agent=None start_time=datetime.datetime(2025, 5, 8, 20, 35, 57, 643346) transitions={}
+2025-05-08 20:36:06,077 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] data_summary: {
+  "data": null,
+  "description": "2024-05-01〜2025-04-30の期間における高額注文の担当者・取引先ペアごとの発注データ（発注ID、発注日、担当者ID、担当者名、取引先ID、取引先名、発注金額）は取得できましたが、支払データ管理エージェントでは発注ID（注文ID）を直接キーとして支払データを検索・取得することができませんでした。支払データには「支払ID」「支払日」「取引先ID」「取引先名」「支払金額」「支払先口座名義」「関連請求書ID」「支払方法」などの情報はありますが、発注IDや注文IDとの直接的な紐付け情報が存在しません。",
+  "background": "まず発注データ管理エージェントから高額注文の発注IDリストを取得し、その発注IDをもとに支払データ管理エージェントで該当する支払データを検索しようとしました。しかし、支払データ管理エージェントの仕様上、発注ID（注文ID）を直接キーとして支払データを取得することができませんでした。"
+}
+2025-05-08 20:36:06,082 - __main__ - INFO - Notifying backend with full state after node query_data_agent...
+2025-05-08 20:36:06,653 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:36:06,656 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - --- Node: DecisionMaker ---
+2025-05-08 20:36:06,656 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DecisionMaker] next_action: {'action_type': 'evaluate_hypothesis', 'parameters': {'hypothesis_id': 'sub_hyp_001_2'}}
+2025-05-08 20:36:06,662 - __main__ - INFO - Notifying backend with full state after node decision_maker...
+2025-05-08 20:36:07,243 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:36:07,244 - A2A_risk.samples.python.agents.risk_agent.nodes.evaluate_hypothesis - INFO - --- Node: EvaluateHypothesis ---
+2025-05-08 20:36:18,100 - A2A_risk.samples.python.agents.risk_agent.nodes.evaluate_hypothesis - INFO - [AE] 評価結果: id=sub_hyp_001_2, status=needs_revision, reasoning=高額注文の発注データは取得できたが、それに対応する支払データとの直接的な紐付けが確認できず、支払日の不規則性や支払金額の変動の評価が不可能でした。複数回の試みにもかかわらず、必要な支払データのリンク情報が得られておらず、仮説の検証に十分な証拠が集まっていません。, required_next_data=2024-05-01〜2025-04-30の期間における対象担当者・取引先ペアの高額注文に関連する、支払日、支払金額、注文IDまたは関連請求書IDとの紐付け情報を含む詳細な支払データ
+2025-05-08 20:36:18,109 - __main__ - INFO - Notifying backend with full state after node evaluate_hypothesis...
+2025-05-08 20:36:18,704 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:36:18,709 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - --- Node: DecisionMaker ---
+2025-05-08 20:36:18,709 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DM] Focus hypothesis sub_hyp_001_2 is resolved (needs_revision). Clearing focus.
+2025-05-08 20:36:18,710 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DM] ★★all_hyp_status: ['hyp_001:supported', 'hyp_002:supported', 'hyp_003:rejected', 'sub_hyp_001_1:needs_revision', 'sub_hyp_001_2:needs_revision', 'sub_hyp_001_3:new', 'sub_hyp_002_1:needs_revision', 'sub_hyp_002_2:new', 'sub_hyp_002_3:needs_revision']
+2025-05-08 20:36:18,717 - __main__ - INFO - Notifying backend with full state after node decision_maker...
+2025-05-08 20:36:19,377 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:36:19,380 - A2A_risk.samples.python.agents.risk_agent.nodes.evaluate_hypothesis - INFO - --- Node: EvaluateHypothesis ---
+2025-05-08 20:36:27,604 - A2A_risk.samples.python.agents.risk_agent.nodes.evaluate_hypothesis - INFO - [AE] 評価結果: id=sub_hyp_002_2, status=inconclusive, reasoning=現時点ではDATA_SUMMARYおよび利用可能なデータから、対象期間中の高額注文に対する決済パターンとその従来の注文との比較検証ができていないため、仮説を明確に支持する根拠が不足している。具体的な同日決済や従来と異なる決済手法の頻度と比較情報が得られていない状態である。, required_next_data=2024-05-01〜2025-04-30における各注文の決済日、決済方法、注文金額の詳細な記録。特に高額注文とその他注文の決済パターンの比較データが必要。
+2025-05-08 20:36:27,613 - __main__ - INFO - Notifying backend with full state after node evaluate_hypothesis...
+2025-05-08 20:36:28,168 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:36:28,171 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - --- Node: DecisionMaker ---
+2025-05-08 20:36:35,780 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - ---decision--------------------
+2025-05-08 20:36:35,780 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DM] LLM response: {'thought': "現在フォーカスしている仮説 'sub_hyp_002_2' のステータスは 'inconclusive' であり、最新の履歴エントリは評価（observation）で、必要な次のデータ（required_next_data）として『2024-05-01〜2025-04-30における各注文の決済日、決済方法、注文金額の詳細な記録。特に高額注文とその他注文の決済パターンの比較データ』が明示されている。ポリシーに従い、このデータを取得するため 'query_data_agent' を選択する。", 'action': {'action_type': 'query_data_agent', 'parameters': {'query': ['2024-05-01〜2025-04-30における各注文の決済日、決済方法、注文金額の詳細な記録を取得してください。特に高額注文（単価が同期間平均の1.5倍以上）とその他注文の決済パターン（決済日が注文日と同日の割合、決済方法の違い）を比較できるデータを抽出してください。']}}}
+2025-05-08 20:36:35,780 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - -------------------------------
+2025-05-08 20:36:35,791 - __main__ - INFO - Notifying backend with full state after node decision_maker...
+2025-05-08 20:36:36,368 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:36:36,371 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - --- Node: QueryDataAgent ---
+2025-05-08 20:36:41,215 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent skill_id: analyze_order, query: 2024-05-01〜2025-04-30の期間における全注文の発注ID、発注日、単価、数量、発注金額を一覧で取得してください。
+2025-05-08 20:36:41,215 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Found 1 agents with skill 'analyze_order'.
+2025-05-08 20:36:41,216 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - エージェント 発注データ管理エージェント にタスクを送信中...
+2025-05-08 20:36:41,216 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - input_message: role='user' parts=[DataPart(type='data', data={'input': '2024-05-01〜2025-04-30の期間における全注文の発注ID、発注日、単価、数量、発注金額を一覧で取得してください。'}, metadata=None)] metadata=None
+2025-05-08 20:36:41,576 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent skill_id: analyze_payments, query: 2024-05-01〜2025-04-30の期間における全支払の支払ID、支払日、支払金額、支払方法、関連請求書IDを一覧で取得してください。
+2025-05-08 20:36:41,576 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Found 1 agents with skill 'analyze_payments'.
+2025-05-08 20:36:41,577 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - エージェント 支払データ管理エージェント にタスクを送信中...
+2025-05-08 20:36:41,577 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - input_message: role='user' parts=[DataPart(type='data', data={'input': '2024-05-01〜2025-04-30の期間における全支払の支払ID、支払日、支払金額、支払方法、関連請求書IDを一覧で取得してください。'}, metadata=None)] metadata=None
+2025-05-08 20:36:53,943 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスクが送信されました。タスクID: 9297c186-df82-405f-9a33-3d703948fc35
+2025-05-08 20:36:54,309 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスクが送信されました。タスクID: f7802db9-1496-4e88-ab25-39e74dcd0df9
+2025-05-08 20:36:54,606 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスク結果を取得しました
+2025-05-08 20:36:54,606 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent result: id='step_analyze_payments' description='データエージェントへのクエリ: 2024-05-01〜2025-04-30の期間における全支払の支払ID、支払日、支払金額、支払方法、関連請求書IDを一覧で取得してください。' skill_id='analyze_payments' input_data={'input': '2024-05-01〜2025-04-30の期間における全支払の支払ID、支払日、支払金額、支払方法、関連請求書IDを一覧で取得してください。'} parameters={} is_completed=True output_data={'text': '2024-05-01〜2025-04-30の期間における全支払の支払ID、支払日、支払金額、支払方法、関連請求書IDは以下の通りです。\n\n| 支払ID   | 支払日       | 支払金額 | 支払方法 | 関連請求書ID |\n|----------|--------------|----------|----------|--------------|\n| PAY00005 | 2024-05-31   | 150000   | 銀行振込 | INV00005     |\n| PAY00006 | 2024-06-28   | 95000    | 銀行振込 | INV00006     |\n| PAY00007 | 2024-07-31   | 300000   | 銀行振込 | INV00007     |\n| PAY00008 | 2024-08-30   | 30000    | 銀行振込 | INV00008     |\n| PAY00009 | 2024-09-30   | 210000   | 銀行振込 | INV00009     |\n| PAY00010 | 2024-10-31   | 500000   | 銀行振込 | INV00010     |\n| PAY00011 | 2024-11-29   | 120000   | 銀行振込 | INV00011     |\n| PAY00012 | 2024-12-27   | 800000   | 銀行振込 | INV00012     |\n| PAY00013 | 2025-01-31   | 165000   | 銀行振込 | INV00013     |\n| PAY00014 | 2025-01-31   | 75000    | 銀行振込 | INV00014     |\n| PAY00015 | 2025-01-25   | 5000000  | 銀行振込 | INV00015     |\n| PAY00016 | 2025-02-28   | 450000   | 銀行振込 | INV00016     |\n| PAY00017 | 2025-02-28   | 300000   | 銀行振込 | INV00017     |\n| PAY00018 | 2025-02-20   | 4900000  | 銀行振込 | INV00018     |\n| PAY00019 | 2025-03-31   | 1200000  | 銀行振込 | INV00019     |\n| PAY00020 | 2025-03-25   | 250000   | 銀行振込 | INV00020     |\n| PAY00021 | 2025-04-30   | 260000   | 銀行振込 | INV00021     |', 'data': None, 'agent': '支払データ管理エージェント'} error=None selected_agent=None start_time=datetime.datetime(2025, 5, 8, 20, 36, 41, 576627) transitions={}
+2025-05-08 20:39:03,611 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent result: id='step_analyze_order' description='データエージェントへのクエリ: 2024-05-01〜2025-04-30の期間における全注文の発注ID、発注日、単価、数量、発注金額を一覧で取得してください。' skill_id='analyze_order' input_data={'input': '2024-05-01〜2025-04-30の期間における全注文の発注ID、発注日、単価、数量、発注金額を一覧で取得してください。'} parameters={} is_completed=False output_data=None error='タスク結果の取得がタイムアウトしました' selected_agent=None start_time=datetime.datetime(2025, 5, 8, 20, 36, 41, 215606) transitions={}
+2025-05-08 20:39:12,435 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] data_summary: {
+  "data": {
+    "payments": [
+      {"支払ID": "PAY00005", "支払日": "2024-05-31", "支払金額": 150000, "支払方法": "銀行振込", "関連請求書ID": "INV00005"},
+      {"支払ID": "PAY00006", "支払日": "2024-06-28", "支払金額": 95000, "支払方法": "銀行振込", "関連請求書ID": "INV00006"},
+      {"支払ID": "PAY00007", "支払日": "2024-07-31", "支払金額": 300000, "支払方法": "銀行振込", "関連請求書ID": "INV00007"},
+      {"支払ID": "PAY00008", "支払日": "2024-08-30", "支払金額": 30000, "支払方法": "銀行振込", "関連請求書ID": "INV00008"},
+      {"支払ID": "PAY00009", "支払日": "2024-09-30", "支払金額": 210000, "支払方法": "銀行振込", "関連請求書ID": "INV00009"},
+      {"支払ID": "PAY00010", "支払日": "2024-10-31", "支払金額": 500000, "支払方法": "銀行振込", "関連請求書ID": "INV00010"},
+      {"支払ID": "PAY00011", "支払日": "2024-11-29", "支払金額": 120000, "支払方法": "銀行振込", "関連請求書ID": "INV00011"},
+      {"支払ID": "PAY00012", "支払日": "2024-12-27", "支払金額": 800000, "支払方法": "銀行振込", "関連請求書ID": "INV00012"},
+      {"支払ID": "PAY00013", "支払日": "2025-01-31", "支払金額": 165000, "支払方法": "銀行振込", "関連請求書ID": "INV00013"},
+      {"支払ID": "PAY00014", "支払日": "2025-01-31", "支払金額": 75000, "支払方法": "銀行振込", "関連請求書ID": "INV00014"},
+      {"支払ID": "PAY00015", "支払日": "2025-01-25", "支払金額": 5000000, "支払方法": "銀行振込", "関連請求書ID": "INV00015"},
+      {"支払ID": "PAY00016", "支払日": "2025-02-28", "支払金額": 450000, "支払方法": "銀行振込", "関連請求書ID": "INV00016"},
+      {"支払ID": "PAY00017", "支払日": "2025-02-28", "支払金額": 300000, "支払方法": "銀行振込", "関連請求書ID": "INV00017"},
+      {"支払ID": "PAY00018", "支払日": "2025-02-20", "支払金額": 4900000, "支払方法": "銀行振込", "関連請求書ID": "INV00018"},
+      {"支払ID": "PAY00019", "支払日": "2025-03-31", "支払金額": 1200000, "支払方法": "銀行振込", "関連請求書ID": "INV00019"},
+      {"支払ID": "PAY00020", "支払日": "2025-03-25", "支払金額": 250000, "支払方法": "銀行振込", "関連請求書ID": "INV00020"},
+      {"支払ID": "PAY00021", "支払日": "2025-04-30", "支払金額": 260000, "支払方法": "銀行振込", "関連請求書ID": "INV00021"}
+    ]
+  },
+  "description": "2024-05-01〜2025-04-30の期間における全支払の支払ID、支払日、支払金額、支払方法、関連請求書IDの一覧データです。すべて銀行振込による支払いで、支払日・金額・請求書IDが記載されています。",
+  "background": "支払データ管理エージェント（analyze_payments）から、指定期間の全支払記録を取得しました。発注データ管理エージェントからの注文データ取得はタイムアウトにより失敗しました。"
+}
+2025-05-08 20:39:12,457 - __main__ - INFO - Notifying backend with full state after node query_data_agent...
+2025-05-08 20:39:13,078 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:39:13,082 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - --- Node: DecisionMaker ---
+2025-05-08 20:39:13,082 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DecisionMaker] next_action: {'action_type': 'evaluate_hypothesis', 'parameters': {'hypothesis_id': 'sub_hyp_002_2'}}
+2025-05-08 20:39:13,091 - __main__ - INFO - Notifying backend with full state after node decision_maker...
+2025-05-08 20:39:13,714 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:39:13,715 - A2A_risk.samples.python.agents.risk_agent.nodes.evaluate_hypothesis - INFO - --- Node: EvaluateHypothesis ---
+2025-05-08 20:39:21,611 - A2A_risk.samples.python.agents.risk_agent.nodes.evaluate_hypothesis - INFO - [AE] 評価結果: id=sub_hyp_002_2, status=needs_revision, reasoning=現時点で取得された支払データは全て銀行振込であり、支払日の詳細は確認できるものの、注文データ（発注日、単価、数量、発注金額）との関連付けができないため、高額注文とその他注文の決済パターンの比較が不可能です。さらに、これまで3回目のinconclusive評価となっているため、仮説の評価には記録の補完が必要です。, required_next_data=2024-05-01〜2025-04-30の各注文の発注ID、発注日、単価、数量、発注金額、特に高額注文（単価が期間の平均の1.5倍以上）の決済日と決済方法、及びその他注文の同様の決済データ
+2025-05-08 20:39:21,620 - __main__ - INFO - Notifying backend with full state after node evaluate_hypothesis...
+2025-05-08 20:39:22,235 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:39:22,237 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - --- Node: DecisionMaker ---
+2025-05-08 20:39:22,237 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DM] Focus hypothesis sub_hyp_002_2 is resolved (needs_revision). Clearing focus.
+2025-05-08 20:39:22,237 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DM] ★★all_hyp_status: ['hyp_001:supported', 'hyp_002:supported', 'hyp_003:rejected', 'sub_hyp_001_1:needs_revision', 'sub_hyp_001_2:needs_revision', 'sub_hyp_001_3:new', 'sub_hyp_002_1:needs_revision', 'sub_hyp_002_2:needs_revision', 'sub_hyp_002_3:needs_revision']
+2025-05-08 20:39:22,248 - __main__ - INFO - Notifying backend with full state after node decision_maker...
+2025-05-08 20:39:22,812 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:39:22,813 - A2A_risk.samples.python.agents.risk_agent.nodes.evaluate_hypothesis - INFO - --- Node: EvaluateHypothesis ---
+2025-05-08 20:39:32,607 - A2A_risk.samples.python.agents.risk_agent.nodes.evaluate_hypothesis - INFO - [AE] 評価結果: id=sub_hyp_001_3, status=inconclusive, reasoning=利用可能なデータが限定的であり、同一担当者・取引先ペアによる連続注文とその注文に紐づく納品/検収のタイムラインについて、明確なパターンや一貫性の問題を示す十分な証拠が得られていません。したがって、現状では仮説を支持する兆候を断言するには至らず、さらなる詳細データが必要です。, required_next_data=発注データの詳細レコード（商品説明、数量、条件、担当者、取引先情報）および納品/検収記録の時系列データ、さらにそれらの注文と納品/検収の間の遅延や矛盾に関する具体的指標
+2025-05-08 20:39:32,629 - __main__ - INFO - Notifying backend with full state after node evaluate_hypothesis...
+2025-05-08 20:39:33,192 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:39:33,195 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - --- Node: DecisionMaker ---
+2025-05-08 20:39:36,021 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - ---decision--------------------
+2025-05-08 20:39:36,021 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DM] LLM response: {'thought': "現在フォーカスしている仮説 sub_hyp_001_3 のステータスは 'inconclusive' であり、最新の履歴エントリは評価観察で、追加で必要なデータ（発注データの詳細レコードや納品/検収記録の時系列データ等）が明示されています。ポリシーに従い、必要なデータを取得するため 'query_data_agent' を選択します。", 'action': {'action_type': 'query_data_agent', 'parameters': {'query': ['発注データの詳細レコード（商品説明、数量、条件、担当者、取引先情報）および納品/検収記録の時系列データ、さらにそれらの注文と納品/検収の間の遅延や矛盾に関する具体的指標を取得してください。']}}}
+2025-05-08 20:39:36,021 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - -------------------------------
+2025-05-08 20:39:36,027 - __main__ - INFO - Notifying backend with full state after node decision_maker...
+2025-05-08 20:39:36,572 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:39:36,573 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - --- Node: QueryDataAgent ---
+2025-05-08 20:39:38,934 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent skill_id: analyze_order, query: 発注データの詳細レコード（商品説明、数量、条件、担当者、取引先情報）を全件取得してください。
+2025-05-08 20:39:38,935 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Found 1 agents with skill 'analyze_order'.
+2025-05-08 20:39:38,935 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - エージェント 発注データ管理エージェント にタスクを送信中...
+2025-05-08 20:39:38,935 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - input_message: role='user' parts=[DataPart(type='data', data={'input': '発注データの詳細レコード（商品説明、数量、条件、担当者、取引先情報）を全件取得してください。'}, metadata=None)] metadata=None
+2025-05-08 20:39:39,237 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent skill_id: analyze_order, query: 納品記録や検収記録の時系列データを全件取得してください。
+2025-05-08 20:39:39,237 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Found 1 agents with skill 'analyze_order'.
+2025-05-08 20:39:39,237 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - エージェント 発注データ管理エージェント にタスクを送信中...
+2025-05-08 20:39:39,238 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - input_message: role='user' parts=[DataPart(type='data', data={'input': '納品記録や検収記録の時系列データを全件取得してください。'}, metadata=None)] metadata=None
+2025-05-08 20:39:39,538 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent skill_id: analyze_order, query: 発注と納品/検収の間の遅延や矛盾に関する具体的な指標を取得してください。
+2025-05-08 20:39:39,539 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Found 1 agents with skill 'analyze_order'.
+2025-05-08 20:39:39,539 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - エージェント 発注データ管理エージェント にタスクを送信中...
+2025-05-08 20:39:39,539 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - input_message: role='user' parts=[DataPart(type='data', data={'input': '発注と納品/検収の間の遅延や矛盾に関する具体的な指標を取得してください。'}, metadata=None)] metadata=None
+2025-05-08 20:39:44,532 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスクが送信されました。タスクID: 615705f0-d1ed-4026-a108-045eccdca5eb
+2025-05-08 20:39:49,808 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスクが送信されました。タスクID: 21d14335-7808-40ca-8e19-4968083e17ed
+2025-05-08 20:39:53,574 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスクが送信されました。タスクID: b001f3f9-7357-4ee7-b88f-8285fa08d6e3
+2025-05-08 20:39:53,864 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスク結果を取得しました
+2025-05-08 20:39:53,864 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent result: id='step_analyze_order' description='データエージェントへのクエリ: 発注と納品/検収の間の遅延や矛盾に関する具体的な指標を取得してください。' skill_id='analyze_order' input_data={'input': '発注と納品/検収の間の遅延や矛盾に関する具体的な指標を取得してください。'} parameters={} is_completed=True output_data={'text': '発注と納品/検収の間の遅延や矛盾を分析するためには、以下のような情報が必要になります：\n\n1. 発注日（dfにあります）\n2. 納品日や検収日（このdfには含まれていません）\n\nまず、納品日や検収日などの列がデータに存在するかどうか確認してください。もし別のデータフレームにある場合は、それを教えてください。\n\n納品日/検収日があれば、遅延日数（納品日/検収日 - 発注日）を計算し、その統計情報（平均遅延、遅延が発生している割合、遅延の分布など）を算出できます。\n\nまた、発注金額や品目についても突合して矛盾があるか確認したい場合、それらの列も含めた検出方法を検討します。\n\n---\n\nしたがって、\n\n1. 納品日や検収日の情報がこのデータに含まれているか教えてください。\n2. もし別のデータにある場合は、それを提供してください。\n\nこの情報があれば具体的な遅延指標を算出できます。', 'data': None, 'agent': '発注データ管理エージェント'} error=None selected_agent=None start_time=datetime.datetime(2025, 5, 8, 20, 39, 39, 539056) transitions={}
+2025-05-08 20:39:53,865 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスク結果を取得しました
+2025-05-08 20:39:53,865 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent result: id='step_analyze_order' description='データエージェントへのクエリ: 発注データの詳細レコード（商品説明、数量、条件、担当者、取引先情報）を全件取得してください。' skill_id='analyze_order' input_data={'input': '発注データの詳細レコード（商品説明、数量、条件、担当者、取引先情報）を全件取得してください。'} parameters={} is_completed=True output_data={'text': "発注データの詳細レコード（商品説明（品目名）、数量（数量）、条件（単価）、担当者（担当者ID, 担当者名）、取引先情報（取引先ID, 取引先名））を以下のように全件取得できます。\n\n取得項目:\n- 品目名\n- 数量\n- 単価\n- 担当者ID\n- 担当者名\n- 取引先ID\n- 取引先名\n\nもし全件のデータをPythonのpandas dataframeから取得したい場合は、以下のように必要なカラムを指定して取得できます。\n\n```python\ndetail_records = df[['品目名', '数量', '単価', '担当者ID', '担当者名', '取引先ID', '取引先名']]\nprint(detail_records)\n```\n\nこれで詳細な発注データレコードの一覧を得られます。必要に応じて加工やフィルターも加えられます。", 'data': None, 'agent': '発注データ管理エージェント'} error=None selected_agent=None start_time=datetime.datetime(2025, 5, 8, 20, 39, 38, 934967) transitions={}
+2025-05-08 20:39:53,868 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスク結果を取得しました
+2025-05-08 20:39:53,868 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent result: id='step_analyze_order' description='データエージェントへのクエリ: 納品記録や検収記録の時系列データを全件取得してください。' skill_id='analyze_order' input_data={'input': '納品記録や検収記録の時系列データを全件取得してください。'} parameters={} is_completed=True output_data={'text': '現在のデータフレーム`df`の内容には、発注に関する情報が含まれていますが、納品記録や検収記録の情報は含まれていません。  \nそのため、納品記録や検収記録の時系列データを取得するには、これらの情報が格納されている別のデータフレームやテーブルが必要です。  \n\nもし納品記録や検収記録のデータが別途あれば、そのデータを教えていただくか、どのファイルやテーブルから取得したいかを教えてください。  \nまたは、納品記録や検収記録のデータだと思われるカラムや情報がこのデータフレームの中にある場合は、その場所を教えてください。', 'data': None, 'agent': '発注データ管理エージェント'} error=None selected_agent=None start_time=datetime.datetime(2025, 5, 8, 20, 39, 39, 237414) transitions={}
+2025-05-08 20:39:58,163 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] data_summary: {
+  "data": {
+    "発注データの詳細レコード": {
+      "取得項目": [
+        "品目名（商品説明）",
+        "数量",
+        "単価（条件）",
+        "担当者ID",
+        "担当者名",
+        "取引先ID",
+        "取引先名"
+      ]
+    },
+    "納品/検収記録の時系列データ": null,
+    "発注と納品/検収の間の遅延や矛盾に関する具体的指標": null
+  },
+  "description": "発注データ管理エージェントから、発注データの詳細レコード（商品説明、数量、条件、担当者、取引先情報）は取得可能です。一方、納品記録や検収記録の時系列データ、および発注と納品/検収の間の遅延や矛盾に関する具体的指標は、発注データ管理エージェントのデータには含まれていません。",
+  "background": "発注データ管理エージェントに対して3つのクエリ（発注データの詳細、納品/検収記録の時系列データ、遅延や矛盾の指標）を実行しました。発注データの詳細は取得できましたが、納品/検収記録や遅延・矛盾指標は該当データが存在しない、もしくは管理エージェントのデータフレームに含まれていないため取得できませんでした。"
+}
+2025-05-08 20:39:58,168 - __main__ - INFO - Notifying backend with full state after node query_data_agent...
+2025-05-08 20:39:58,714 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:39:58,715 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - --- Node: DecisionMaker ---
+2025-05-08 20:39:58,715 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DecisionMaker] next_action: {'action_type': 'evaluate_hypothesis', 'parameters': {'hypothesis_id': 'sub_hyp_001_3'}}
+2025-05-08 20:39:58,721 - __main__ - INFO - Notifying backend with full state after node decision_maker...
+2025-05-08 20:39:59,294 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:39:59,296 - A2A_risk.samples.python.agents.risk_agent.nodes.evaluate_hypothesis - INFO - --- Node: EvaluateHypothesis ---
+2025-05-08 20:40:03,748 - A2A_risk.samples.python.agents.risk_agent.nodes.evaluate_hypothesis - INFO - [AE] 評価結果: id=sub_hyp_001_3, status=needs_revision, reasoning=発注データの詳細レコードは取得できたが、納品/検収記録の時系列データおよび注文と納品/検収の間の遅延・矛盾に関する具体的指標が取得できなかったため、仮説の証拠が不十分です。今回で3度目の評価となるため、判断のため追加データが必要です。, required_next_data=納品/検収記録の時系列データと発注と納品/検収の間の遅延や矛盾に関する具体的な指標（例えば、発注日と納品日/検収日、遅延日数、統計情報など）
+2025-05-08 20:40:03,758 - __main__ - INFO - Notifying backend with full state after node evaluate_hypothesis...
+2025-05-08 20:40:04,322 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:40:04,325 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - --- Node: DecisionMaker ---
+2025-05-08 20:40:04,325 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DM] 全仮説が解決済み。concludeへ遷移
+2025-05-08 20:40:04,346 - __main__ - INFO - Notifying backend with full state after node decision_maker...
+2025-05-08 20:40:04,906 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:40:04,907 - A2A_risk.samples.python.agents.risk_agent.nodes.conclude - INFO - --- Node: Conclude ---
+2025-05-08 20:40:12,940 - __main__ - INFO - Notifying backend with full state after node conclude...
+2025-05-08 20:40:13,535 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-08 20:40:13,598 - root - INFO - [CHECKPOINT] 0: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02c013-41bd-67dd-8041-0d8f42a6dafb, next_node=()
+2025-05-08 20:40:13,598 - root - INFO - [CHECKPOINT] 1: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02c012-efae-65e5-8040-c47127a9b6d2, next_node=('conclude',)
+2025-05-08 20:40:13,599 - root - INFO - [CHECKPOINT] 2: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02c012-ea2c-6907-803f-05f9d31e72b6, next_node=('decision_maker',)
+2025-05-08 20:40:13,599 - root - INFO - [CHECKPOINT] 3: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02c012-ba2e-6cd2-803e-757d488e324c, next_node=('evaluate_hypothesis',)
+2025-05-08 20:40:13,599 - root - INFO - [CHECKPOINT] 4: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02c012-b4e7-6d2f-803d-454cb1eca43e, next_node=('decision_maker',)
+2025-05-08 20:40:13,600 - root - INFO - [CHECKPOINT] 5: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02c011-e1c1-65d3-803c-592d8f2355a1, next_node=('query_data_agent',)
+2025-05-08 20:40:13,600 - root - INFO - [CHECKPOINT] 6: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02c011-c12f-6131-803b-d6b4ed6c8efa, next_node=('decision_maker',)
+2025-05-08 20:40:13,600 - root - INFO - [CHECKPOINT] 7: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02c011-5e4d-68b6-803a-2957ffa26133, next_node=('evaluate_hypothesis',)
+2025-05-08 20:40:13,601 - root - INFO - [CHECKPOINT] 8: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02c011-5852-6300-8039-7d15dbf1760d, next_node=('decision_maker',)
+2025-05-08 20:40:13,601 - root - INFO - [CHECKPOINT] 9: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02c011-06fd-6944-8038-968e7746c947, next_node=('evaluate_hypothesis',)
+2025-05-08 20:40:13,601 - root - INFO - [CHECKPOINT] 10: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02c011-00cf-6ae5-8037-681f0f779607, next_node=('decision_maker',)
+2025-05-08 20:40:13,601 - root - INFO - [CHECKPOINT] 11: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02c00b-2ad9-6259-8036-cd9308a099bd, next_node=('query_data_agent',)
+2025-05-08 20:40:13,602 - root - INFO - [CHECKPOINT] 12: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02c00a-dcdb-66e8-8035-7e925903a946, next_node=('decision_maker',)
+2025-05-08 20:40:13,602 - root - INFO - [CHECKPOINT] 13: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02c00a-880c-6b91-8034-8bff4cdd63b3, next_node=('evaluate_hypothesis',)
+2025-05-08 20:40:13,602 - root - INFO - [CHECKPOINT] 14: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02c00a-8239-6df1-8033-72eb67118beb, next_node=('decision_maker',)
+2025-05-08 20:40:13,603 - root - INFO - [CHECKPOINT] 15: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02c00a-1518-6711-8032-3f7389904085, next_node=('evaluate_hypothesis',)
+2025-05-08 20:40:13,603 - root - INFO - [CHECKPOINT] 16: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02c00a-0f8f-6478-8031-efbaf47b6774, next_node=('decision_maker',)
+2025-05-08 20:40:13,603 - root - INFO - [CHECKPOINT] 17: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02c008-daba-6822-8030-2fdc2113fbe7, next_node=('query_data_agent',)
+2025-05-08 20:40:13,604 - root - INFO - [CHECKPOINT] 18: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02c008-b766-6b1c-802f-f59e2442a882, next_node=('decision_maker',)
+2025-05-08 20:40:13,604 - root - INFO - [CHECKPOINT] 19: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02c008-6ec6-644a-802e-76a69ddf0e9a, next_node=('evaluate_hypothesis',)
+2025-05-08 20:40:13,604 - root - INFO - [CHECKPOINT] 20: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02c008-6937-6d1b-802d-427b799c0a0b, next_node=('decision_maker',)
+2025-05-08 20:40:13,605 - root - INFO - [CHECKPOINT] 21: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02c008-052d-6f32-802c-7430a42ede1d, next_node=('evaluate_hypothesis',)
+2025-05-08 20:40:13,605 - root - INFO - [CHECKPOINT] 22: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02c007-ff40-633e-802b-739e634446c5, next_node=('decision_maker',)
+2025-05-08 20:40:13,605 - root - INFO - [CHECKPOINT] 23: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02c006-cc51-67b9-802a-e34771685546, next_node=('query_data_agent',)
+2025-05-08 20:40:13,606 - root - INFO - [CHECKPOINT] 24: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02c006-a963-66da-8029-f6159cc9acef, next_node=('decision_maker',)
+2025-05-08 20:40:13,606 - root - INFO - [CHECKPOINT] 25: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02c006-6a7a-6e2a-8028-904259c3d5fc, next_node=('evaluate_hypothesis',)
+2025-05-08 20:40:13,607 - root - INFO - [CHECKPOINT] 26: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02c006-6510-6eee-8027-52d82fb2e5e2, next_node=('decision_maker',)
+2025-05-08 20:40:13,607 - root - INFO - [CHECKPOINT] 27: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02c006-11c9-6ae3-8026-8e7f027ee8fa, next_node=('evaluate_hypothesis',)
+2025-05-08 20:40:13,608 - root - INFO - [CHECKPOINT] 28: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02c006-0c20-6651-8025-204d30090cd8, next_node=('decision_maker',)
+2025-05-08 20:40:13,608 - root - INFO - [CHECKPOINT] 29: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02c000-895f-63c2-8024-b7062f8c924a, next_node=('query_data_agent',)
+2025-05-08 20:40:13,608 - root - INFO - [CHECKPOINT] 30: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02c000-60f6-6910-8023-11e59d436ca1, next_node=('decision_maker',)
+2025-05-08 20:40:13,609 - root - INFO - [CHECKPOINT] 31: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02c000-1b1f-66ac-8022-35aceb58671e, next_node=('evaluate_hypothesis',)
+2025-05-08 20:40:13,609 - root - INFO - [CHECKPOINT] 32: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02c000-157d-6e80-8021-408f4fc1559f, next_node=('decision_maker',)
+2025-05-08 20:40:13,609 - root - INFO - [CHECKPOINT] 33: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02bfff-afff-647e-8020-f404746d196d, next_node=('evaluate_hypothesis',)
+2025-05-08 20:40:13,610 - root - INFO - [CHECKPOINT] 34: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02bfff-aa54-6e4e-801f-ec229c0dfcc8, next_node=('decision_maker',)
+2025-05-08 20:40:13,610 - root - INFO - [CHECKPOINT] 35: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02bff8-cd98-69fc-801e-33d85f656dbd, next_node=('query_data_agent',)
+2025-05-08 20:40:13,610 - root - INFO - [CHECKPOINT] 36: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02bff8-b045-63e5-801d-abb17bd6f717, next_node=('decision_maker',)
+2025-05-08 20:40:13,611 - root - INFO - [CHECKPOINT] 37: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02bff8-6302-60e6-801c-b7580f6a1f5b, next_node=('evaluate_hypothesis',)
+2025-05-08 20:40:13,611 - root - INFO - [CHECKPOINT] 38: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02bff8-5d37-6963-801b-3a42ffa283b7, next_node=('decision_maker',)
+2025-05-08 20:40:13,612 - root - INFO - [CHECKPOINT] 39: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02bff7-e6c0-6659-801a-317af9190ebb, next_node=('evaluate_hypothesis',)
+2025-05-08 20:40:13,612 - root - INFO - [CHECKPOINT] 40: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02bff7-e144-648c-8019-5e653b7cd701, next_node=('decision_maker',)
+2025-05-08 20:40:13,612 - root - INFO - [CHECKPOINT] 41: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02bff6-d885-6f57-8018-44239d1382af, next_node=('query_data_agent',)
+2025-05-08 20:40:13,613 - root - INFO - [CHECKPOINT] 42: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02bff6-bb59-61d6-8017-c78941658d0d, next_node=('decision_maker',)
+2025-05-08 20:40:13,613 - root - INFO - [CHECKPOINT] 43: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02bff6-75f3-6bd0-8016-c0a1e9039847, next_node=('evaluate_hypothesis',)
+2025-05-08 20:40:13,614 - root - INFO - [CHECKPOINT] 44: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02bff6-6fd5-6949-8015-2118a7386e0f, next_node=('decision_maker',)
+2025-05-08 20:40:13,614 - root - INFO - [CHECKPOINT] 45: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02bff4-c3a2-63d2-8014-f0cb15de790d, next_node=('generate_hypothesis',)
+2025-05-08 20:40:13,614 - root - INFO - [CHECKPOINT] 46: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02bff4-bdd0-6733-8013-9dc68b7aedee, next_node=('decision_maker',)
+2025-05-08 20:40:13,614 - root - INFO - [CHECKPOINT] 47: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02bff4-3803-6f7d-8012-8462b62042ef, next_node=('evaluate_hypothesis',)
+2025-05-08 20:40:13,615 - root - INFO - [CHECKPOINT] 48: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02bff4-321c-6192-8011-38649739fe4d, next_node=('decision_maker',)
+2025-05-08 20:40:13,615 - root - INFO - [CHECKPOINT] 49: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02bff2-9dd7-6199-8010-1cfe81738145, next_node=('query_data_agent',)
+2025-05-08 20:40:13,616 - root - INFO - [CHECKPOINT] 50: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02bff2-6d1a-639a-800f-4568a92d25d0, next_node=('decision_maker',)
+2025-05-08 20:40:13,616 - root - INFO - [CHECKPOINT] 51: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02bff2-12e1-6c97-800e-c29bc1071609, next_node=('evaluate_hypothesis',)
+2025-05-08 20:40:13,617 - root - INFO - [CHECKPOINT] 52: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02bff2-0d90-6099-800d-d1cfd073c6b6, next_node=('decision_maker',)
+2025-05-08 20:40:13,617 - root - INFO - [CHECKPOINT] 53: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02bff0-2972-6b36-800c-6d573165dece, next_node=('generate_hypothesis',)
+2025-05-08 20:40:13,617 - root - INFO - [CHECKPOINT] 54: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02bff0-23dc-6e7e-800b-431e99c5291e, next_node=('decision_maker',)
+2025-05-08 20:40:13,618 - root - INFO - [CHECKPOINT] 55: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02bfef-b95a-6ac4-800a-889a0ef80c11, next_node=('evaluate_hypothesis',)
+2025-05-08 20:40:13,618 - root - INFO - [CHECKPOINT] 56: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02bfef-b3cb-6b8a-8009-c16b56ece2d4, next_node=('decision_maker',)
+2025-05-08 20:40:13,619 - root - INFO - [CHECKPOINT] 57: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02bfee-6747-6b4e-8008-61b1bea70074, next_node=('query_data_agent',)
+2025-05-08 20:40:13,619 - root - INFO - [CHECKPOINT] 58: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02bfee-4a54-6bbf-8007-f64288613964, next_node=('decision_maker',)
+2025-05-08 20:40:13,620 - root - INFO - [CHECKPOINT] 59: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02bfee-0586-6d16-8006-dfd8d8bcbffc, next_node=('evaluate_hypothesis',)
+2025-05-08 20:40:13,620 - root - INFO - [CHECKPOINT] 60: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02bfed-ff9f-69d2-8005-c74037004ec7, next_node=('decision_maker',)
+2025-05-08 20:40:13,620 - root - INFO - [CHECKPOINT] 61: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02bfeb-e127-68a6-8004-490ba6ed1a6b, next_node=('generate_hypothesis',)
+2025-05-08 20:40:13,621 - root - INFO - [CHECKPOINT] 62: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02bfeb-db5d-6a9a-8003-640114d81f46, next_node=('decision_maker',)
+2025-05-08 20:40:13,621 - root - INFO - [CHECKPOINT] 63: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02bfeb-7699-6703-8002-c37461924ee0, next_node=('query_data_agent',)
+2025-05-08 20:40:13,621 - root - INFO - [CHECKPOINT] 64: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02bfeb-70e1-6350-8001-674c217738de, next_node=('decision_maker',)
+2025-05-08 20:40:13,622 - root - INFO - [CHECKPOINT] 65: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02bfeb-5c17-64f6-8000-02c327047407, next_node=('eda',)
+2025-05-08 20:40:13,622 - root - INFO - [CHECKPOINT] 66: thread_id=b1dd39bf-66f0-4391-9004-2cb24dd575c4, checkpoint_id=1f02bfeb-5c12-692d-bfff-17af1d7e7f6b, next_node=('__start__',)

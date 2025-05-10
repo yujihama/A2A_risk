@@ -7,7 +7,7 @@ def _all_hypotheses_resolved(hypotheses: List[Dict[str, Any]]) -> bool:
         return False
     for h in hypotheses:
         status = h.get('status')
-        if status not in ['supported', 'rejected', 'needs_revision']:
+        if status not in ['supported', 'rejected']:
             return False
     return True
 

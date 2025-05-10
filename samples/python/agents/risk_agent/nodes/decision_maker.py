@@ -31,7 +31,7 @@ class DecisionMakerNode(Node):
 
         # --- 1. stateのhistoryのうち、"node"の数が95を超えたらerror ---
         node_count = sum(1 for entry in state.get('history', []) if entry.get('type') == 'node')
-        if node_count > 95:
+        if node_count > 195:
             patch = {"next_action": {"action_type": "error", "parameters": {"message": "historyのnodeの数が95を超えました。"}}}
             return NodeResult(observation="history_error", patch=patch, events=events)
 
@@ -52,7 +52,7 @@ class DecisionMakerNode(Node):
         if currently_investigating_hypothesis_id:
             # 現在調査中の仮説が「supported」ステータス、または「supporting」仮説生成が必要な場合のみ追加仮説生成をトリガー
             focused_hypothesis = next((h for h in current_hypotheses if h.get('id') == currently_investigating_hypothesis_id), None)
-            if focused_hypothesis and focused_hypothesis.get('status') == "supported":
+            if focused_hypothesis and focused_hypothesis.get('status') in ("supported", "needs_revision"):
                 # 紐づく追加仮説が存在するかチェック
                 has_supporting_hypothesis = any(
                     h.get('parent_hypothesis_id') == currently_investigating_hypothesis_id for h in current_hypotheses
@@ -61,7 +61,7 @@ class DecisionMakerNode(Node):
                 # IDの文字列にsubがいくつ含まれるか算出
                 sub_count = focused_hypothesis.get('id').count('sub')
 
-                if not has_supporting_hypothesis and sub_count < 2:
+                if not has_supporting_hypothesis and sub_count < 2 and focused_hypothesis.get('status') == "supported":
                     logger.info(f"[DM] Hypothesis {currently_investigating_hypothesis_id} (supported) に基づき追加仮説生成をトリガーします。")
                     patch = {
                         "next_action": {
@@ -78,7 +78,14 @@ class DecisionMakerNode(Node):
                         state
                     ))
                     return NodeResult(observation=f"trigger_support_gen_for_{currently_investigating_hypothesis_id}", patch=patch, events=events)
-            
+
+                if focused_hypothesis.get('status') == "needs_revision":
+                    if not has_supporting_hypothesis:
+                        logger.info(f"[DM] Hypothesis {currently_investigating_hypothesis_id} (needs_revision)のrefine判定")
+                    if sub_count > 1 or has_supporting_hypothesis:
+                        logger.info(f"[DM] Hypothesis {currently_investigating_hypothesis_id} (needs_revision)のフォーカスを解除")
+                        currently_investigating_hypothesis_id = None
+
         # --- 2. 全仮説解決済みならconclude ---
         if _all_hypotheses_resolved(current_hypotheses):
             logger.info("[DM] 全仮説が解決済み。concludeへ遷移")
@@ -99,7 +106,7 @@ class DecisionMakerNode(Node):
         focused_hypothesis = None
         if currently_investigating_hypothesis_id:
             focused_hypothesis = next((h for h in current_hypotheses if h['id'] == currently_investigating_hypothesis_id), None)
-            if not focused_hypothesis or focused_hypothesis['status'] in ['supported', 'rejected', 'needs_revision']:
+            if not focused_hypothesis or focused_hypothesis['status'] in ['supported', 'rejected']:
                 logger.info(f"[DM] Focus hypothesis {currently_investigating_hypothesis_id} is resolved ({focused_hypothesis['status'] if focused_hypothesis else 'not found'}). Clearing focus.")
                 logger.info(f"[DM] ★★all_hyp_status: {[hyp['id'] + ':' + hyp['status'] for hyp in current_hypotheses]}")
                 currently_investigating_hypothesis_id = None

@@ -53,7 +53,7 @@ class QueryAgent:
             self.logger.error(f"LLMクライアントの初期化に失敗しました: {e}")
             self.llm = None  # 初期化失敗
 
-    def load_data(self, data_source: Any, build_embedding: bool = True, embedding_persist_path: Optional[str] = None, text_column: Optional[str] = None, metadata_columns: Optional[List[str]] = None):
+    def load_data(self, data_source: Any, build_embedding: bool = False, embedding_persist_path: Optional[str] = None, text_column: Optional[str] = None, metadata_columns: Optional[List[str]] = None):
         """
         指定されたデータソースからデータを読み込み、データフレームと列情報を設定する
 
@@ -450,7 +450,7 @@ class QueryAgent:
         try:
             # create_pandas_dataframe_agent用
             agent = create_pandas_dataframe_agent(
-                ChatOpenAI(model="gpt-4.1-mini"),
+                ChatOpenAI(model="gpt-4.1"),
                 self.data,
                 verbose=False,
                 agent_type=AgentType.OPENAI_FUNCTIONS,

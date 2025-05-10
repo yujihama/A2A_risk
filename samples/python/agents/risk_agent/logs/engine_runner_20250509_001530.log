@@ -1,0 +1,39 @@
+2025-05-09 00:15:30,484 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Discovering agent at: http://localhost:8002/.well-known/agent.json
+2025-05-09 00:15:30,953 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Agent '発注データ管理エージェント' registered with URL: http://localhost:8002
+2025-05-09 00:15:30,954 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Discovering agent at: http://localhost:8003/.well-known/agent.json
+2025-05-09 00:15:31,350 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Agent '支払データ管理エージェント' registered with URL: http://localhost:8003
+2025-05-09 00:15:31,351 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Discovering agent at: http://localhost:8004/.well-known/agent.json
+2025-05-09 00:15:31,697 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Agent '取引先データ管理エージェント' registered with URL: http://localhost:8004
+2025-05-09 00:15:31,697 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Discovering agent at: http://localhost:8005/.well-known/agent.json
+2025-05-09 00:15:32,043 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Agent '経費データ管理エージェント' registered with URL: http://localhost:8005
+2025-05-09 00:15:32,044 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Discovering agent at: http://localhost:8006/.well-known/agent.json
+2025-05-09 00:15:32,354 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Agent '従業員データ管理エージェント' registered with URL: http://localhost:8006
+2025-05-09 00:15:32,354 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Discovering agent at: http://localhost:8007/.well-known/agent.json
+2025-05-09 00:15:32,665 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Agent 'メールデータ管理エージェント' registered with URL: http://localhost:8007
+2025-05-09 00:15:32,665 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Discovering agent at: http://localhost:8008/.well-known/agent.json
+2025-05-09 00:15:32,993 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Agent '通話データ管理エージェント' registered with URL: http://localhost:8008
+2025-05-09 00:15:32,993 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Discovering agent at: http://localhost:8009/.well-known/agent.json
+2025-05-09 00:15:33,313 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Agent '稟議書・申請書データ管理エージェント' registered with URL: http://localhost:8009
+2025-05-09 00:15:33,314 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Discovering agent at: http://localhost:8010/.well-known/agent.json
+2025-05-09 00:15:33,632 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Agent '不正事例管理エージェント' registered with URL: http://localhost:8010
+2025-05-09 00:15:33,632 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Discovered 9 agents from 9 URLs.
+2025-05-09 00:15:34,264 - A2A_risk.samples.python.common.client.smart_client - INFO - SmartA2AClient initialized with registry and skill selector.
+2025-05-09 00:15:36,349 - A2A_risk.samples.python.agents.risk_agent.nodes.eda - INFO - --- Node: EDA ---
+2025-05-09 00:15:36,349 - A2A_risk.samples.python.agents.risk_agent.nodes.eda - INFO - No data present. Ask LLM to propose initial data query.
+2025-05-09 00:15:37,876 - A2A_risk.samples.python.agents.risk_agent.nodes.eda - INFO - [EDA] LLM出力: {'agent_skill_id': 'analyze_order', 'query': '2024-05-01から2025-04-30までの発注データについて、担当者ID、担当者名、取引先ID、取引先名、品目名、単価、数量、発注金額を抽出してください。'}
+2025-05-09 00:15:37,876 - A2A_risk.samples.python.agents.risk_agent.nodes.eda - INFO - [EDA] アクション決定: query_data_agent, skill_id=analyze_order, query=2024-05-01から2025-04-30までの発注データについて、担当者ID、担当者名、取引先ID、取引先名、品目名、単価、数量、発注金額を抽出してください。
+2025-05-09 00:15:37,876 - A2A_risk.samples.python.agents.risk_agent.nodes.eda - INFO - [EDA] patch keys: ['data_collected', 'eda_summary', 'eda_stats', 'last_query', 'next_action']
+2025-05-09 00:15:37,882 - __main__ - INFO - Notifying backend with full state after node eda...
+2025-05-09 00:15:38,460 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-09 00:15:38,463 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - --- Node: DecisionMaker ---
+2025-05-09 00:15:38,463 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DecisionMaker] next_action: {'action_type': 'query_data_agent', 'parameters': {'agent_skill_id': 'analyze_order', 'query': '2024-05-01から2025-04-30までの発注データについて、担当者ID、担当者名、取引先ID、取引先名、品目名、単価、数量、発注金額を抽出してください。'}}
+2025-05-09 00:15:38,470 - __main__ - INFO - Notifying backend with full state after node decision_maker...
+2025-05-09 00:15:39,111 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-09 00:15:39,112 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - --- Node: QueryDataAgent ---
+2025-05-09 00:15:41,222 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent skill_id: analyze_order, query: 2024-05-01から2025-04-30までの発注データについて、担当者ID、担当者名、取引先ID、取引先名、品目名、単価、数量、発注金額を抽出してください。
+2025-05-09 00:15:41,223 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Found 1 agents with skill 'analyze_order'.
+2025-05-09 00:15:41,224 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - エージェント 発注データ管理エージェント にタスクを送信中...
+2025-05-09 00:15:41,224 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - input_message: role='user' parts=[DataPart(type='data', data={'input': '2024-05-01から2025-04-30までの発注データについて、担当者ID、担当者名、取引先ID、取引先名、品目名、単価、数量、発注金額を抽出してください。'}, metadata=None)] metadata=None
+2025-05-09 00:15:52,675 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスクが送信されました。タスクID: 3ce1c228-47eb-4ac2-976e-b925bb16a357
+2025-05-09 00:15:52,981 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスク結果を取得しました
+2025-05-09 00:15:52,981 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent result: id='step_analyze_order' description='データエージェントへのクエリ: 2024-05-01から2025-04-30までの発注データについて、担当者ID、担当者名、取引先ID、取引先名、品目名、単価、数量、発注金額を抽出してください。' skill_id='analyze_order' input_data={'input': '2024-05-01から2025-04-30までの発注データについて、担当者ID、担当者名、取引先ID、取引先名、品目名、単価、数量、発注金額を抽出してください。'} parameters={} is_completed=True output_data={'text': '2024-05-01から2025-04-30までの発注データから、担当者ID、担当者名、取引先ID、取引先名、品目名、単価、数量、発注金額を抽出した結果は以下の通りです。\n\n| 担当者ID | 担当者名 | 取引先ID | 取引先名 | 品目名 | 単価 | 数量 | 発注金額 |\n| --- | --- | --- | --- | --- | --- | --- | --- |\n| EMP004 | 担当者D | V00030 | 取引先W | ライセンス費用 | 150000 | 1 | 150000 |\n| EMP001 | 担当者A | V00001 | サプライヤーX | 部品DDD | 950 | 100 | 95000 |\n| EMP005 | 担当者E | V00035 | 取引先V | 研修費用 | 300000 | 1 | 300000 |\n| EMP003 | 担当者C | V00026 | 取引先Z | 部品EEE | 1500 | 20 | 30000 |\n| EMP001 | 担当者A | V00001 | サプライヤーX | 部品FFF | 2100 | 100 | 210000 |\n| EMP004 | 担当者D | V00040 | 取引先U | オフィスチェア | 50000 | 10 | 500000 |\n| EMP003 | 担当者C | V00027 | 取引先Y | システム保守費 | 120000 | 1 | 120000 |\n| EMP005 | 担当者E | V00042 | 取引先T | 広告掲載料 | 800000 | 1 | 800000 |\n| EMP001 | 担当者A | V00001 | サプライヤーX | 部品GGG | 1650 | 100 | 165000 |\n| EMP003 | 担当者C | V00026 | 取引先Z | 試作品A | 75000 | 1 | 75000 |\n| EMP002 | 担当者B | V00055 | コンサルY | 調査業務委託 | 5000000 | 1 | 5000000 |\n| EMP004 | 担当者D | V00030 | 取引先W | システム改修費 | 450000 | 1 | 450000 |\n| EMP002 | 担当者B | V00056 | デザイン事務所S | デザイン料 | 300000 | 1 | 300000 |\n| EMP002 | 担当者B | V00055 | コンサルY | 追加調査委託 | 4900000 | 1 | 4900000 |\n| EMP005 | 担当者E | V00045 | イベント会社R | 出展準備費用 | 1200000 | 1 | 1200000 |\n| EMP001 | 担当者A | V00001 | サプライヤーX | 部品HHH | 2500 | 100 | 250000 |\n| EMP001 | 担当者A | V00001 | サプライヤーX | 部品FFF | 2600 | 100 | 260000 |\n\n必要に応じてCSVへの書き出しや他の操作もできますので、お知らせください。', 'data': None, 'agent': '発注データ管理エージェント'} error=None selected_agent=None start_time=datetime.datetime(2025, 5, 9, 0, 15, 41, 222992) transitions={}

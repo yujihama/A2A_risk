@@ -5,6 +5,7 @@ import ReactFlow, { Background, Controls, Edge, Node } from "reactflow";
 import "reactflow/dist/style.css";
 import ActionNode from "./ActionNode";
 import HypothesisNode from "./HypothesisNode";
+import QueryDataAgentNode from "./QueryDataAgentNode";
 
 // Props の型定義
 interface ExecutionGraphProps {
@@ -16,6 +17,7 @@ interface ExecutionGraphProps {
 const nodeTypes = {
   action: ActionNode,
   hypothesis: HypothesisNode,
+  queryDataAgentNode: QueryDataAgentNode,
 };
 
 // デフォルトエクスポートとして ExecutionGraph を定義

@@ -25,10 +25,11 @@ interface FlowNode extends Node {
 const getLayoutedElements = (nodes: FlowNode[], edges: Edge[], direction: 'LR' | 'TB' = 'TB') => {
   const dagreGraph = new dagre.graphlib.Graph();
   dagreGraph.setDefaultEdgeLabel(() => ({}));
-  dagreGraph.setGraph({ rankdir: direction, nodesep: 60, ranksep: 45 });
+  dagreGraph.setGraph({ rankdir: direction, nodesep: 100, ranksep: 120 });
 
   nodes.forEach((node) => {
-    dagreGraph.setNode(node.id, { label: node.data.label, width: node.style?.width ?? 180, height: node.style?.minHeight ?? 80 });
+    const height = node.data?.estimatedHeight || node.style?.minHeight || 80;
+    dagreGraph.setNode(node.id, { label: node.data.label, width: node.style?.width ?? 180, height: height });
   });
 
   edges.forEach((edge) => {
@@ -50,6 +51,22 @@ const getLayoutedElements = (nodes: FlowNode[], edges: Edge[], direction: 'LR' |
 
   return { nodes, edges };
 };
+
+// アニメーション枠線用のCSSとスタイル
+const animatedBorderStyle = {
+  animation: 'border-dance 1s linear infinite',
+  border: '6px solid #facc15', // より太い黄色枠線
+  background: '#fef9c3', // 薄い黄色
+  zIndex: 10,
+};
+
+const styleSheet = `
+@keyframes border-dance {
+  0% { box-shadow: 0 0 0 0 #facc15; }
+  50% { box-shadow: 0 0 0 12px #fde047; }
+  100% { box-shadow: 0 0 0 0 #facc15; }
+}
+`;
 
 export default function DashboardPage() {
   const state = useAgentState();
@@ -96,7 +113,17 @@ export default function DashboardPage() {
       };
       
       // 表示対象のアクションタイプを定義（decisionを除外）
-      const displayedActionTypes = ['eda', 'generate_hypothesis', 'evaluate_hypothesis', 'query_data_agent'];
+      const displayedActionTypes = ['eda', 'generate_hypothesis', 'evaluate_hypothesis', 'query_data_agent', 'refine_hypothesis'];
+      
+      // 最後のアクションノードIDを特定
+      let latestActionNodeId: string | null = null;
+      for (let i = state.history.length - 1; i >= 0; i--) {
+        const entry = state.history[i];
+        if (entry?.type === 'node' && displayedActionTypes.includes(entry.content?.name)) {
+          latestActionNodeId = `action-${entry.content.name}-${i}`;
+          break;
+        }
+      }
       
       // メインアクション履歴を表示（アクションノード生成）
       state.history.forEach((entry: any, index: number) => {
@@ -117,16 +144,33 @@ export default function DashboardPage() {
             nodeLabel = actionDisplayNames[actionName] || actionName;
             nodeId = `action-${actionName}-${index}`;
             
-            // アクションタイプごとに色分け
+            let nodeSpecificData = {}; 
+            let estimatedNodeHeight = Number(style.minHeight) || 80; // デフォルトの高さ
+
+            if (nodeId === latestActionNodeId) {
+              style = {
+                ...style,
+                ...animatedBorderStyle,
+              };
+            }
+
             if (actionName === 'query_data_agent') {
-              style.background = '#6b21a8';
-              // どのデータエージェントを呼び出したかをラベルに追加
-              const agentId = entry.content?.parameters?.agent_skill_id ?? entry.content?.agent_id ?? '';
-              if (agentId) {
-                nodeLabel += `\n(${agentId})`;
+              style.background = '#6b21a8'; 
+              const linkedAgents = entry.content?.process;
+              if (linkedAgents && Array.isArray(linkedAgents)) {
+                nodeSpecificData = { ...nodeSpecificData, linkedAgents: linkedAgents };
+                let linkedAgentsHeight = 20; // 「連携エージェント:」ラベル分の高さ
+                if (linkedAgents.length > 0) {
+                  linkedAgentsHeight += linkedAgents.length * 45; // 1エージェントあたりの高さを35から45に増やす
+                }
+                estimatedNodeHeight = (Number(style.minHeight) || 80) + linkedAgentsHeight; 
               }
+            } else if (actionName === 'evaluate_hypothesis'){
+              // evaluate_hypothesisの色設定などはここで行う (現状はelseで青)
+              // 必要であれば、estimatedNodeHeightも内容に応じて調整
+              style.background = '#2563eb'; 
             } else {
-              style.background = '#2563eb'; // その他のアクションは青色
+              style.background = '#2563eb'; 
             }
             style.color = 'white';
             style.width = 180;
@@ -181,6 +225,20 @@ export default function DashboardPage() {
                 parentId: parentId
               });
             }
+            // generate_hypothesis ノードの生成モードを記録
+            if (actionName === 'refine_hypothesis' && entry.content) {
+              const parentId = entry.content.parent_id || null;
+              
+              // ノードラベルにモード情報を追加
+              nodeLabel = `Refine hyp`;
+              
+              // 生成情報を記録
+              generateHypNodes.push({
+                nodeId: nodeId,
+                mode: 'refine',
+                parentId: parentId
+              });
+            }
             
             // 現在のフォーカス仮説ID
             const focusHypId = entry.currently_investigating_hypothesis_id || null;
@@ -189,14 +247,16 @@ export default function DashboardPage() {
               id: nodeId,
               data: { 
                 label: nodeLabel,
-                focusHypId: focusHypId, // フォーカス仮説ID情報を保持
-                evaluationReason: evaluationReason // 理由を追加
+                focusHypId: focusHypId, 
+                evaluationReason: evaluationReason,
+                estimatedHeight: estimatedNodeHeight, // 推定高さをdataに含める
+                ...nodeSpecificData 
               },
-              position: { x: 0, y: 0 }, // 後でdagreで配置
-              style: style,
-              type: 'action',
-              sourcePosition: Position.Right, // 右から出る
-              targetPosition: Position.Left,  // 左から入る
+              position: { x: 0, y: 0 }, 
+              style: actionName === 'query_data_agent' ? {} : style, // queryDataAgentNodeの場合は空のスタイルを渡し、他は既存のstyleを維持
+              type: actionName === 'query_data_agent' ? 'queryDataAgentNode' : 'action', 
+              sourcePosition: Position.Right, 
+              targetPosition: Position.Left,  
             };
             
             nodes.push(newNode);
@@ -256,6 +316,8 @@ export default function DashboardPage() {
             bgColor = '#38A169'; // 緑：サポート済み
           } else if (hyp.status === 'rejected') {
             bgColor = '#718096'; // 灰色：棄却済み
+          } else if (hyp.status === 'needs_revision') {
+            bgColor = '#718096'; // 灰色：棄却済みと同様の色
           } else if (hyp.id.startsWith('sup_')) {
             bgColor = '#718096'; // 灰色：補助仮説
           }
@@ -315,12 +377,15 @@ export default function DashboardPage() {
             } else if (genNode.mode === 'supporting' && hyp.parent_hypothesis_id === genNode.parentId && hyp.id.startsWith('sub_')) {
               // サポート仮説の場合（指定された親ID、かつsub_プレフィックス）
               isGenerated = true;
+            } else if (genNode.mode === 'refine' && hyp.parent_hypothesis_id === genNode.parentId && !hyp.id.startsWith('sup_')) {
+              // refine_hypothesisノードで生成された仮説（親IDが一致、sup_でない）
+              isGenerated = true;
             }
             
             if (isGenerated) {
               const hypNodeId = `hyp-${hyp.id}`;
               if (nodeMap.has(hypNodeId)) {
-                // Generate Hypothesisノードから仮説ノードへのエッジを追加
+                // Generate/Refine Hypothesisノードから仮説ノードへのエッジを追加
                 edges.push({
                   id: `e-gen-${genNode.nodeId}-${hypNodeId}`,
                   source: genNode.nodeId,
@@ -337,42 +402,47 @@ export default function DashboardPage() {
       console.log("[Layout] Calculating layout with dagre for", nodes.length, "nodes and", edges.length, "edges.");
       // 横方向（左→右）レイアウトを明示し、エッジタイプを滑らかなベジエ曲線（default）にする
       edges.forEach(e => { e.type = 'default'; });
-      const { nodes: layoutedNodesResult, edges: layoutedEdgesResult } = getLayoutedElements(nodes, edges, 'LR');
+      let { nodes: dagreLayoutedNodes, edges: dagreLayoutedEdges } = getLayoutedElements(nodes, edges, 'LR');
       
-      // --- ここから仮説ごとにノードの中心を揃える処理 ---
-      // focusHypId（仮説ID）ごとにノードをグループ化
+      // --- ここからY軸中心を揃える処理を追加 ---
+      const nodesById = new Map(dagreLayoutedNodes.map(n => [n.id, n]));
+
+      // 仮説IDごとにノードをグループ化 (focusHypIdを持つノード)
       const nodesByHypothesis: { [hypId: string]: FlowNode[] } = {};
-      layoutedNodesResult.forEach(node => {
-        const hypId = node.data?.focusHypId || node.data?.parent_hypothesis_id || null;
-        if (hypId) {
-          if (!nodesByHypothesis[hypId]) nodesByHypothesis[hypId] = [];
-          nodesByHypothesis[hypId].push(node);
-        }
-      });
-
-      // ↓ 中心で揃えるロジック + 仮説ノード中心に合わせてシフト
-      Object.entries(nodesByHypothesis).forEach(([hypId, group]) => {
-        if (group.length > 0) {
-          // 対応する仮説ノードの中心Yを取得
-          const hypNodeId = `hyp-${hypId}`;
-          const hypNodeEntry = nodeMap.get(hypNodeId);
-          if (hypNodeEntry) {
-            const hypNode = hypNodeEntry.node;
-            const hypHeight = Number(hypNode.style?.minHeight ?? 80);
-            const hypCenterY = hypNode.position.y + hypHeight / 2;
-
-            // グループの各ノードの中心Yを仮説中心に合わせる
-            group.forEach(node => {
-              const nodeHeight = Number(node.style?.minHeight ?? 80);
-              node.position.y = hypCenterY - nodeHeight / 2;
-            });
+      dagreLayoutedNodes.forEach(node => {
+        const focusHypId = node.data?.focusHypId;
+        if (focusHypId && typeof focusHypId === 'string') {
+          if (!nodesByHypothesis[focusHypId]) {
+            nodesByHypothesis[focusHypId] = [];
           }
+          nodesByHypothesis[focusHypId].push(node);
         }
       });
-      // --- ここまで ---
 
-      setLayoutedNodes(layoutedNodesResult);
-      setLayoutedEdges(layoutedEdgesResult);
+      // 各仮説グループごとにY軸中心を揃える
+      Object.values(nodesByHypothesis).forEach(group => {
+        if (group.length > 0) {
+          // グループ内のノードのY座標の中心の平均値を計算
+          let sumOfCenterY = 0;
+          group.forEach(node => {
+            const nodeHeight = node.data?.estimatedHeight || node.style?.minHeight || 80;
+            sumOfCenterY += (node.position.y + nodeHeight / 2); // 各ノードの中心Yを合計
+          });
+          const averageCenterY = sumOfCenterY / group.length;
+
+          // 各ノードのY位置を調整
+          group.forEach(node => {
+            const nodeHeight = node.data?.estimatedHeight || node.style?.minHeight || 80;
+            node.position.y = averageCenterY - (nodeHeight / 2);
+          });
+        }
+      });
+      
+      // 仮説IDを持たないノード群 (メインフローなど) についても同様に処理 (今回は簡略化のため未実装)
+      // もしメインフローも同様に揃えたい場合は、別途グルーピングと処理が必要
+
+      setLayoutedNodes(dagreLayoutedNodes);
+      setLayoutedEdges(dagreLayoutedEdges);
 
     } catch (error) {
       console.error("[Flow Generation/Layout] Error:", error);
@@ -394,45 +464,48 @@ export default function DashboardPage() {
   const agentsToShow = state?.available_data_agents_and_skills ?? [];
 
   return (
-    <Grid templateColumns="3fr 1fr" gap={4} p={4} h="100vh">
-      <GridItem border="1px solid #E2E8F0" borderRadius="md" p={2} overflow="hidden" minHeight="200px">
-        <Heading size="sm" mb={2}>
-          Execution Flow & Hypotheses
-        </Heading>
-        <ExecutionGraph nodes={layoutedNodes} edges={layoutedEdges} />
-      </GridItem>
-      <GridItem border="1px solid #E2E8F0" borderRadius="md" p={2} overflowY="auto" minHeight="200px" display="flex" flexDirection="column">
-        <Heading size="sm" mb={2}>
-          Connected Agents
-        </Heading>
-        <AgentTable agents={agentsToShow} />
-        <Box mt={8} flexGrow={1} display="flex" flexDirection="column" justifyContent="flex-start">
-          <Divider my={4} />
-          <Box>
-            <Heading size="xs" mb={2}>仮説一覧</Heading>
-            <Table size="sm" variant="simple">
-              <Thead>
-                <Tr>
-                  <Th>仮説ID</Th>
-                  <Th>priority</Th>
-                  <Th>status</Th>
-                  <Th>内容</Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {state.current_hypotheses && state.current_hypotheses.map((hyp: any) => (
-                  <Tr key={hyp.id}>
-                    <Td>{hyp.id}</Td>
-                    <Td>{hyp.priority}</Td>
-                    <Td>{hyp.status}</Td>
-                    <Td style={{whiteSpace: 'pre-wrap', maxWidth: 400}}>{hyp.text}</Td>
+    <>
+      <Box as="style">{styleSheet}</Box>
+      <Grid templateColumns="3fr 1fr" gap={4} p={4} h="100vh">
+        <GridItem border="1px solid #E2E8F0" borderRadius="md" p={2} overflow="hidden" minHeight="200px">
+          <Heading size="sm" mb={2}>
+            Execution Flow & Hypotheses
+          </Heading>
+          <ExecutionGraph nodes={layoutedNodes} edges={layoutedEdges} />
+        </GridItem>
+        <GridItem border="1px solid #E2E8F0" borderRadius="md" p={2} overflowY="auto" minHeight="200px" display="flex" flexDirection="column">
+          <Heading size="sm" mb={2}>
+            Connected Agents
+          </Heading>
+          <AgentTable agents={agentsToShow} />
+          <Box mt={8} flexGrow={1} display="flex" flexDirection="column" justifyContent="flex-start">
+            <Divider my={4} />
+            <Box>
+              <Heading size="xs" mb={2}>仮説一覧</Heading>
+              <Table size="sm" variant="simple">
+                <Thead>
+                  <Tr>
+                    <Th>仮説ID</Th>
+                    <Th>priority</Th>
+                    <Th>status</Th>
+                    <Th>内容</Th>
                   </Tr>
-                ))}
-              </Tbody>
-            </Table>
+                </Thead>
+                <Tbody>
+                  {state.current_hypotheses && state.current_hypotheses.map((hyp: any) => (
+                    <Tr key={hyp.id}>
+                      <Td>{hyp.id}</Td>
+                      <Td>{hyp.priority}</Td>
+                      <Td>{hyp.status}</Td>
+                      <Td style={{whiteSpace: 'pre-wrap', maxWidth: 400}}>{hyp.text}</Td>
+                    </Tr>
+                  ))}
+                </Tbody>
+              </Table>
+            </Box>
           </Box>
-        </Box>
-      </GridItem>
-    </Grid>
+        </GridItem>
+      </Grid>
+    </>
   );
 } 

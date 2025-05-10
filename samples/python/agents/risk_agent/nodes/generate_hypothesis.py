@@ -146,7 +146,7 @@ class GenerateHypothesisNode(Node):
         if prompt:
             try:
                 react_llm = ChatOpenAI(
-                    model="o3-mini"
+                    model="gpt-4.1"
                 )
                 react_agent = create_react_agent(
                     model=react_llm, 

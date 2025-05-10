@@ -13,6 +13,7 @@ from langgraph.prebuilt import create_react_agent
 from langchain_openai import ChatOpenAI
 
 import json
+from pydantic import BaseModel, Field
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +24,7 @@ async def call_data_agent(skill_id,query):
         skill_id: クエリを渡すスキルのID
         query: データエージェントに渡すクエリ（重要：クエリは複雑すぎず、シンプルなデータ取得にしてください）
     Returns:
-        str: データエージェントから取得したデータ
+        dict: データエージェントから取得したデータ
     
     """
     logger.info(f"[QDA] call_data_agent skill_id: {skill_id}, query: {query}")
@@ -37,13 +38,15 @@ async def call_data_agent(skill_id,query):
     )
     try:
         step_result = await execute_step(step)
+        called_agent = step_result.output_data["agent"]
     except Exception as e:
         logger.error(f"[QDA] call_data_agent error: {e}")
         step_result = {"error": "データエージェントからデータを取得できませんでした。クエリを変更して再度実行してください。"}
+        called_agent = "なし"
 
     logger.info(f"[QDA] call_data_agent result: {step_result}")
 
-    return step_result
+    return {"called_agent":called_agent,"result":step_result}
 
 async def analyze_data(query, output_from_data_agent):
     """
@@ -56,7 +59,7 @@ async def analyze_data(query, output_from_data_agent):
     """
     logger.info(f"[QDA] analyze_data: {query[:50]}")
 
-    tool_llm = ChatOpenAI(model="o3-mini")
+    tool_llm = ChatOpenAI(model="gpt-4.1")
     prompt_for_data_analysis = get_query_data_analysis_prompt(query, output_from_data_agent)
 
     analysis_result = await tool_llm.ainvoke(prompt_for_data_analysis)
@@ -65,6 +68,9 @@ async def analyze_data(query, output_from_data_agent):
 
     return analysis_result
 
+class react_agent_result(BaseModel):
+    called_agent: list[str] = Field(description="データ取得のために呼び出したデータエージェントの名前のリスト")
+    result: str = Field(description="データ取得結果")
 
 class QueryDataAgentNode(Node):
     """データ取得ノード
@@ -94,13 +100,14 @@ class QueryDataAgentNode(Node):
         react_agent = create_react_agent(
             model=react_llm, 
             tools=[call_data_agent, analyze_data],
+            response_format=react_agent_result,
             prompt="ステップバイステップでcall_data_agentツールを使ってエージェントからデータを取得し、結果を回答してください。必要に応じて、analyze_dataツールを使って分析を行い結果を回答してください。データ取得手順ではなく、必ずデータ取得結果を回答してください。",
 
         )
         # agent_executor を使用して呼び出す
         resp_data = await react_agent.ainvoke({"messages": [("human", prompt_for_query)]})
         
-        data_summary = resp_data["messages"][-1].content
+        data_summary = resp_data["structured_response"].result
         logger.info(f"[QDA] data_summary: {data_summary}")
     
         # 既存の collected_data_summary を仮説 ID ごとに更新
@@ -132,7 +139,7 @@ class QueryDataAgentNode(Node):
             {
                 "name": "query_data_agent",
                 "query": query_list,
-                "process":[step.content for step in resp_data["messages"]]
+                "process":resp_data["structured_response"].called_agent,
             },
             state
         )]

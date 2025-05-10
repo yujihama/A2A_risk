@@ -1,8 +1,14 @@
 import logging
 import uuid
 from typing import Any, Dict, List
+import asyncio
 
 from ..core.node_base import Node, NodeResult, make_history_entry
+from ..prompts import get_refine_hypothesis_prompt
+from langgraph.prebuilt import create_react_agent
+from langchain_openai import ChatOpenAI
+from pydantic import BaseModel, Field
+from ..nodes.generate_hypothesis import HypothesisList
 
 logger = logging.getLogger(__name__)
 
@@ -13,40 +19,62 @@ class RefineHypothesisNode(Node):
     async def run(self, state: Dict[str, Any], toolbox):  # noqa: ANN001
         logger.info("--- Node: RefineHypothesis ---")
 
-        hyps: List[Dict[str, Any]] = state.get("current_hypotheses", [])
-        supported = [h for h in hyps if h.get("status") == "supported"]
-        focus_hyps = supported or hyps[:1]
-
+        # フォーカス仮説を取得
+        params = state.get("next_action", {}).get("parameters", {})
+        hypothesis_id = params.get("hypothesis_id")
+        existing_hypotheses: List[Dict] = state.get("current_hypotheses", [])
+        target_hypothesis = next((h for h in existing_hypotheses if h.get('id') == hypothesis_id), None)
+        
+        prompt = get_refine_hypothesis_prompt(state, target_hypothesis)
         new_hyps: List[Dict[str, Any]] = []
-
-        if toolbox.llm and focus_hyps:
-            prompt = (
-                "You are a scientist. Suggest refined or follow-up hypotheses based on the following:\n"
-                f"CURRENT SUPPORTED OR FOCUSED HYPOTHESES: {focus_hyps}\n"
-                "Return JSON list with objects {id,text,priority}."
+        try:
+            react_llm = ChatOpenAI(model="gpt-4.1")
+            react_agent = create_react_agent(
+                model=react_llm,
+                tools=[],
+                response_format=HypothesisList,
             )
-            try:
-                resp = await toolbox.llm.ainvoke(prompt)
-                if isinstance(resp, list):
-                    new_hyps = resp
-                elif isinstance(resp, dict) and "hypotheses" in resp:
-                    new_hyps = resp["hypotheses"]
-            except Exception as e:  # noqa: BLE001
-                logger.warning("LLM refine failed: %s", e)
+            resp_data = await react_agent.ainvoke({"messages": [("human", prompt)]})
+            raw_hypotheses = dict(resp_data["structured_response"]).get("hypotheses", [])
+            for i, hypo in enumerate(raw_hypotheses):
+                hypo = dict(hypo)
+                # refineの場合はidをsubref_+元仮説id+連番に
+                hypo["id"] = f"subref_{hypothesis_id}_{i+1}"
+                hypo["parent_hypothesis_id"] = hypothesis_id
+                if hypo.get("status") != "new":
+                    hypo["status"] = "new"
+                new_hyps.append(hypo)
+        except Exception as e:
+            logger.warning(f"LLM failed during refine hypothesis generation, fallback: {e}")
 
         if not new_hyps:
-            # fallback simple variant
-            for h in focus_hyps:
-                new_hyps.append({
-                    "id": str(uuid.uuid4())[:8],
-                    "text": h["text"] + " (refined)",
-                    "priority": h.get("priority", 5),
-                    "status": "new",
-                })
+            fallback_hypo = {
+                "id": f"fb_ref_{str(uuid.uuid4())[:8]}",
+                "text": f"{target_hypothesis['text']} を見直したサブ仮説",
+                "priority": 0.5,
+                "status": "new",
+                "parent_hypothesis_id": hypothesis_id,
+                "supporting_evidence_keys": [],
+                "next_validation_step_suggestion": "",
+                "metric_definition": ""
+            }
+            new_hyps.append(fallback_hypo)
 
-        hyps.extend(new_hyps)
+        updated_hypotheses = existing_hypotheses + new_hyps
+        patch = {
+            "current_hypotheses": updated_hypotheses,
+            "next_action": None,
+        }
 
-        patch = {"current_hypotheses": hyps, "next_action": None}
-        events = [make_history_entry("node", {"name": "refine_hypothesis", "new_count": len(new_hyps)}, state)]
+        events = [make_history_entry(
+            "node",
+            {
+                "name": "refine_hypothesis",
+                "parent_id": hypothesis_id,
+                "count": len(new_hyps),
+                "generated_hypotheses": [hypo["id"] for hypo in new_hyps],
+            },
+            state
+        )]
 
         return NodeResult(observation=new_hyps, patch=patch, events=events) 

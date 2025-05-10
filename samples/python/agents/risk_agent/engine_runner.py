@@ -152,7 +152,7 @@ async def run_with_checkpoint(yaml_path, resume_checkpoint_id=None, initial_stat
     # ------------------------------------
 
     llm = ChatOpenAI(model="gpt-4.1", temperature=0).with_structured_output(method="json_mode")
-    eval_llm = ChatOpenAI(model="o3-mini").with_structured_output(method="json_mode")
+    eval_llm = ChatOpenAI(model="gpt-4.1").with_structured_output(method="json_mode")
     data_client = None
     try:
         from A2A_risk.samples.python.common.client.client import SmartA2AClient
@@ -179,7 +179,7 @@ async def run_with_checkpoint(yaml_path, resume_checkpoint_id=None, initial_stat
                 "thread_id": thread_id,
                 "checkpoint_id": resume_checkpoint_id
             },
-            "recursion_limit": 100
+            "recursion_limit": 150
             }
             print(f"[再開] thread_id: {thread_id} (指定した checkpoint_id: {resume_checkpoint_id} に対応)")
             # ★ astream を使用して再開・実行し、状態をブロードキャスト
@@ -210,7 +210,7 @@ async def run_with_checkpoint(yaml_path, resume_checkpoint_id=None, initial_stat
             # 新規実行
             thread_id = str(uuid.uuid4())
             print(f"[新規実行] thread_id: {thread_id}")
-            config = {"configurable": {"thread_id": thread_id}, "recursion_limit":100}
+            config = {"configurable": {"thread_id": thread_id}, "recursion_limit":150}
             # ★ astream を使用して実行し、状態をブロードキャスト
             async for output in graph.astream(initial_state or {}, config):
                  # astream は {'node_name': state_after_node} の形式で返す
@@ -259,7 +259,7 @@ async def run_with_checkpoint(yaml_path, resume_checkpoint_id=None, initial_stat
         history = []
         i = 0
         # ★ get_state_history の代わりに aget_state_history を使う
-        async for snapshot in graph.aget_state_history(history_config, limit=100): # limit を追加推奨
+        async for snapshot in graph.aget_state_history(history_config, limit=150): # limit を追加推奨
             checkpoint_id = snapshot.config.get("configurable", {}).get("checkpoint_id", "unknown")
             current_thread_id = snapshot.config.get("configurable", {}).get("thread_id", "unknown")
             # snapshot.values にその時点の状態が含まれる
