@@ -3,7 +3,7 @@ agent_name: "経費データ管理エージェント"
 agent_description: "経費データの分析と情報提供を行います"
 host: "localhost"
 port: 8005
-llm_model: "gpt-4o-mini"
+llm_model: "gpt-4.1-nano"
 data_source: "../data/expenses.csv"
 
 # A2A設定

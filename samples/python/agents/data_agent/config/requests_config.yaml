@@ -3,7 +3,7 @@ agent_name: "稟議書・申請書データ管理エージェント"
 agent_description: " 稟議書・申請書データの分析と情報提供を行います"
 host: "localhost"
 port: 8009
-llm_model: "gpt-4o-mini"
+llm_model: "gpt-4.1-nano"
 data_source: "../data/稟議書"
 
 # A2A設定

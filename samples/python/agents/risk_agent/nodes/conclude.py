@@ -13,25 +13,34 @@ class ConcludeNode(Node):
         logger.info("--- Node: Conclude ---")
 
         objective = state.get("objective", "")
-        hyps: List[Dict[str, Any]] = state.get("current_hypotheses", [])
-        analysis = state.get("analysis_result", {})
+        hypothesis = state.get("current_hypothesis", {})
+        # currently_investigating_hypothesis_id が設定されていない、またはnullになっているhistoryを取得
+        hyp_history = [h for h in state.get("history", []) if h.get("currently_investigating_hypothesis_id") is not None]
 
-        summary = "Summary not generated"
+        summary = ""
         if toolbox.llm:
-            prompt = (
-                "You are to write a concise conclusion based on objective, hypotheses and analysis results.\n"
-                f"OBJECTIVE: {objective}\nHYPOTHESES: {hyps}\nANALYSIS: {analysis}\n"
-                "Return JSON summary."
-            )
+            prompt = f"""
+            ### Role
+            あなたは内部監査人として、不正の検証過程を詳細に確認して評価を行います。            
+            
+            ### Task
+            不正の検出を行うための検証過程を詳細に確認して評価を行います。
+            
+            ### Context
+            ・OBJECTIVE: {objective}
+            ・HYPOTHESES: {hypothesis}
+            ・HYPOTHESES HISTORY: {hyp_history}
+            
+            ### Output
+            ・上記のHYPOTHESESの検証過程を詳細に確認し、最終的にOBJECTIVEの不正に該当するデータが存在するかどうかを判断します。
+            ・resultというキーにJSONで回答してください。  
+            """
             try:
-                resp = await toolbox.llm.ainvoke(prompt)
-                if isinstance(resp, str):
-                    summary = resp
-                elif isinstance(resp, dict):
-                    summary = resp.get("text") or summary
+                summary = await toolbox.llm.ainvoke(prompt)
+                
             except Exception as e:  # noqa: BLE001
                 logger.warning("LLM conclusion failed: %s", e)
 
-        patch = {"final_result": {"summary": summary}, "next_action": None}
+        patch = {"hypothesis_result": {"summary": summary}, "next_action": None}
         events = [make_history_entry("node", {"name": "conclude"}, state)]
         return NodeResult(observation=summary, patch=patch, events=events) 

@@ -3,7 +3,7 @@ agent_name: "不正事例管理エージェント"
 agent_description: "不正事例の分析と情報提供を行います"
 host: "localhost"
 port: 8010
-llm_model: "gpt-4o"
+llm_model: "gpt-4.1-nano"
 data_source: "../data/不正事例"
 
 # A2A設定

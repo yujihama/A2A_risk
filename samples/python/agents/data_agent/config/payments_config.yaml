@@ -3,7 +3,7 @@ agent_name: "支払データ管理エージェント"
 agent_description: "支払データの分析と情報提供を行います"
 host: "localhost"
 port: 8003
-llm_model: "gpt-4o-mini"
+llm_model: "gpt-4.1-nano"
 data_source: "../data/payments.csv"
 
 # A2A設定

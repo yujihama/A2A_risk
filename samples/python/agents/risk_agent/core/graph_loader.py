@@ -62,3 +62,15 @@ def load_graph(yml_path: str | Path):  # noqa: ANN001
         edges.append(Edge(src=e["src"], dst=e["dst"], condition=cond, priority=getattr(cond, "priority", 0)))
 
     return nodes, edges, start_node 
+
+
+def load_subgraphs(yml_paths: List[str | Path]):
+    """
+    サブグラフYAMLのパスリストから、各サブグラフの(nodes, edges, start_node_id)をまとめて返すユーティリティ
+    Returns: List of (nodes_dict, edges_list, start_node_id)
+    """
+    subgraphs = []
+    for yml_path in yml_paths:
+        nodes, edges, start_node = load_graph(yml_path)
+        subgraphs.append((nodes, edges, start_node))
+    return subgraphs 

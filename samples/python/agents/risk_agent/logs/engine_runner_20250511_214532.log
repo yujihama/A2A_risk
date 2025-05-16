@@ -1,0 +1,92 @@
+2025-05-11 21:45:32,862 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Discovering agent at: http://localhost:8002/.well-known/agent.json
+2025-05-11 21:45:33,190 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Agent '発注データ管理エージェント' registered with URL: http://localhost:8002
+2025-05-11 21:45:33,190 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Discovering agent at: http://localhost:8003/.well-known/agent.json
+2025-05-11 21:45:33,497 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Agent '支払データ管理エージェント' registered with URL: http://localhost:8003
+2025-05-11 21:45:33,498 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Discovering agent at: http://localhost:8004/.well-known/agent.json
+2025-05-11 21:45:33,841 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Agent '取引先データ管理エージェント' registered with URL: http://localhost:8004
+2025-05-11 21:45:33,841 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Discovering agent at: http://localhost:8005/.well-known/agent.json
+2025-05-11 21:45:34,175 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Agent '経費データ管理エージェント' registered with URL: http://localhost:8005
+2025-05-11 21:45:34,175 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Discovering agent at: http://localhost:8006/.well-known/agent.json
+2025-05-11 21:45:34,515 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Agent '従業員データ管理エージェント' registered with URL: http://localhost:8006
+2025-05-11 21:45:34,516 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Discovering agent at: http://localhost:8007/.well-known/agent.json
+2025-05-11 21:45:34,852 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Agent 'メールデータ管理エージェント' registered with URL: http://localhost:8007
+2025-05-11 21:45:34,852 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Discovering agent at: http://localhost:8008/.well-known/agent.json
+2025-05-11 21:45:35,159 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Agent '通話データ管理エージェント' registered with URL: http://localhost:8008
+2025-05-11 21:45:35,159 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Discovering agent at: http://localhost:8009/.well-known/agent.json
+2025-05-11 21:45:35,466 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Agent '稟議書・申請書データ管理エージェント' registered with URL: http://localhost:8009
+2025-05-11 21:45:35,466 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Discovering agent at: http://localhost:8010/.well-known/agent.json
+2025-05-11 21:45:35,768 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Agent '不正事例管理エージェント' registered with URL: http://localhost:8010
+2025-05-11 21:45:35,769 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Discovered 9 agents from 9 URLs.
+2025-05-11 21:45:36,407 - A2A_risk.samples.python.common.client.smart_client - INFO - SmartA2AClient initialized with registry and skill selector.
+2025-05-11 21:45:38,869 - A2A_risk.samples.python.agents.risk_agent.nodes.fork_hypotheses - INFO - --- Node: ForkHypotheses ---
+2025-05-11 21:45:38,906 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - --- Node: DecisionMaker ---
+2025-05-11 21:45:39,616 - A2A_risk.samples.python.agents.risk_agent.nodes.evaluate_hypothesis - INFO - --- Node: EvaluateHypothesis ---
+2025-05-11 21:45:44,580 - A2A_risk.samples.python.agents.risk_agent.nodes.evaluate_hypothesis - INFO - [AE] 評価結果: id=hyp_001, status=inconclusive, reasoning=現在利用可能なデータやデータ分析結果の要約が提供されていないため、担当者ID・取引先IDごとの同一品目の発注単価を比較・評価することができません。また、30%以上高い取引が3回以上連続して発生しているケースの有無など、具体的な分析結果も示されていません。, required_next_data=担当者IDと取引先IDごとに、2024-05-01〜2025-04-30の期間中の品目別発注単価データ（時系列順）、および他の担当者・取引先の同一品目単価との比較ができる集計データ。発注日や発注数量も合わせて取得が望ましい。
+2025-05-11 21:45:45,217 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - --- Node: DecisionMaker ---
+2025-05-11 21:45:49,402 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - ---decision--------------------
+2025-05-11 21:45:49,403 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DM] LLM response: {'thought': "現在フォーカスしている仮説 hyp_001 のステータスは 'inconclusive' であり、最新の履歴エントリは評価結果（observation）で、必要な次データ（required_next_data）として『担当者IDと取引先IDごとに、2024-05-01〜2025-04-30の期間中の品目別発注単価データ（時系列順）、および他の担当者・取引先の同一品目単価との比較ができる集計データ』の取得が求められています。ポリシーに従い、必要なデータを取得するため 'query_data_agent' を選択します。", 'action': {'action_type': 'query_data_agent', 'parameters': {'query': ['担当者IDと取引先IDごとに、2024-05-01〜2025-04-30の期間中の品目別発注単価データ（時系列順）、および他の担当者・取引先の同一品目単価との比較ができる集計データを取得してください。発注日や発注数量も含めてください。']}}}
+2025-05-11 21:45:49,403 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - -------------------------------
+2025-05-11 21:45:49,987 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - --- Node: QueryDataAgent ---
+2025-05-11 21:45:52,246 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent skill_id: analyze_order, query: 2024-05-01から2025-04-30の期間における、担当者ID・取引先IDごとの品目別発注単価データ（時系列順）、発注日、発注数量を取得してください。また、同一品目について他の担当者・取引先の単価も比較できるように集計データも取得してください。
+2025-05-11 21:45:52,246 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Found 1 agents with skill 'analyze_order'.
+2025-05-11 21:45:52,246 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - エージェント 発注データ管理エージェント にタスクを送信中...
+2025-05-11 21:45:52,247 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - input_message: role='user' parts=[DataPart(type='data', data={'input': '2024-05-01から2025-04-30の期間における、担当者ID・取引先IDごとの品目別発注単価データ（時系列順）、発注日、発注数量を取得してください。また、同一品目について他の担当者・取引先の単価も比較できるように集計データも取得してください。'}, metadata=None)] metadata=None
+2025-05-11 21:46:07,985 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスクが送信されました。タスクID: 7210e8cc-b169-4c7d-968d-51c366000a82
+2025-05-11 21:46:08,321 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスク結果を取得しました
+2025-05-11 21:46:08,321 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent result: id='step_analyze_order' description='データエージェントへのクエリ: 2024-05-01から2025-04-30の期間における、担当者ID・取引先IDごとの品目別発注単価データ（時系列順）、発注日、発注数量を取得してください。また、同一品目について他の担当者・取引先の単価も比較できるように集計データも取得してください。' skill_id='analyze_order' input_data={'input': '2024-05-01から2025-04-30の期間における、担当者ID・取引先IDごとの品目別発注単価データ（時系列順）、発注日、発注数量を取得してください。また、同一品目について他の担当者・取引先の単価も比較できるように集計データも取得してください。'} parameters={} is_completed=True output_data={'text': 'ご要望の「2024-05-01〜2025-04-30」の期間における、「担当者ID・取引先IDごとの品目別発注単価データ（時系列順）」と、「品目ごとに他の担当者・取引先の単価を比較可能な集計データ」の例は下記の通りです。\n\n---\n### 1. 担当者ID・取引先IDごとの品目別発注単価データ（時系列順）\n\n| 担当者ID | 取引先ID | 品目名      | 発注日         | 単価    | 数量 |\n|----------|----------|-------------|----------------|--------|------|\n| EMP001   | V00001   | 部品DDD     | 2024-06-25     | 950    | 100  |\n| EMP001   | V00001   | 部品FFF     | 2024-09-10     | 2100   | 100  |\n| EMP001   | V00001   | 部品FFF     | 2025-04-25     | 2600   | 100  |\n| EMP001   | V00001   | 部品GGG     | 2025-01-10     | 1650   | 100  |\n| EMP001   | V00001   | 部品HHH     | 2025-03-20     | 2500   | 100  |\n| EMP002   | V00055   | 調査業務委託 | 2025-01-20     | 5000000| 1    |\n| EMP002   | V00055   | 追加調査委託 | 2025-02-15     | 4900000| 1    |\n| EMP002   | V00056   | デザイン料   | 2025-02-12     | 300000 | 1    |\n| EMP003   | V00026   | 試作品A      | 2025-01-18     | 75000  | 1    |\n| EMP003   | V00026   | 部品EEE      | 2024-08-15     | 1500   | 20   |\n| EMP003   | V00027   | システム保守費| 2024-11-15    | 120000 | 1    |\n| EMP004   | V00030   | システム改修費| 2025-02-10    | 450000 | 1    |\n| EMP004   | V00030   | ライセンス費用| 2024-05-15    | 150000 | 1    |\n| EMP004   | V00040   | オフィスチェア| 2024-10-25    | 50000  | 10   |\n| EMP005   | V00035   | 研修費用     | 2024-07-20     | 300000 | 1    |\n| EMP005   | V00042   | 広告掲載料   | 2024-12-15     | 800000 | 1    |\n| EMP005   | V00045   | 出展準備費用 | 2025-03-06     |1200000 | 1    |\n\n---\n\n### 2. 集計データ: 同一品目の他担当者・取引先も比較可能\n\n| 品目名     | 担当者ID | 取引先ID | 単価一覧            | 平均単価    | 発注数 | 発注回数 |\n|------------|----------|----------|---------------------|-------------|--------|----------|\n| 部品FFF    | EMP001   | V00001   | [2100, 2600]        | 2350.0      | 200    | 2        |\n| 部品EEE    | EMP003   | V00026   | [1500]              | 1500.0      | 20     | 1        |\n| 出展準備費用| EMP005   | V00045   | [1200000]           | 1200000.0   | 1      | 1        |\n| ...        | ...      | ...      | ...                 | ...         | ...    | ...      |\n\n---\n\n### 3. 品目ごとの全担当者・取引先・単価リスト\n\n| 品目名     | 担当者ID一覧          | 取引先ID一覧            | 単価リスト         |\n|------------|----------------------|-------------------------|--------------------|\n| 部品FFF    | [EMP001]             | [V00001]                | [2100, 2600]       |\n| 部品EEE    | [EMP003]             | [V00026]                | [1500]             |\n| ...        | ...                  | ...                     | ...                |\n\n---\n\nご希望であればExcel/CSV形式などファイル出力や、特定品目の比較可視化も可能です。ご要望をお知らせください。', 'data': None, 'agent': '発注データ管理エージェント'} error=None selected_agent=None start_time=datetime.datetime(2025, 5, 11, 21, 45, 52, 246442) transitions={}
+2025-05-11 21:46:23,185 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] data_summary: 2024-05-01〜2025-04-30の期間における、担当者ID・取引先IDごとの品目別発注単価データ（時系列順）、発注日、発注数量、および同一品目について他の担当者・取引先の単価も比較できる集計データを取得しました。主なデータ例は以下の通りです。
+
+【担当者ID・取引先IDごとの品目別発注単価データ（時系列順）】
+- EMP001/V00001/部品DDD/2024-06-25/950/100
+- EMP001/V00001/部品FFF/2024-09-10/2100/100
+- EMP001/V00001/部品FFF/2025-04-25/2600/100
+- EMP003/V00026/部品EEE/2024-08-15/1500/20
+- EMP005/V00045/出展準備費用/2025-03-06/1200000/1
+など
+
+【同一品目の他担当者・取引先も比較可能な集計データ】
+- 部品FFF/EMP001/V00001/単価一覧:[2100,2600]/平均単価:2350/発注数:200/発注回数:2
+- 部品EEE/EMP003/V00026/単価一覧:[1500]/平均単価:1500/発注数:20/発注回数:1
+など
+
+【品目ごとの全担当者・取引先・単価リスト】
+- 部品FFF/担当者ID:[EMP001]/取引先ID:[V00001]/単価リスト:[2100,2600]
+- 部品EEE/担当者ID:[EMP003]/取引先ID:[V00026]/単価リスト:[1500]
+など
+
+これらのデータは発注データ管理エージェントから取得しました。
+2025-05-11 21:46:23,738 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - --- Node: DecisionMaker ---
+2025-05-11 21:46:23,738 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DecisionMaker] next_action: {'action_type': 'evaluate_hypothesis', 'parameters': {'hypothesis_id': 'hyp_001'}}
+2025-05-11 21:46:24,316 - A2A_risk.samples.python.agents.risk_agent.nodes.evaluate_hypothesis - INFO - --- Node: EvaluateHypothesis ---
+2025-05-11 21:46:28,635 - A2A_risk.samples.python.agents.risk_agent.nodes.evaluate_hypothesis - INFO - [AE] 評価結果: id=hyp_001, status=inconclusive, reasoning=指定された期間内の担当者ID・取引先IDごと、および同一品目についての発注単価比較データが取得されており、データ形式にも問題はありません。ただし、提供された要約やサンプルには『他担当者・他取引先の同一品目単価と30%以上高い取引が、3回連続で発生したペア』を示す具体的な分析例やケースが含まれていません。したがって、仮説に対しsupported/rejectedと評価できる状態にありません。, required_next_data=各品目ごとに、担当者ID・取引先IDペアごと発注日順に、他担当者・他取引先平均単価比で30%以上高い発注が連続して3回以上発生したケースが存在するか、該当するペアと品目、発注日・単価のリスト。
+2025-05-11 21:46:29,193 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - --- Node: DecisionMaker ---
+2025-05-11 21:46:32,607 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - ---decision--------------------
+2025-05-11 21:46:32,607 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DM] LLM response: {'thought': "現在フォーカスしている仮説 hyp_001 のステータスは 'inconclusive' です。最新の履歴エントリは観察(observation)であり、'required_next_data'として『各品目ごとに、担当者ID・取引先IDペアごと発注日順に、他担当者・他取引先平均単価比で30%以上高い発注が連続して3回以上発生したケースが存在するか、該当するペアと品目、発注日・単価のリスト』の取得が必要と明記されています。ポリシーに従い、必要なデータを取得するため 'query_data_agent' を選択します。", 'action': {'action_type': 'query_data_agent', 'parameters': {'query': ['2024-05-01〜2025-04-30の期間において、各品目ごとに、担当者ID・取引先IDペアごと発注日順に、他担当者・他取引先の同一品目平均単価比で30%以上高い発注が連続して3回以上発生したケースが存在するかを調査し、該当する担当者ID・取引先ID・品目名・発注日・単価のリストを抽出してください。']}}}
+2025-05-11 21:46:32,607 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - -------------------------------
+2025-05-11 21:46:33,160 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - --- Node: QueryDataAgent ---
+2025-05-11 21:46:35,265 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent skill_id: analyze_order, query: 2024-05-01〜2025-04-30の期間において、各品目ごとに、担当者ID・取引先IDペアごと発注日順に、他担当者・他取引先の同一品目平均単価比で30%以上高い発注が連続して3回以上発生したケースが存在するかを調査し、該当する担当者ID・取引先ID・品目名・発注日・単価のリストを抽出してください。
+2025-05-11 21:46:35,265 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Found 1 agents with skill 'analyze_order'.
+2025-05-11 21:46:35,265 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - エージェント 発注データ管理エージェント にタスクを送信中...
+2025-05-11 21:46:35,266 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - input_message: role='user' parts=[DataPart(type='data', data={'input': '2024-05-01〜2025-04-30の期間において、各品目ごとに、担当者ID・取引先IDペアごと発注日順に、他担当者・他取引先の同一品目平均単価比で30%以上高い発注が連続して3回以上発生したケースが存在するかを調査し、該当する担当者ID・取引先ID・品目名・発注日・単価のリストを抽出してください。'}, metadata=None)] metadata=None
+2025-05-11 21:46:47,056 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスクが送信されました。タスクID: 832508d1-734e-4e6e-987c-516be0348bbd
+2025-05-11 21:46:47,355 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスク結果を取得しました
+2025-05-11 21:46:47,355 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent result: id='step_analyze_order' description='データエージェントへのクエリ: 2024-05-01〜2025-04-30の期間において、各品目ごとに、担当者ID・取引先IDペアごと発注日順に、他担当者・他取引先の同一品目平均単価比で30%以上高い発注が連続して3回以上発生したケースが存在するかを調査し、該当する担当者ID・取引先ID・品目名・発注日・単価のリストを抽出してください。' skill_id='analyze_order' input_data={'input': '2024-05-01〜2025-04-30の期間において、各品目ごとに、担当者ID・取引先IDペアごと発注日順に、他担当者・他取引先の同一品目平均単価比で30%以上高い発注が連続して3回以上発生したケースが存在するかを調査し、該当する担当者ID・取引先ID・品目名・発注日・単価のリストを抽出してください。'} parameters={} is_completed=True output_data={'text': 'ご指定の「2024-05-01〜2025-04-30」の期間において、「各品目ごとに、担当者ID・取引先IDペアごと発注日順に、他担当者・他取引先の同一品目平均単価比で30%以上高い発注が連続して3回以上発生したケース」を調査した結果、該当するデータは見つかりませんでした。\n\nこの期間・条件に合致する「担当者ID・取引先ID・品目名・発注日・単価」のレコードは存在しません。', 'data': None, 'agent': '発注データ管理エージェント'} error=None selected_agent=None start_time=datetime.datetime(2025, 5, 11, 21, 46, 35, 265457) transitions={}
+2025-05-11 21:46:51,239 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] data_summary: 2024-05-01〜2025-04-30の期間において、各品目ごとに、担当者ID・取引先IDペアごと発注日順に、他担当者・他取引先の同一品目平均単価比で30%以上高い発注が連続して3回以上発生したケースは存在しませんでした。該当する担当者ID・取引先ID・品目名・発注日・単価のレコードはありません。
+2025-05-11 21:46:51,802 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - --- Node: DecisionMaker ---
+2025-05-11 21:46:51,802 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DecisionMaker] next_action: {'action_type': 'evaluate_hypothesis', 'parameters': {'hypothesis_id': 'hyp_001'}}
+2025-05-11 21:46:52,375 - A2A_risk.samples.python.agents.risk_agent.nodes.evaluate_hypothesis - INFO - --- Node: EvaluateHypothesis ---
+2025-05-11 21:46:57,114 - A2A_risk.samples.python.agents.risk_agent.nodes.evaluate_hypothesis - INFO - [AE] 評価結果: id=hyp_001, status=rejected, reasoning=2024-05-01〜2025-04-30の期間において、担当者ID・取引先IDごと、発注日順に、他担当者・他取引先の同一品目平均単価比で30%以上高い発注が連続して3回以上発生したケースは分析の結果見つかりませんでした。該当する担当者・取引先・品目・発注日の具体的レコードも存在しません。したがって、現時点で仮説を支持する兆候は確認できません。, required_next_data=None
+2025-05-11 21:46:57,664 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - --- Node: DecisionMaker ---
+2025-05-11 21:46:57,664 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DM] 全仮説が解決済み。concludeへ遷移
+2025-05-11 21:46:58,241 - A2A_risk.samples.python.agents.risk_agent.nodes.conclude - INFO - --- Node: Conclude ---
+2025-05-11 21:47:07,033 - __main__ - INFO - Notifying backend with full state after node fork_hypotheses (resumed run)...
+2025-05-11 21:47:07,619 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-11 21:47:07,624 - root - INFO - [CHECKPOINT] 0: thread_id=2d885eae-05a3-4df5-90f8-be7ab9a1cd0e, checkpoint_id=1f02e660-bef6-6d9b-8006-0609e5cb8185, next_node=()
+2025-05-11 21:47:07,624 - root - INFO - [CHECKPOINT] 1: thread_id=2d885eae-05a3-4df5-90f8-be7ab9a1cd0e, checkpoint_id=1f02e623-f440-6fef-8006-958ecbff466d, next_node=()
+2025-05-11 21:47:07,625 - root - INFO - [CHECKPOINT] 2: thread_id=2d885eae-05a3-4df5-90f8-be7ab9a1cd0e, checkpoint_id=1f02e605-ec1c-68ee-8005-ab969ec047a2, next_node=('fork_hypotheses',)
+2025-05-11 21:47:07,625 - root - INFO - [CHECKPOINT] 3: thread_id=2d885eae-05a3-4df5-90f8-be7ab9a1cd0e, checkpoint_id=1f02e603-bb9b-6efe-8004-b17842e400fc, next_node=('generate_hypothesis',)
+2025-05-11 21:47:07,626 - root - INFO - [CHECKPOINT] 4: thread_id=2d885eae-05a3-4df5-90f8-be7ab9a1cd0e, checkpoint_id=1f02e603-b61b-601f-8003-9f65d3eefe6c, next_node=('decision_maker',)
+2025-05-11 21:47:07,626 - root - INFO - [CHECKPOINT] 5: thread_id=2d885eae-05a3-4df5-90f8-be7ab9a1cd0e, checkpoint_id=1f02e602-7bd0-67d9-8002-89db7d882a5e, next_node=('query_data_agent',)
+2025-05-11 21:47:07,626 - root - INFO - [CHECKPOINT] 6: thread_id=2d885eae-05a3-4df5-90f8-be7ab9a1cd0e, checkpoint_id=1f02e602-75e4-683d-8001-ea9590338da8, next_node=('decision_maker',)
+2025-05-11 21:47:07,627 - root - INFO - [CHECKPOINT] 7: thread_id=2d885eae-05a3-4df5-90f8-be7ab9a1cd0e, checkpoint_id=1f02e602-5fe6-6ec7-8000-34fb49271f38, next_node=('eda',)
+2025-05-11 21:47:07,627 - root - INFO - [CHECKPOINT] 8: thread_id=2d885eae-05a3-4df5-90f8-be7ab9a1cd0e, checkpoint_id=1f02e602-5fe4-6f81-bfff-d5c57c64048e, next_node=('__start__',)

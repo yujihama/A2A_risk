@@ -1,0 +1,51 @@
+nodes:
+  - id: eda
+    impl: A2A_risk.samples.python.agents.risk_agent.nodes.eda.EDANode
+  - id: decision_maker
+    impl: A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker.DecisionMakerNode
+  - id: query_data_agent
+    impl: A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent.QueryDataAgentNode
+  - id: generate_hypothesis
+    impl: A2A_risk.samples.python.agents.risk_agent.nodes.generate_hypothesis.GenerateHypothesisNode
+  - id: fork_hypotheses
+    impl: A2A_risk.samples.python.agents.risk_agent.nodes.fork_hypotheses.ForkHypothesesNode
+  - id: parent_conclude
+    impl: A2A_risk.samples.python.agents.risk_agent.nodes.conclude.ConcludeNode
+  - id: error
+    impl: A2A_risk.samples.python.agents.risk_agent.nodes.error.ErrorNode
+
+edges:
+  - src: eda
+    dst: decision_maker
+    type: rule
+    expr: "True"
+  - src: decision_maker
+    dst: query_data_agent
+    type: rule
+    expr: "state.get('next_action', {}).get('action_type') == 'query_data_agent'"
+  - src: query_data_agent
+    dst: decision_maker
+    type: rule
+    expr: "True"
+  - src: decision_maker
+    dst: generate_hypothesis
+    type: rule
+    expr: "True"
+  - src: generate_hypothesis
+    dst: fork_hypotheses
+    type: rule
+    expr: "state.get('current_hypotheses') and len(state.get('current_hypotheses', [])) > 0"
+  - src: generate_hypothesis
+    dst: error
+    type: rule
+    expr: "not state.get('current_hypotheses')"
+  - src: fork_hypotheses
+    dst: parent_conclude
+    type: rule
+    expr: "state.get('all_forked_finished')"
+  - src: fork_hypotheses
+    dst: error
+    type: rule
+    expr: "state.get('fork_error')"
+
+start: eda 

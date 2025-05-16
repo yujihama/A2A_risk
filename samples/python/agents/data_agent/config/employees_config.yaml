@@ -3,7 +3,7 @@ agent_name: "従業員データ管理エージェント"
 agent_description: "従業員データの分析と情報提供を行います"
 host: "localhost"
 port: 8006
-llm_model: "gpt-4o-mini"
+llm_model: "gpt-4.1-nano"
 data_source: "../data/employees.csv"
 
 # A2A設定

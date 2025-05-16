@@ -151,8 +151,8 @@ async def run_with_checkpoint(yaml_path, resume_checkpoint_id=None, initial_stat
     checkpointer = AsyncSqliteSaver(conn=conn)
     # ------------------------------------
 
-    llm = ChatOpenAI(model="gpt-4.1", temperature=0).with_structured_output(method="json_mode")
-    eval_llm = ChatOpenAI(model="gpt-4.1").with_structured_output(method="json_mode")
+    llm = ChatOpenAI(model="gpt-4.1-mini", temperature=0).with_structured_output(method="json_mode")
+    eval_llm = ChatOpenAI(model="gpt-4.1-mini").with_structured_output(method="json_mode")
     data_client = None
     try:
         from A2A_risk.samples.python.common.client.client import SmartA2AClient
@@ -211,10 +211,21 @@ async def run_with_checkpoint(yaml_path, resume_checkpoint_id=None, initial_stat
             thread_id = str(uuid.uuid4())
             print(f"[新規実行] thread_id: {thread_id}")
             config = {"configurable": {"thread_id": thread_id}, "recursion_limit":150}
+
+            # ★ 新規実行の開始前にバックエンドの latest_state をリセットする
+            logger.info("Resetting backend state for new graph execution...")
+            async with httpx.AsyncClient() as client:
+                await client.post(
+                    BACKEND_UPDATE_URL,
+                    json={},
+                    params={"reset": "true"},
+                    timeout=5.0
+                )
+
             # ★ astream を使用して実行し、状態をブロードキャスト
-            async for output in graph.astream(initial_state or {}, config):
+            async for output in graph.astream(initial_state or {}, config, subgraphs=True, stream_mode="updates"):
                  # astream は {'node_name': state_after_node} の形式で返す
-                node_name = list(output.keys())[0]
+                node_name = list(list(output)[1].keys())[0]
                 # ENDノードの場合は state が含まれないことがあるのでチェック
                 if node_name == END:
                     print("--- Graph finished ---")
@@ -314,7 +325,8 @@ if __name__ == "__main__":
                 candidate = base_dir / "llm_graph.yml"
                 yaml_path = candidate.as_posix() if candidate.exists() else None
             if not yaml_path:
-                yaml_path = (base_dir / "simple_graph.yml").as_posix()
+                # simple_graph.yml ではなく parent_graph.yml をデフォルトに変更
+                yaml_path = (base_dir / "parent_graph.yml").as_posix()
 
         # エージェント初期化とavailable_data_agents_and_skillsのセット
         initial_state = {}

@@ -3,7 +3,7 @@ agent_name: "メールデータ管理エージェント"
 agent_description: "社内外メールデータの分析と情報提供を行います"
 host: "localhost"
 port: 8007
-llm_model: "gpt-4o-mini"
+llm_model: "gpt-4.1-nano"
 data_source: "../data/communications.csv"
 
 # A2A設定

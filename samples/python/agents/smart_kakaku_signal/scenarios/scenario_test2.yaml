@@ -1,3 +1,0 @@
-scenario_id: high_price_purchase_detection_scenario1
-name: 高単価購買の検知
-description: 担当者が取引先から調達する単価が、基準(過去平均)より著しく高い(120%以上)。

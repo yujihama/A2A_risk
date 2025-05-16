@@ -10,7 +10,7 @@ interface Agent {
 
 export default function AgentTable({ agents = [] }: { agents: Agent[] }) {
   return (
-    <Table size="sm" variant="striped">
+    <Table size="xs" variant="striped">
       <Thead>
         <Tr>
           <Th>Name</Th>

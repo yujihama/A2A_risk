@@ -1,0 +1,73 @@
+nodes:
+  - id: decision_maker
+    impl: A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker.DecisionMakerNode
+  - id: query_data_agent
+    impl: A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent.QueryDataAgentNode
+  - id: generate_hypothesis
+    impl: A2A_risk.samples.python.agents.risk_agent.nodes.generate_hypothesis.GenerateHypothesisNode
+  - id: evaluate_hypothesis
+    impl: A2A_risk.samples.python.agents.risk_agent.nodes.evaluate_hypothesis.EvaluateHypothesisNode
+  - id: data_analysis
+    impl: A2A_risk.samples.python.agents.risk_agent.nodes.data_analysis.DataAnalysisNode
+  - id: refine_hypothesis
+    impl: A2A_risk.samples.python.agents.risk_agent.nodes.refine_hypothesis.RefineHypothesisNode
+  - id: conclude
+    impl: A2A_risk.samples.python.agents.risk_agent.nodes.conclude.ConcludeNode
+  - id: error
+    impl: A2A_risk.samples.python.agents.risk_agent.nodes.error.ErrorNode
+
+edges:
+  - src: decision_maker
+    dst: query_data_agent
+    type: rule
+    expr: "state.get('next_action', {}).get('action_type') == 'query_data_agent'"
+  - src: decision_maker
+    dst: generate_hypothesis
+    type: rule
+    expr: "state.get('next_action', {}).get('action_type') == 'generate_hypothesis'"
+  - src: decision_maker
+    dst: evaluate_hypothesis
+    type: rule
+    expr: "state.get('next_action', {}).get('action_type') == 'evaluate_hypothesis'"
+  - src: decision_maker
+    dst: data_analysis
+    type: rule
+    expr: "state.get('next_action', {}).get('action_type') == 'data_analysis'"
+  - src: decision_maker
+    dst: refine_hypothesis
+    type: rule
+    expr: "state.get('next_action', {}).get('action_type') == 'refine_hypothesis'"
+  - src: decision_maker
+    dst: decision_maker
+    type: rule
+    expr: "state.get('next_action', {}).get('action_type') == 'decision_maker'"
+  - src: decision_maker
+    dst: conclude
+    type: rule
+    expr: "state.get('next_action', {}).get('action_type') == 'conclude'"
+  - src: decision_maker
+    dst: error
+    type: rule
+    expr: "state.get('next_action', {}).get('action_type') == 'error'"
+  - src: query_data_agent
+    dst: decision_maker
+    type: rule
+    expr: "True"
+  - src: generate_hypothesis
+    dst: decision_maker
+    type: rule
+    expr: "True"
+  - src: evaluate_hypothesis
+    dst: decision_maker
+    type: rule
+    expr: "True"
+  - src: data_analysis
+    dst: decision_maker
+    type: rule
+    expr: "True"
+  - src: refine_hypothesis
+    dst: decision_maker
+    type: rule
+    expr: "True"
+
+start: decision_maker 

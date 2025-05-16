@@ -10,8 +10,8 @@ export default function HypothesisNode({ data }: NodeProps<Record<string, any>>)
   return (
     <>
       <Handle type="target" position={Position.Left} />
-      <pre style={{ margin: 0, whiteSpace: "pre-wrap", textAlign: "center", padding: 6 }}>
-        {data?.label}
+      <pre style={{ margin: 0, whiteSpace: "pre-wrap", textAlign: "center", padding: 6, fontSize: '30px' }}>
+        {data?.id}
       </pre>
       <Handle type="source" position={Position.Right} />
     </>

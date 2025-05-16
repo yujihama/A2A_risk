@@ -87,7 +87,7 @@ export default function DashboardPage() {
       const baseNodeStyle = { 
         borderRadius: 6, 
         padding: '10px 15px', 
-        fontSize: '16px', 
+        fontSize: '20px', 
         whiteSpace: 'pre-wrap',
         fontWeight: 500,
         width: 180,
@@ -323,20 +323,21 @@ export default function DashboardPage() {
           }
           
           // 高さを固定 200px に設定（推定ロジックは使用しない）
-          const estimatedHeight = 200;
+          const estimatedHeight = 80; // 変更後の高さ (60px -> 80px)
 
           const hypStyle: React.CSSProperties = {
              ...baseNodeStyle,
              background: bgColor,
              color: 'white',
              width: 260,
-             minHeight: estimatedHeight,
+             minHeight: estimatedHeight, // 変更後の高さを適用
              border: hyp.id.startsWith('sup_') ? '2px solid yellow' : 'none',
+             borderRadius: '40px', // 高さと幅に応じて調整 (高さ80pxなら40pxでカプセル型に近い)
           };
 
           const newNode: FlowNode = {
             id: hypNodeId,
-            data: { label: hypLabel },
+            data: { label: `${hyp.id}`, id: hyp.id, estimatedHeight: estimatedHeight }, // estimatedHeight を更新
             position: { x: 0, y: 0 }, // 後でdagreで配置
             style: hypStyle,
             type: 'hypothesis',
@@ -482,22 +483,20 @@ export default function DashboardPage() {
             <Divider my={4} />
             <Box>
               <Heading size="xs" mb={2}>仮説一覧</Heading>
-              <Table size="sm" variant="simple">
+              <Table size="xs" variant="simple">
                 <Thead>
                   <Tr>
-                    <Th>仮説ID</Th>
-                    <Th>priority</Th>
-                    <Th>status</Th>
+                    <Th minWidth="60px">仮説ID</Th>
+                    <Th minWidth="80px">status</Th>
                     <Th>内容</Th>
                   </Tr>
                 </Thead>
                 <Tbody>
                   {state.current_hypotheses && state.current_hypotheses.map((hyp: any) => (
                     <Tr key={hyp.id}>
-                      <Td>{hyp.id}</Td>
-                      <Td>{hyp.priority}</Td>
-                      <Td>{hyp.status}</Td>
-                      <Td style={{whiteSpace: 'pre-wrap', maxWidth: 400}}>{hyp.text}</Td>
+                      <Td minWidth="60px" style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>{hyp.id}</Td>
+                      <Td minWidth="80px" style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>{hyp.status}</Td>
+                      <Td style={{whiteSpace: 'pre-wrap'}}>{hyp.text}</Td>
                     </Tr>
                   ))}
                 </Tbody>

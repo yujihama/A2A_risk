@@ -22,6 +22,12 @@ class DecisionMakerNode(Node):
         logger.info("--- Node: DecisionMaker ---")
         patch: Dict[str, Any] = {}
         events = []
+        # 子グラフ用: target_hypothesis_idが指定されていればcurrent_hypothesesをフィルタ
+        target_hypothesis_id = state.get('target_hypothesis_id')
+        if target_hypothesis_id:
+            filtered = [h for h in state.get('current_hypotheses', []) if h.get('id') == target_hypothesis_id]
+            state = state.copy()
+            state['current_hypotheses'] = filtered
         max_queries_without_hypothesis = state.get('max_queries_without_hypothesis', 2)
         cycles_since_last_hypothesis = state.get('cycles_since_last_hypothesis', 0)
         consecutive_query_count = state.get('consecutive_query_count', 0)
@@ -31,7 +37,7 @@ class DecisionMakerNode(Node):
 
         # --- 1. stateのhistoryのうち、"node"の数が95を超えたらerror ---
         node_count = sum(1 for entry in state.get('history', []) if entry.get('type') == 'node')
-        if node_count > 195:
+        if node_count > 80:
             patch = {"next_action": {"action_type": "error", "parameters": {"message": "historyのnodeの数が95を超えました。"}}}
             return NodeResult(observation="history_error", patch=patch, events=events)
 
@@ -205,13 +211,13 @@ class DecisionMakerNode(Node):
             ))
             return NodeResult(observation="force_generate_hypothesis_no_hyp", patch=patch, events=events)
 
-        # --- 9. どの分岐にも該当しない場合はエラー ---
-        patch = {"next_action": {"action_type": "error", "parameters": {"message": "Unexpected state in Decision Maker"}},
-                 "error_message": "Unexpected state in Decision Maker"
+        # --- 9. どの分岐にも該当しない場合はconclude ---
+        patch = {"next_action": {"action_type": "conclude", "parameters": {}},
+                 "error_message": "conclude hypothesis result"
                 }
         events.append(make_history_entry(
             "node",
-            {"name": "decision_maker", "action": "error"},
+            {"name": "decision_maker", "action": "conclude"},
             state
         ))
-        return NodeResult(observation="unexpected_state", patch=patch, events=events) 
+        return NodeResult(observation="conclude_hypothesis_result", patch=patch, events=events) 

@@ -209,14 +209,3 @@ class DataAgentTaskManager(InMemoryTaskManager):
         logger.warning("Task resubscription (on_resubscribe_to_task) is not implemented in this prototype.")
         return new_not_implemented_error(request.id)
 
-# --- 必要であれば依存関係を requirements.txt に追加 ---
-# langchain-openai
-# python-dotenv
-# langchain
-# langchain-core
-# sse-starlette (ストリーミング実装時)
-# uvicorn
-# starlette
-# pydantic
-
-# 

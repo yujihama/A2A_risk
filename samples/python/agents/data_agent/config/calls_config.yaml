@@ -3,7 +3,7 @@ agent_name: "通話データ管理エージェント"
 agent_description: "通話データの分析と情報提供を行います"
 host: "localhost"
 port: 8008
-llm_model: "gpt-4o-mini"
+llm_model: "gpt-4.1-nano"
 data_source: "../data/calls.csv"
 
 # A2A設定

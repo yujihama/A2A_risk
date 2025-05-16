@@ -1,0 +1,407 @@
+2025-05-11 10:10:29,258 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Discovering agent at: http://localhost:8002/.well-known/agent.json
+2025-05-11 10:10:29,576 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Agent '発注データ管理エージェント' registered with URL: http://localhost:8002
+2025-05-11 10:10:29,576 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Discovering agent at: http://localhost:8003/.well-known/agent.json
+2025-05-11 10:10:29,871 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Agent '支払データ管理エージェント' registered with URL: http://localhost:8003
+2025-05-11 10:10:29,872 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Discovering agent at: http://localhost:8004/.well-known/agent.json
+2025-05-11 10:10:30,180 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Agent '取引先データ管理エージェント' registered with URL: http://localhost:8004
+2025-05-11 10:10:30,180 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Discovering agent at: http://localhost:8005/.well-known/agent.json
+2025-05-11 10:10:30,468 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Agent '経費データ管理エージェント' registered with URL: http://localhost:8005
+2025-05-11 10:10:30,469 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Discovering agent at: http://localhost:8006/.well-known/agent.json
+2025-05-11 10:10:30,756 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Agent '従業員データ管理エージェント' registered with URL: http://localhost:8006
+2025-05-11 10:10:30,756 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Discovering agent at: http://localhost:8007/.well-known/agent.json
+2025-05-11 10:10:31,052 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Agent 'メールデータ管理エージェント' registered with URL: http://localhost:8007
+2025-05-11 10:10:31,052 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Discovering agent at: http://localhost:8008/.well-known/agent.json
+2025-05-11 10:10:31,375 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Agent '通話データ管理エージェント' registered with URL: http://localhost:8008
+2025-05-11 10:10:31,376 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Discovering agent at: http://localhost:8009/.well-known/agent.json
+2025-05-11 10:10:31,728 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Agent '稟議書・申請書データ管理エージェント' registered with URL: http://localhost:8009
+2025-05-11 10:10:31,728 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Discovering agent at: http://localhost:8010/.well-known/agent.json
+2025-05-11 10:10:32,012 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Agent '不正事例管理エージェント' registered with URL: http://localhost:8010
+2025-05-11 10:10:32,012 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Discovered 9 agents from 9 URLs.
+2025-05-11 10:10:32,596 - A2A_risk.samples.python.common.client.smart_client - INFO - SmartA2AClient initialized with registry and skill selector.
+2025-05-11 10:10:34,970 - A2A_risk.samples.python.agents.risk_agent.nodes.eda - INFO - --- Node: EDA ---
+2025-05-11 10:10:34,970 - A2A_risk.samples.python.agents.risk_agent.nodes.eda - INFO - No data present. Ask LLM to propose initial data query.
+2025-05-11 10:10:36,359 - A2A_risk.samples.python.agents.risk_agent.nodes.eda - INFO - [EDA] LLM出力: {'agent_skill_id': 'analyze_order', 'query': '2024-05-01から2025-04-30までの発注データについて、担当者ID、担当者名、取引先ID、取引先名、品目名、単価、数量、発注金額を抽出してください。'}
+2025-05-11 10:10:36,359 - A2A_risk.samples.python.agents.risk_agent.nodes.eda - INFO - [EDA] アクション決定: query_data_agent, skill_id=analyze_order, query=2024-05-01から2025-04-30までの発注データについて、担当者ID、担当者名、取引先ID、取引先名、品目名、単価、数量、発注金額を抽出してください。
+2025-05-11 10:10:36,359 - A2A_risk.samples.python.agents.risk_agent.nodes.eda - INFO - [EDA] patch keys: ['data_collected', 'eda_summary', 'eda_stats', 'last_query', 'next_action']
+2025-05-11 10:10:36,366 - __main__ - INFO - Notifying backend with full state after node eda...
+2025-05-11 10:10:37,013 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-11 10:10:37,017 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - --- Node: DecisionMaker ---
+2025-05-11 10:10:37,017 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DecisionMaker] next_action: {'action_type': 'query_data_agent', 'parameters': {'agent_skill_id': 'analyze_order', 'query': '2024-05-01から2025-04-30までの発注データについて、担当者ID、担当者名、取引先ID、取引先名、品目名、単価、数量、発注金額を抽出してください。'}}
+2025-05-11 10:10:37,022 - __main__ - INFO - Notifying backend with full state after node decision_maker...
+2025-05-11 10:10:37,701 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-11 10:10:37,704 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - --- Node: QueryDataAgent ---
+2025-05-11 10:10:39,917 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent skill_id: analyze_order, query: 2024-05-01から2025-04-30までの発注データについて、担当者ID、担当者名、取引先ID、取引先名、品目名、単価、数量、発注金額を抽出してください。
+2025-05-11 10:10:39,918 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Found 1 agents with skill 'analyze_order'.
+2025-05-11 10:10:39,918 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - エージェント 発注データ管理エージェント にタスクを送信中...
+2025-05-11 10:10:39,918 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - input_message: role='user' parts=[DataPart(type='data', data={'input': '2024-05-01から2025-04-30までの発注データについて、担当者ID、担当者名、取引先ID、取引先名、品目名、単価、数量、発注金額を抽出してください。'}, metadata=None)] metadata=None
+2025-05-11 10:10:40,280 - __main__ - INFO - Notifying backend with full state after node agent...
+2025-05-11 10:10:41,001 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-11 10:10:50,533 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスクが送信されました。タスクID: 69a0e610-a070-4dfb-b1a9-b7a28e68a06a
+2025-05-11 10:10:50,831 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスク結果を取得しました
+2025-05-11 10:10:50,831 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent result: id='step_analyze_order' description='データエージェントへのクエリ: 2024-05-01から2025-04-30までの発注データについて、担当者ID、担当者名、取引先ID、取引先名、品目名、単価、数量、発注金額を抽出してください。' skill_id='analyze_order' input_data={'input': '2024-05-01から2025-04-30までの発注データについて、担当者ID、担当者名、取引先ID、取引先名、品目名、単価、数量、発注金額を抽出してください。'} parameters={} is_completed=True output_data={'text': 'ご指定の期間（2024-05-01～2025-04-30）の該当データより、担当者ID、担当者名、取引先ID、取引先名、品目名、単価、数量、発注金額を抽出した結果は以下の通りです。\n\n| 担当者ID | 担当者名 | 取引先ID | 取引先名     | 品目名       | 単価     | 数量 | 発注金額    |\n|---------|--------|---------|-------------|------------|--------|------|---------|\n| EMP004  | 担当者D | V00030  | 取引先W     | ライセンス費用 | 150000  | 1    | 150000  |\n| EMP001  | 担当者A | V00001  | サプライヤーX | 部品DDD    | 950     | 100  | 95000   |\n| EMP005  | 担当者E | V00035  | 取引先V     | 研修費用     | 300000  | 1    | 300000  |\n| EMP003  | 担当者C | V00026  | 取引先Z     | 部品EEE     | 1500    | 20   | 30000   |\n| EMP001  | 担当者A | V00001  | サプライヤーX | 部品FFF    | 2100    | 100  | 210000  |\n| EMP004  | 担当者D | V00040  | 取引先U     | オフィスチェア | 50000   | 10   | 500000  |\n| EMP003  | 担当者C | V00027  | 取引先Y     | システム保守費 | 120000  | 1    | 120000  |\n| EMP005  | 担当者E | V00042  | 取引先T     | 広告掲載料    | 800000  | 1    | 800000  |\n| EMP001  | 担当者A | V00001  | サプライヤーX | 部品GGG    | 1650    | 100  | 165000  |\n| EMP003  | 担当者C | V00026  | 取引先Z     | 試作品A     | 75000   | 1    | 75000   |\n| EMP002  | 担当者B | V00055  | コンサルY   | 調査業務委託  | 5000000 | 1    | 5000000 |\n| EMP004  | 担当者D | V00030  | 取引先W     | システム改修費 | 450000  | 1    | 450000  |\n| EMP002  | 担当者B | V00056  | デザイン事務所S | デザイン料 | 300000  | 1    | 300000  |\n| EMP002  | 担当者B | V00055  | コンサルY   | 追加調査委託  | 4900000 | 1    | 4900000 |\n| EMP005  | 担当者E | V00045  | イベント会社R | 出展準備費用 | 1200000 | 1    | 1200000 |\n| EMP001  | 担当者A | V00001  | サプライヤーX | 部品HHH    | 2500    | 100  | 250000  |\n| EMP001  | 担当者A | V00001  | サプライヤーX | 部品FFF    | 2600    | 100  | 260000  |\n\n必要に応じて、データの保存や加工も承りますので、ご希望があれば教えてください。', 'data': None, 'agent': '発注データ管理エージェント'} error=None selected_agent=None start_time=datetime.datetime(2025, 5, 11, 10, 10, 39, 918028) transitions={}
+2025-05-11 10:10:50,846 - __main__ - INFO - Notifying backend with full state after node tools...
+2025-05-11 10:10:51,396 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-11 10:11:03,396 - __main__ - INFO - Notifying backend with full state after node agent...
+2025-05-11 10:11:03,942 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-11 10:11:13,603 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] data_summary: {
+  "data":[
+    {"担当者ID":"EMP004","担当者名":"担当者D","取引先ID":"V00030","取引先名":"取引先W","品目名":"ライセンス費用","単価":150000,"数量":1,"発注金額":150000},
+    {"担当者ID":"EMP001","担当者名":"担当者A","取引先ID":"V00001","取引先名":"サプライヤーX","品目名":"部品DDD","単価":950,"数量":100,"発注金額":95000},
+    {"担当者ID":"EMP005","担当者名":"担当者E","取引先ID":"V00035","取引先名":"取引先V","品目名":"研修費用","単価":300000,"数量":1,"発注金額":300000},
+    {"担当者ID":"EMP003","担当者名":"担当者C","取引先ID":"V00026","取引先名":"取引先Z","品目名":"部品EEE","単価":1500,"数量":20,"発注金額":30000},
+    {"担当者ID":"EMP001","担当者名":"担当者A","取引先ID":"V00001","取引先名":"サプライヤーX","品目名":"部品FFF","単価":2100,"数量":100,"発注金額":210000},
+    {"担当者ID":"EMP004","担当者名":"担当者D","取引先ID":"V00040","取引先名":"取引先U","品目名":"オフィスチェア","単価":50000,"数量":10,"発注金額":500000},
+    {"担当者ID":"EMP003","担当者名":"担当者C","取引先ID":"V00027","取引先名":"取引先Y","品目名":"システム保守費","単価":120000,"数量":1,"発注金額":120000},
+    {"担当者ID":"EMP005","担当者名":"担当者E","取引先ID":"V00042","取引先名":"取引先T","品目名":"広告掲載料","単価":800000,"数量":1,"発注金額":800000},
+    {"担当者ID":"EMP001","担当者名":"担当者A","取引先ID":"V00001","取引先名":"サプライヤーX","品目名":"部品GGG","単価":1650,"数量":100,"発注金額":165000},
+    {"担当者ID":"EMP003","担当者名":"担当者C","取引先ID":"V00026","取引先名":"取引先Z","品目名":"試作品A","単価":75000,"数量":1,"発注金額":75000},
+    {"担当者ID":"EMP002","担当者名":"担当者B","取引先ID":"V00055","取引先名":"コンサルY","品目名":"調査業務委託","単価":5000000,"数量":1,"発注金額":5000000},
+    {"担当者ID":"EMP004","担当者名":"担当者D","取引先ID":"V00030","取引先名":"取引先W","品目名":"システム改修費","単価":450000,"数量":1,"発注金額":450000},
+    {"担当者ID":"EMP002","担当者名":"担当者B","取引先ID":"V00056","取引先名":"デザイン事務所S","品目名":"デザイン料","単価":300000,"数量":1,"発注金額":300000},
+    {"担当者ID":"EMP002","担当者名":"担当者B","取引先ID":"V00055","取引先名":"コンサルY","品目名":"追加調査委託","単価":4900000,"数量":1,"発注金額":4900000},
+    {"担当者ID":"EMP005","担当者名":"担当者E","取引先ID":"V00045","取引先名":"イベント会社R","品目名":"出展準備費用","単価":1200000,"数量":1,"発注金額":1200000},
+    {"担当者ID":"EMP001","担当者名":"担当者A","取引先ID":"V00001","取引先名":"サプライヤーX","品目名":"部品HHH","単価":2500,"数量":100,"発注金額":250000},
+    {"担当者ID":"EMP001","担当者名":"担当者A","取引先ID":"V00001","取引先名":"サプライヤーX","品目名":"部品FFF","単価":2600,"数量":100,"発注金額":260000}
+  ],
+  "description":"2024年5月1日から2025年4月30日までの発注データについて、担当者ID、担当者名、取引先ID、取引先名、品目名、単価、数量、発注金額を抽出したものです。",
+  "background":"発注データ管理エージェント（発注情報分析スキル）に対し、指定期間の発注データから必要な項目を抽出するクエリを実行し、取得しました。"
+}
+2025-05-11 10:11:13,604 - __main__ - INFO - Notifying backend with full state after node generate_structured_response...
+2025-05-11 10:11:14,147 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-11 10:11:14,148 - __main__ - INFO - Notifying backend with full state after node query_data_agent...
+2025-05-11 10:11:14,698 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-11 10:11:14,702 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - --- Node: DecisionMaker ---
+2025-05-11 10:11:14,707 - __main__ - INFO - Notifying backend with full state after node decision_maker...
+2025-05-11 10:11:15,271 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-11 10:11:15,273 - A2A_risk.samples.python.agents.risk_agent.nodes.generate_hypothesis - INFO - --- Node: GenerateHypothesis ---
+2025-05-11 10:11:15,273 - A2A_risk.samples.python.agents.risk_agent.nodes.generate_hypothesis - INFO - Generating initial hypotheses.
+2025-05-11 10:11:27,598 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Found 1 agents with skill 'analyze_fraud_case'.
+2025-05-11 10:11:27,598 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - エージェント 不正事例管理エージェント にタスクを送信中...
+2025-05-11 10:11:27,598 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - input_message: role='user' parts=[DataPart(type='data', data={'input': 'RAGを使って、以下の不正を検知するためのリスクシナリオに関する兆候を複数生成してください。具体的な事例にフォーカスした兆候ではなく、汎用的な兆候を生成してください。\n\n不正:\n担当者と取引先の癒着による価格上乗せやキックバック \n\nリスクシナリオ:\n業務担当者が特定の取引先に発注する際、実勢より高い単価で発注し、差額や利益を担当者個人が受領する（キックバック）または不当に特定取引先を優遇する。 \n\n 出力形式: [<兆候1>(ref:<参考事例>), 兆候2(ref:<参考事例>), 兆候3(ref:<参考事例>),...] '}, metadata=None)] metadata=None
+2025-05-11 10:11:27,895 - __main__ - INFO - Notifying backend with full state after node agent...
+2025-05-11 10:11:28,548 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-11 10:11:35,625 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスクが送信されました。タスクID: e25eb61d-8e47-4383-b289-e46046865465
+2025-05-11 10:11:35,911 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスク結果を取得しました
+2025-05-11 10:11:35,911 - A2A_risk.samples.python.agents.risk_agent.nodes.generate_hypothesis - INFO - --------------------------------
+2025-05-11 10:11:35,911 - A2A_risk.samples.python.agents.risk_agent.nodes.generate_hypothesis - INFO - tool_result: [  
+単価が継続的に市場価格や他社取引平均より高くなっている取引が存在する(ref:不適切事例_1_OSJB.pdf),  
+特定の取引先への発注頻度や金額が他の取引先と比較して著しく高い(ref:第三者委員会報告書_2_DSJB.pdf),   
+業務担当者と取引先担当者間の私的接触または関係性の深さがうかがえる情報が認められる(ref:第三者委員会報告書_2_DSJB.pdf),  
+発注先変更理由や価格決定根拠の社内記録・文書が不十分または不明瞭(ref:不適切事例_1_OSJB.pdf),  
+同一業務で複数回に分割した発注が短期間に集中している(ref:第三者委員会報告書_2_DSJB.pdf),  
+指摘された業務担当者が異動や退職した直後から当該取引先との取引状況が急変する(ref:不適切事例_1_OSJB.pdf),  
+監査や取引見直し時に担当者からの説明が曖昧・根拠に乏しい(ref:第三者委員会報告書_2_DSJB.pdf),  
+定期的な相見積取得や競争入札プロセスが形骸化している(ref:不適切事例_1_OSJB.pdf)  
+]
+2025-05-11 10:11:35,911 - A2A_risk.samples.python.agents.risk_agent.nodes.generate_hypothesis - INFO - --------------------------------
+2025-05-11 10:11:35,911 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Found 1 agents with skill 'analyze_fraud_case'.
+2025-05-11 10:11:35,911 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - エージェント 不正事例管理エージェント にタスクを送信中...
+2025-05-11 10:11:35,911 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - input_message: role='user' parts=[DataPart(type='data', data={'input': 'RAGを使って、以下の不正を検知するためのリスクシナリオに関する兆候を複数生成してください。具体的な事例にフォーカスした兆候ではなく、汎用的な兆候を生成してください。\n\n不正:\n異常に高額な発注、単価の急激な上昇、同一担当者・取引先ペアによる集中発注、発注品目の名目による不透明さ（例: コンサル費・広告費等） \n\nリスクシナリオ:\n担当者と取引先の癒着による価格上乗せやキックバックを目的とした不正な発注操作 \n\n 出力形式: [<兆候1>(ref:<参考事例>), 兆候2(ref:<参考事例>), 兆候3(ref:<参考事例>),...] '}, metadata=None)] metadata=None
+2025-05-11 10:11:44,124 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスクが送信されました。タスクID: 14bfc39a-6d9a-4f4c-b7bc-a74b194a7998
+2025-05-11 10:11:44,419 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスク結果を取得しました
+2025-05-11 10:11:44,419 - A2A_risk.samples.python.agents.risk_agent.nodes.generate_hypothesis - INFO - --------------------------------
+2025-05-11 10:11:44,419 - A2A_risk.samples.python.agents.risk_agent.nodes.generate_hypothesis - INFO - tool_result: [  
+異常に高額な取引や前例のない単価設定の発注が継続的に見られる(ref:事例1/第三者委員会報告書),  
+特定の担当者と特定の取引先の間で発注額・発注件数が集中している傾向がある(ref:事例1/不適切事例通達),  
+発注内容・品目の記載が曖昧または広義の名目（コンサル費、広告費、雑費等）で繰り返されている(ref:事例1/第三者委員会報告書),  
+短期間で同一品目の単価が急激に上昇している事例が確認できる(ref:事例1/不適切事例通達),  
+発注理由や価格決定プロセスの説明が他案件と比べて不透明または文書化が不十分である(ref:事例1/第三者委員会報告書),  
+特定の担当者・取引先間において発注以外の通常業務との兼務状況が複数発生しており職務分掌が曖昧(ref:事例1/不適切事例通達),  
+発注の決裁・承認プロセスにおいて例外的な対応（決裁の簡略化や一部関係者による特例承認など）がみられる(ref:事例1/第三者委員会報告書)  
+]
+2025-05-11 10:11:44,419 - A2A_risk.samples.python.agents.risk_agent.nodes.generate_hypothesis - INFO - --------------------------------
+2025-05-11 10:11:44,432 - __main__ - INFO - Notifying backend with full state after node tools...
+2025-05-11 10:11:44,985 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-11 10:12:01,676 - __main__ - INFO - Notifying backend with full state after node agent...
+2025-05-11 10:12:02,232 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-11 10:12:19,637 - A2A_risk.samples.python.agents.risk_agent.nodes.generate_hypothesis - INFO - Generated 4 new hypotheses (initial mode). Total hypotheses: 4
+2025-05-11 10:12:19,637 - A2A_risk.samples.python.agents.risk_agent.nodes.generate_hypothesis - INFO - Newly generated: [{'id': 'hyp_001', 'text': 'IF 2024-05-01〜2025-04-30 の間に一つの担当者ID・取引先IDペアへの発注金額合計が全体の中で10%以上を占めている場合、癒着による過度な優遇やキックバックの疑いが高まる。', 'priority': 0.96, 'status': 'new', 'time_window': '2024-05-01〜2025-04-30', 'supporting_evidence_keys': ['担当者ID', '取引先ID', '発注金額'], 'next_validation_step_suggestion': '全担当者・取引先ペアごとに発注金額を集計し、全体との比率を算出して10%超のペアを抽出する。', 'metric_definition': "SELECT employee_id, vendor_id, SUM(order_amount) AS pair_total, (SUM(order_amount)/SUM(order_amount) OVER ())*100 AS pair_rate FROM orders WHERE order_date BETWEEN '2024-05-01' AND '2025-04-30' GROUP BY employee_id, vendor_id HAVING pair_rate >= 10;"}, {'id': 'hyp_002', 'text': 'IF 2024-05-01〜2025-04-30 の間に同じ品目について担当者・取引先ペアで発注単価が全体平均の20%以上高い状態が2回以上繰り返されていれば、癒着による価格上乗せが行われている可能性がある。', 'priority': 0.93, 'status': 'new', 'time_window': '2024-05-01〜2025-04-30', 'supporting_evidence_keys': ['担当者ID', '取引先ID', '品目名', '単価'], 'next_validation_step_suggestion': '品目ごとに平均単価を算出後、担当者・取引先ごとで20%超の上乗せが複数回生じたケースを抽出。', 'metric_definition': "WITH avg_p AS (SELECT item_name, AVG(unit_price) AS avg_unit_price FROM orders WHERE order_date BETWEEN '2024-05-01' AND '2025-04-30' GROUP BY item_name) SELECT o.employee_id, o.vendor_id, o.item_name, COUNT(*) AS high_count FROM orders o JOIN avg_p a ON o.item_name=a.item_name WHERE o.unit_price > a.avg_unit_price*1.2 AND o.order_date BETWEEN '2024-05-01' AND '2025-04-30' GROUP BY o.employee_id, o.vendor_id, o.item_name HAVING high_count >= 2;"}, {'id': 'hyp_003', 'text': 'IF 2024-05-01〜2025-04-30 の間に『コンサル』『広告』『研修』等の費目で、1件あたり発注金額が300,000円以上の取引が各品目ごとに複数回ある場合、癒着による不透明な発注やキックバックのリスクがある。', 'priority': 0.9, 'status': 'new', 'time_window': '2024-05-01〜2025-04-30', 'supporting_evidence_keys': ['品目名', '発注金額'], 'next_validation_step_suggestion': '品目名に『コンサル』『広告』『研修』等を含む発注で300,000円以上の取引回数を集計し、品目ごとに2回以上のものを抽出。', 'metric_definition': "SELECT item_name, COUNT(*) AS freq FROM orders WHERE (item_name LIKE '%コンサル%' OR item_name LIKE '%広告%' OR item_name LIKE '%研修%') AND order_amount >= 300000 AND order_date BETWEEN '2024-05-01' AND '2025-04-30' GROUP BY item_name HAVING freq >= 2;"}, {'id': 'hyp_004', 'text': 'IF 2024-05-01〜2025-04-30 の発注データから担当者・取引先ごとに代表的なサンプルと基本統計（件数、合計金額、平均単価等）を抽出し発注傾向を把握することで、特異値や異常パターン（発注集中、価格急騰など）の初期兆候が可視化できる。', 'priority': 0.85, 'status': 'new', 'time_window': '2024-05-01〜2025-04-30', 'supporting_evidence_keys': ['担当者ID', '取引先ID', '発注金額', '単価'], 'next_validation_step_suggestion': '担当者・取引先ペア単位で発注件数、金額合計、平均単価、最大単価などを算出し、傾向を可視化。', 'metric_definition': "SELECT employee_id, vendor_id, COUNT(*) AS order_count, SUM(order_amount) AS total_amount, AVG(unit_price) AS avg_unit_price, MAX(unit_price) AS max_unit_price FROM orders WHERE order_date BETWEEN '2024-05-01' AND '2025-04-30' GROUP BY employee_id, vendor_id;"}]
+2025-05-11 10:12:19,639 - __main__ - INFO - Notifying backend with full state after node generate_structured_response...
+2025-05-11 10:12:20,174 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-11 10:12:20,176 - __main__ - INFO - Notifying backend with full state after node generate_hypothesis...
+2025-05-11 10:12:20,737 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-11 10:12:20,741 - A2A_risk.samples.python.agents.risk_agent.nodes.fork_hypotheses - INFO - --- Node: ForkHypotheses ---
+2025-05-11 10:12:20,779 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - --- Node: DecisionMaker ---
+2025-05-11 10:12:21,329 - A2A_risk.samples.python.agents.risk_agent.backend.main - ERROR - [notify_self_backend] Error notifying self backend: Client error '404 Not Found' for url 'http://localhost:8000/state/progress'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+Traceback (most recent call last):
+  File "C:\Users\nyham\work\A2A\A2A\A2A_risk\samples\python\agents\risk_agent\backend\main.py", line 152, in notify_self_backend
+    response.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\nyham\work\A2A\A2A\venv\Lib\site-packages\httpx\_models.py", line 829, in raise_for_status
+    raise HTTPStatusError(message, request=request, response=self)
+httpx.HTTPStatusError: Client error '404 Not Found' for url 'http://localhost:8000/state/progress'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+2025-05-11 10:12:21,331 - A2A_risk.samples.python.agents.risk_agent.nodes.evaluate_hypothesis - INFO - --- Node: EvaluateHypothesis ---
+2025-05-11 10:12:24,290 - A2A_risk.samples.python.agents.risk_agent.nodes.evaluate_hypothesis - INFO - [AE] 評価結果: id=hyp_001, status=inconclusive, reasoning=現在、該当期間（2024-05-01〜2025-04-30）における発注金額の総額および、各担当者ID・取引先IDペアごとの発注金額合計に関するデータ提供がありません。そのため、発注金額が特定ペアで全体の10%以上を占めているかどうかを評価できません。, required_next_data=2024-05-01〜2025-04-30における全体の発注金額、および各担当者ID・取引先IDペア毎の発注金額合計
+2025-05-11 10:12:24,896 - A2A_risk.samples.python.agents.risk_agent.backend.main - ERROR - [notify_self_backend] Error notifying self backend: Client error '404 Not Found' for url 'http://localhost:8000/state/progress'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+Traceback (most recent call last):
+  File "C:\Users\nyham\work\A2A\A2A\A2A_risk\samples\python\agents\risk_agent\backend\main.py", line 152, in notify_self_backend
+    response.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\nyham\work\A2A\A2A\venv\Lib\site-packages\httpx\_models.py", line 829, in raise_for_status
+    raise HTTPStatusError(message, request=request, response=self)
+httpx.HTTPStatusError: Client error '404 Not Found' for url 'http://localhost:8000/state/progress'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+2025-05-11 10:12:24,900 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - --- Node: DecisionMaker ---
+2025-05-11 10:12:27,558 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - ---decision--------------------
+2025-05-11 10:12:27,558 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DM] LLM response: {'thought': "現在フォーカスしている仮説 hyp_001 のステータスは 'inconclusive' であり、最新の履歴エントリも評価結果として『必要なデータが未提供』と記録されています。ポリシーに従い、required_next_data に記載された『2024-05-01〜2025-04-30における全体の発注金額、および各担当者ID・取引先IDペア毎の発注金額合計』を取得するため、'query_data_agent' を選択します。", 'action': {'action_type': 'query_data_agent', 'parameters': {'query': ['2024-05-01〜2025-04-30における全体の発注金額、および各担当者ID・取引先IDペア毎の発注金額合計を取得してください。']}}}
+2025-05-11 10:12:27,558 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - -------------------------------
+2025-05-11 10:12:28,155 - A2A_risk.samples.python.agents.risk_agent.backend.main - ERROR - [notify_self_backend] Error notifying self backend: Client error '404 Not Found' for url 'http://localhost:8000/state/progress'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+Traceback (most recent call last):
+  File "C:\Users\nyham\work\A2A\A2A\A2A_risk\samples\python\agents\risk_agent\backend\main.py", line 152, in notify_self_backend
+    response.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\nyham\work\A2A\A2A\venv\Lib\site-packages\httpx\_models.py", line 829, in raise_for_status
+    raise HTTPStatusError(message, request=request, response=self)
+httpx.HTTPStatusError: Client error '404 Not Found' for url 'http://localhost:8000/state/progress'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+2025-05-11 10:12:28,158 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - --- Node: QueryDataAgent ---
+2025-05-11 10:12:30,226 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent skill_id: analyze_order, query: 2024-05-01から2025-04-30の期間における全体の発注金額合計と、各担当者ID・取引先IDペアごとの発注金額合計を取得してください。
+2025-05-11 10:12:30,226 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Found 1 agents with skill 'analyze_order'.
+2025-05-11 10:12:30,227 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - エージェント 発注データ管理エージェント にタスクを送信中...
+2025-05-11 10:12:30,227 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - input_message: role='user' parts=[DataPart(type='data', data={'input': '2024-05-01から2025-04-30の期間における全体の発注金額合計と、各担当者ID・取引先IDペアごとの発注金額合計を取得してください。'}, metadata=None)] metadata=None
+2025-05-11 10:12:42,465 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスクが送信されました。タスクID: 4491db1d-43f9-4282-b9e1-fa9e8d70f436
+2025-05-11 10:12:42,751 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスク結果を取得しました
+2025-05-11 10:12:42,751 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent result: id='step_analyze_order' description='データエージェントへのクエリ: 2024-05-01から2025-04-30の期間における全体の発注金額合計と、各担当者ID・取引先IDペアごとの発注金額合計を取得してください。' skill_id='analyze_order' input_data={'input': '2024-05-01から2025-04-30の期間における全体の発注金額合計と、各担当者ID・取引先IDペアごとの発注金額合計を取得してください。'} parameters={} is_completed=True output_data={'text': '2024-05-01から2025-04-30の期間における発注金額合計は以下の通りです。\n\n■ 全体の発注金額合計\n- 14,805,000 円\n\n■ 各担当者ID・取引先IDペアごとの発注金額合計\n\n| 担当者ID | 取引先ID | 発注金額合計（円） |\n|----------|----------|-------------------|\n| EMP001   | V00001   |    980,000        |\n| EMP002   | V00055   |  9,900,000        |\n| EMP002   | V00056   |    300,000        |\n| EMP003   | V00026   |    105,000        |\n| EMP003   | V00027   |    120,000        |\n| EMP004   | V00030   |    600,000        |\n| EMP004   | V00040   |    500,000        |\n| EMP005   | V00035   |    300,000        |\n| EMP005   | V00042   |    800,000        |\n| EMP005   | V00045   |  1,200,000        |\n\n他にも知りたい集計や条件があればご指定ください。', 'data': None, 'agent': '発注データ管理エージェント'} error=None selected_agent=None start_time=datetime.datetime(2025, 5, 11, 10, 12, 30, 226753) transitions={}
+2025-05-11 10:12:49,433 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] data_summary: 2024年5月1日から2025年4月30日までの全体の発注金額合計は14,805,000円です。また、各担当者ID・取引先IDペアごとの発注金額合計も以下の通り取得しました。
+
+| 担当者ID | 取引先ID | 発注金額合計（円） |
+|----------|----------|-------------------|
+| EMP001   | V00001   |    980,000        |
+| EMP002   | V00055   |  9,900,000        |
+| EMP002   | V00056   |    300,000        |
+| EMP003   | V00026   |    105,000        |
+| EMP003   | V00027   |    120,000        |
+| EMP004   | V00030   |    600,000        |
+| EMP004   | V00040   |    500,000        |
+| EMP005   | V00035   |    300,000        |
+| EMP005   | V00042   |    800,000        |
+| EMP005   | V00045   |  1,200,000        |
+
+このデータは発注データ管理エージェントから取得しました。
+2025-05-11 10:12:49,964 - A2A_risk.samples.python.agents.risk_agent.backend.main - ERROR - [notify_self_backend] Error notifying self backend: Client error '404 Not Found' for url 'http://localhost:8000/state/progress'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+Traceback (most recent call last):
+  File "C:\Users\nyham\work\A2A\A2A\A2A_risk\samples\python\agents\risk_agent\backend\main.py", line 152, in notify_self_backend
+    response.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\nyham\work\A2A\A2A\venv\Lib\site-packages\httpx\_models.py", line 829, in raise_for_status
+    raise HTTPStatusError(message, request=request, response=self)
+httpx.HTTPStatusError: Client error '404 Not Found' for url 'http://localhost:8000/state/progress'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+2025-05-11 10:12:49,966 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - --- Node: DecisionMaker ---
+2025-05-11 10:12:49,966 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DecisionMaker] next_action: {'action_type': 'evaluate_hypothesis', 'parameters': {'hypothesis_id': 'hyp_001'}}
+2025-05-11 10:12:50,494 - A2A_risk.samples.python.agents.risk_agent.backend.main - ERROR - [notify_self_backend] Error notifying self backend: Client error '404 Not Found' for url 'http://localhost:8000/state/progress'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+Traceback (most recent call last):
+  File "C:\Users\nyham\work\A2A\A2A\A2A_risk\samples\python\agents\risk_agent\backend\main.py", line 152, in notify_self_backend
+    response.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\nyham\work\A2A\A2A\venv\Lib\site-packages\httpx\_models.py", line 829, in raise_for_status
+    raise HTTPStatusError(message, request=request, response=self)
+httpx.HTTPStatusError: Client error '404 Not Found' for url 'http://localhost:8000/state/progress'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+2025-05-11 10:12:50,496 - A2A_risk.samples.python.agents.risk_agent.nodes.evaluate_hypothesis - INFO - --- Node: EvaluateHypothesis ---
+2025-05-11 10:12:52,824 - A2A_risk.samples.python.agents.risk_agent.nodes.evaluate_hypothesis - INFO - [AE] 評価結果: id=hyp_001, status=supported, reasoning=2024年5月1日から2025年4月30日までの全体発注金額は14,805,000円であり、このうち『EMP002・V00055』ペアへの発注金額が9,900,000円で全体の約66.9%を占めています。これは仮説で示された10%を大きく上回っており、特定の担当者・取引先ペアに過度に発注が集中している傾向が明確です。したがって、癒着やキックバックの兆候が推認でき、仮説はsupportedと評価します。, required_next_data=None
+2025-05-11 10:12:53,346 - A2A_risk.samples.python.agents.risk_agent.backend.main - ERROR - [notify_self_backend] Error notifying self backend: Client error '404 Not Found' for url 'http://localhost:8000/state/progress'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+Traceback (most recent call last):
+  File "C:\Users\nyham\work\A2A\A2A\A2A_risk\samples\python\agents\risk_agent\backend\main.py", line 152, in notify_self_backend
+    response.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\nyham\work\A2A\A2A\venv\Lib\site-packages\httpx\_models.py", line 829, in raise_for_status
+    raise HTTPStatusError(message, request=request, response=self)
+httpx.HTTPStatusError: Client error '404 Not Found' for url 'http://localhost:8000/state/progress'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+2025-05-11 10:12:53,347 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - --- Node: DecisionMaker ---
+2025-05-11 10:12:53,347 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DM] Hypothesis hyp_001 (supported) に基づき追加仮説生成をトリガーします。
+2025-05-11 10:12:53,879 - A2A_risk.samples.python.agents.risk_agent.backend.main - ERROR - [notify_self_backend] Error notifying self backend: Client error '404 Not Found' for url 'http://localhost:8000/state/progress'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+Traceback (most recent call last):
+  File "C:\Users\nyham\work\A2A\A2A\A2A_risk\samples\python\agents\risk_agent\backend\main.py", line 152, in notify_self_backend
+    response.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\nyham\work\A2A\A2A\venv\Lib\site-packages\httpx\_models.py", line 829, in raise_for_status
+    raise HTTPStatusError(message, request=request, response=self)
+httpx.HTTPStatusError: Client error '404 Not Found' for url 'http://localhost:8000/state/progress'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+2025-05-11 10:12:53,881 - A2A_risk.samples.python.agents.risk_agent.nodes.generate_hypothesis - INFO - --- Node: GenerateHypothesis ---
+2025-05-11 10:12:53,881 - A2A_risk.samples.python.agents.risk_agent.nodes.generate_hypothesis - INFO - Generating supporting hypotheses for parent: hyp_001
+2025-05-11 10:13:10,081 - A2A_risk.samples.python.agents.risk_agent.nodes.generate_hypothesis - INFO - Generated 2 new hypotheses (supporting mode). Total hypotheses: 3
+2025-05-11 10:13:10,081 - A2A_risk.samples.python.agents.risk_agent.nodes.generate_hypothesis - INFO - Newly generated: [{'id': 'sub_hyp_001_1', 'text': 'IF 担当者ID『EMP002』が取引先『V00055』との取引において発注した品目の価格が、同担当者が他取引先へ発注した同一品目の平均価格よりも20%以上高い場合、当該ペア間で癒着等による価格上乗せの疑いが高まる。', 'priority': 0.85, 'status': 'new', 'time_window': '{"start":"2024-05-01","end":"2025-04-30"}', 'supporting_evidence_keys': ['発注ID', '担当者ID', '取引先ID', '品目名', '単価', '数量', '発注金額'], 'next_validation_step_suggestion': '発注データ管理エージェントで『EMP002』が『V00055』に発注した全品目の単価と、他取引先への同一品目の単価を抽出・比較する。', 'metric_definition': '平均単価_V00055 > 平均単価_他取引先 * 1.2', 'parent_hypothesis_id': 'hyp_001'}, {'id': 'sub_hyp_001_2', 'text': 'IF 『EMP002』と『V00055』間で行われた発注案件で、稟議・承認プロセスに通常よりも少ない承認者数または異常に短い承認期間が複数回確認された場合、承認プロセスの形骸化および癒着の隠蔽リスクが高まる。', 'priority': 0.8, 'status': 'new', 'time_window': '{"start":"2024-05-01","end":"2025-04-30"}', 'supporting_evidence_keys': ['発注ID', '稟議ID', '承認者数', '承認期間（申請から最終承認までの日数）'], 'next_validation_step_suggestion': '稟議書・申請書データ管理エージェントから当該ペアの発注に紐づく承認プロセスの記録を抽出し、同時期・同規模発注案件と比較する。', 'metric_definition': '該当ペア発注の承認者数または承認期間 < 同規模案件の中央値の80%以下の頻度', 'parent_hypothesis_id': 'hyp_001'}]
+2025-05-11 10:13:10,654 - A2A_risk.samples.python.agents.risk_agent.backend.main - ERROR - [notify_self_backend] Error notifying self backend: Client error '404 Not Found' for url 'http://localhost:8000/state/progress'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+Traceback (most recent call last):
+  File "C:\Users\nyham\work\A2A\A2A\A2A_risk\samples\python\agents\risk_agent\backend\main.py", line 152, in notify_self_backend
+    response.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\nyham\work\A2A\A2A\venv\Lib\site-packages\httpx\_models.py", line 829, in raise_for_status
+    raise HTTPStatusError(message, request=request, response=self)
+httpx.HTTPStatusError: Client error '404 Not Found' for url 'http://localhost:8000/state/progress'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+2025-05-11 10:13:10,658 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - --- Node: DecisionMaker ---
+2025-05-11 10:13:10,658 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DM] Focus hypothesis hyp_001 is resolved (supported). Clearing focus.
+2025-05-11 10:13:10,658 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DM] ★★all_hyp_status: ['hyp_001:supported', 'sub_hyp_001_1:new', 'sub_hyp_001_2:new']
+2025-05-11 10:13:11,219 - A2A_risk.samples.python.agents.risk_agent.backend.main - ERROR - [notify_self_backend] Error notifying self backend: Client error '404 Not Found' for url 'http://localhost:8000/state/progress'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+Traceback (most recent call last):
+  File "C:\Users\nyham\work\A2A\A2A\A2A_risk\samples\python\agents\risk_agent\backend\main.py", line 152, in notify_self_backend
+    response.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\nyham\work\A2A\A2A\venv\Lib\site-packages\httpx\_models.py", line 829, in raise_for_status
+    raise HTTPStatusError(message, request=request, response=self)
+httpx.HTTPStatusError: Client error '404 Not Found' for url 'http://localhost:8000/state/progress'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+2025-05-11 10:13:11,221 - A2A_risk.samples.python.agents.risk_agent.nodes.evaluate_hypothesis - INFO - --- Node: EvaluateHypothesis ---
+2025-05-11 10:13:13,505 - A2A_risk.samples.python.agents.risk_agent.nodes.evaluate_hypothesis - INFO - [AE] 評価結果: id=sub_hyp_001_1, status=inconclusive, reasoning=現時点のデータサマリーや関連履歴には、EMP002のV00055への発注品目の価格や、同担当者が他の取引先へ発注した同一品目の平均価格に関する具体的な数値や分析結果が存在しません。そのため、該当仮説を支持あるいは否定する根拠が不足しています。, required_next_data=EMP002がV00055およびその他全取引先へ発注した全ての品目別の取引価格データ（2024-05-01から2025-04-30の期間）、および同一品目ごとの平均価格の算出結果
+2025-05-11 10:13:14,062 - A2A_risk.samples.python.agents.risk_agent.backend.main - ERROR - [notify_self_backend] Error notifying self backend: Client error '404 Not Found' for url 'http://localhost:8000/state/progress'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+Traceback (most recent call last):
+  File "C:\Users\nyham\work\A2A\A2A\A2A_risk\samples\python\agents\risk_agent\backend\main.py", line 152, in notify_self_backend
+    response.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\nyham\work\A2A\A2A\venv\Lib\site-packages\httpx\_models.py", line 829, in raise_for_status
+    raise HTTPStatusError(message, request=request, response=self)
+httpx.HTTPStatusError: Client error '404 Not Found' for url 'http://localhost:8000/state/progress'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+2025-05-11 10:13:14,065 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - --- Node: DecisionMaker ---
+2025-05-11 10:13:20,938 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - ---decision--------------------
+2025-05-11 10:13:20,938 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DM] LLM response: {'thought': "現在フォーカスしている仮説 sub_hyp_001_1 のステータスは 'inconclusive' であり、最新の履歴エントリは評価結果（observation）で、必要な次データ（required_next_data）として『EMP002がV00055およびその他全取引先へ発注した全ての品目別の取引価格データ（2024-05-01から2025-04-30の期間）、および同一品目ごとの平均価格の算出結果』が明示されています。ポリシーに従い、このデータを取得するため 'query_data_agent' を選択します。", 'action': {'action_type': 'query_data_agent', 'parameters': {'query': ['2024-05-01から2025-04-30の期間における担当者ID『EMP002』が取引先『V00055』およびその他全取引先へ発注した全品目について、発注ID、担当者ID、取引先ID、品目名、単価、数量、発注金額のデータを抽出してください。また、同一品目ごとにEMP002がV00055へ発注した平均単価と、EMP002が他取引先へ発注した同一品目の平均単価も算出してください。']}}}
+2025-05-11 10:13:20,938 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - -------------------------------
+2025-05-11 10:13:21,495 - A2A_risk.samples.python.agents.risk_agent.backend.main - ERROR - [notify_self_backend] Error notifying self backend: Client error '404 Not Found' for url 'http://localhost:8000/state/progress'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+Traceback (most recent call last):
+  File "C:\Users\nyham\work\A2A\A2A\A2A_risk\samples\python\agents\risk_agent\backend\main.py", line 152, in notify_self_backend
+    response.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\nyham\work\A2A\A2A\venv\Lib\site-packages\httpx\_models.py", line 829, in raise_for_status
+    raise HTTPStatusError(message, request=request, response=self)
+httpx.HTTPStatusError: Client error '404 Not Found' for url 'http://localhost:8000/state/progress'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+2025-05-11 10:13:21,498 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - --- Node: QueryDataAgent ---
+2025-05-11 10:13:23,455 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent skill_id: analyze_order, query: 2024-05-01から2025-04-30の期間における担当者ID『EMP002』が発注した全品目について、発注ID、担当者ID、取引先ID、品目名、単価、数量、発注金額のデータを抽出してください。
+2025-05-11 10:13:23,455 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Found 1 agents with skill 'analyze_order'.
+2025-05-11 10:13:23,456 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - エージェント 発注データ管理エージェント にタスクを送信中...
+2025-05-11 10:13:23,456 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - input_message: role='user' parts=[DataPart(type='data', data={'input': '2024-05-01から2025-04-30の期間における担当者ID『EMP002』が発注した全品目について、発注ID、担当者ID、取引先ID、品目名、単価、数量、発注金額のデータを抽出してください。'}, metadata=None)] metadata=None
+2025-05-11 10:13:31,562 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスクが送信されました。タスクID: 12f10194-aefe-44cc-a4f3-778401bbb5c7
+2025-05-11 10:13:32,334 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスク結果を取得しました
+2025-05-11 10:13:32,334 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent result: id='step_analyze_order' description='データエージェントへのクエリ: 2024-05-01から2025-04-30の期間における担当者ID『EMP002』が発注した全品目について、発注ID、担当者ID、取引先ID、品目名、単価、数量、発注金額のデータを抽出してください。' skill_id='analyze_order' input_data={'input': '2024-05-01から2025-04-30の期間における担当者ID『EMP002』が発注した全品目について、発注ID、担当者ID、取引先ID、品目名、単価、数量、発注金額のデータを抽出してください。'} parameters={} is_completed=True output_data={'text': '2024-05-01から2025-04-30の期間において、担当者ID『EMP002』が発注した全品目について、指定された項目の抽出結果は以下の通りです。\n\n| 発注ID    | 担当者ID   | 取引先ID   | 品目名         | 単価      | 数量 | 発注金額    |\n|-----------|------------|------------|----------------|-----------|------|------------|\n| PO00015 | EMP002   | V00055   | 調査業務委託   | 5,000,000 | 1    | 5,000,000  |\n| PO00017 | EMP002   | V00056   | デザイン料     |   300,000 | 1    |    300,000 |\n| PO00018 | EMP002   | V00055   | 追加調査委託   | 4,900,000 | 1    | 4,900,000  |\n\n他に抽出したい項目や条件があればご指示ください。', 'data': None, 'agent': '発注データ管理エージェント'} error=None selected_agent=None start_time=datetime.datetime(2025, 5, 11, 10, 13, 23, 455348) transitions={}
+2025-05-11 10:13:36,169 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] analyze_data: 同一品目ごとにEMP002がV00055へ発注した平均単価と、EMP002が他取引先へ発注した同一品
+2025-05-11 10:13:42,622 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] analyze_data result: content='{\n  "data_analysis_result": {\n    "調査業務委託": {\n      "EMP002がV00055へ発注した平均単価": 5000000,\n      "EMP002が他取引先へ発注した平均単価": null\n    },\n    "追加調査委託": {\n      "EMP002がV00055へ発注した平均単価": 4900000,\n      "EMP002が他取引先へ発注した平均単価": null\n    },\n    "デザイン料": {\n      "EMP002がV00055へ発注した平均単価": null,\n      "EMP002が他取引先へ発注した平均単価": 300000\n    }\n  },\n  "reasoning": "与えられたデータには、EMP002がV00055へ発注したものとして「調査業務委託」と「追加調査委託」があり、各品目単価は1件ずつしかないためそのままが平均値となります。一方、これら2品目についてEMP002が他取引先へ発注した実績はデータ中に存在しません。また、「デザイン料」については、EMP002がV00055へ発注したデータがなく、他取引先（V00056）へ発注した1件のみのため、その単価が平均値となります。件数が1件のみのものについては、その単価が平均値となり、該当するデータが存在しない場合はnull（該当なし）としています。"\n}' additional_kwargs={'refusal': None} response_metadata={'token_usage': {'completion_tokens': 355, 'prompt_tokens': 409, 'total_tokens': 764, 'completion_tokens_details': {'accepted_prediction_tokens': 0, 'audio_tokens': 0, 'reasoning_tokens': 0, 'rejected_prediction_tokens': 0}, 'prompt_tokens_details': {'audio_tokens': 0, 'cached_tokens': 0}}, 'model_name': 'gpt-4.1-2025-04-14', 'system_fingerprint': 'fp_a1102cf978', 'id': 'chatcmpl-BVpY1bVXao6GdURLfpEyUIggy7WkO', 'finish_reason': 'stop', 'logprobs': None} id='run-01a65bd3-2b38-48ee-843d-aa5bc62a560d-0' usage_metadata={'input_tokens': 409, 'output_tokens': 355, 'total_tokens': 764, 'input_token_details': {'audio': 0, 'cache_read': 0}, 'output_token_details': {'audio': 0, 'reasoning': 0}}
+2025-05-11 10:13:52,436 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] data_summary: {
+  "data": {
+    "発注データ": [
+      {"発注ID": "PO00015", "担当者ID": "EMP002", "取引先ID": "V00055", "品目名": "調査業務委託", "単価": 5000000, "数量": 1, "発注金額": 5000000},
+      {"発注ID": "PO00017", "担当者ID": "EMP002", "取引先ID": "V00056", "品目名": "デザイン料", "単価": 300000, "数量": 1, "発注金額": 300000},
+      {"発注ID": "PO00018", "担当者ID": "EMP002", "取引先ID": "V00055", "品目名": "追加調査委託", "単価": 4900000, "数量": 1, "発注金額": 4900000}
+    ],
+    "平均単価分析": {
+      "調査業務委託": {"EMP002がV00055へ発注した平均単価": 5000000, "EMP002が他取引先へ発注した平均単価": null},
+      "追加調査委託": {"EMP002がV00055へ発注した平均単価": 4900000, "EMP002が他取引先へ発注した平均単価": null},
+      "デザイン料": {"EMP002がV00055へ発注した平均単価": null, "EMP002が他取引先へ発注した平均単価": 300000}
+    }
+  },
+  "description": "2024-05-01から2025-04-30の期間における担当者ID『EMP002』が発注した全品目の発注データ（発注ID、担当者ID、取引先ID、品目名、単価、数量、発注金額）を抽出し、同一品目ごとにEMP002がV00055へ発注した平均単価と、EMP002が他取引先へ発注した同一品目の平均単価を算出しました。各品目について該当する発注が1件のみの場合はその単価が平均値となり、該当データがない場合はnullとしています。",
+  "background": "発注データ管理エージェントからEMP002の全発注データを取得し、品目ごと・取引先ごとに平均単価を算出しました。"
+}
+2025-05-11 10:13:53,045 - A2A_risk.samples.python.agents.risk_agent.backend.main - ERROR - [notify_self_backend] Error notifying self backend: Client error '404 Not Found' for url 'http://localhost:8000/state/progress'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+Traceback (most recent call last):
+  File "C:\Users\nyham\work\A2A\A2A\A2A_risk\samples\python\agents\risk_agent\backend\main.py", line 152, in notify_self_backend
+    response.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\nyham\work\A2A\A2A\venv\Lib\site-packages\httpx\_models.py", line 829, in raise_for_status
+    raise HTTPStatusError(message, request=request, response=self)
+httpx.HTTPStatusError: Client error '404 Not Found' for url 'http://localhost:8000/state/progress'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+2025-05-11 10:13:53,049 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - --- Node: DecisionMaker ---
+2025-05-11 10:13:53,049 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DecisionMaker] next_action: {'action_type': 'evaluate_hypothesis', 'parameters': {'hypothesis_id': 'sub_hyp_001_1'}}
+2025-05-11 10:13:53,639 - A2A_risk.samples.python.agents.risk_agent.backend.main - ERROR - [notify_self_backend] Error notifying self backend: Client error '404 Not Found' for url 'http://localhost:8000/state/progress'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+Traceback (most recent call last):
+  File "C:\Users\nyham\work\A2A\A2A\A2A_risk\samples\python\agents\risk_agent\backend\main.py", line 152, in notify_self_backend
+    response.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\nyham\work\A2A\A2A\venv\Lib\site-packages\httpx\_models.py", line 829, in raise_for_status
+    raise HTTPStatusError(message, request=request, response=self)
+httpx.HTTPStatusError: Client error '404 Not Found' for url 'http://localhost:8000/state/progress'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+2025-05-11 10:13:53,641 - A2A_risk.samples.python.agents.risk_agent.nodes.evaluate_hypothesis - INFO - --- Node: EvaluateHypothesis ---
+2025-05-11 10:13:56,925 - A2A_risk.samples.python.agents.risk_agent.nodes.evaluate_hypothesis - INFO - [AE] 評価結果: id=sub_hyp_001_1, status=inconclusive, reasoning=EMP002による『調査業務委託』や『追加調査委託』のV00055への発注実績は存在するが、これらと同じ品目をEMP002が他の取引先に発注した記録がなく、比較対象となる平均単価がnullとなっているため、価格の不自然な上乗せについて判定できない。一方、『デザイン料』についてはV00055への発注がなく比較できない状況である。したがって、仮説を支持・否定する明確な根拠がデータ上不足している。, required_next_data=EMP002が別取引先に『調査業務委託』または『追加調査委託』を発注した実績が今後生じた際には、その価格データを追加収集し再度平均単価比較を行うことが必要。現状は追加データ取得を待つしかない。
+2025-05-11 10:13:57,529 - A2A_risk.samples.python.agents.risk_agent.backend.main - ERROR - [notify_self_backend] Error notifying self backend: Client error '404 Not Found' for url 'http://localhost:8000/state/progress'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+Traceback (most recent call last):
+  File "C:\Users\nyham\work\A2A\A2A\A2A_risk\samples\python\agents\risk_agent\backend\main.py", line 152, in notify_self_backend
+    response.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\nyham\work\A2A\A2A\venv\Lib\site-packages\httpx\_models.py", line 829, in raise_for_status
+    raise HTTPStatusError(message, request=request, response=self)
+httpx.HTTPStatusError: Client error '404 Not Found' for url 'http://localhost:8000/state/progress'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+2025-05-11 10:13:57,532 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - --- Node: DecisionMaker ---
+2025-05-11 10:14:01,840 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - ---decision--------------------
+2025-05-11 10:14:01,841 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DM] LLM response: {'thought': "現在フォーカスしている仮説 sub_hyp_001_1 のステータスは 'inconclusive' であり、最新の履歴エントリは観察（observation）で、必要な次のデータ（required_next_data）として『EMP002が別取引先に『調査業務委託』または『追加調査委託』を発注した実績が今後生じた際には、その価格データを追加収集し再度平均単価比較を行うことが必要』と明記されている。ポリシーに従い、必要な追加データ取得のため 'query_data_agent' を選択する。", 'action': {'action_type': 'query_data_agent', 'parameters': {'query': ['担当者ID『EMP002』が『V00055』以外の取引先に対して『調査業務委託』または『追加調査委託』を発注した実績が新たに存在するか確認し、該当する場合はその発注ID、取引先ID、品目名、単価、数量、発注金額を抽出してください。']}}}
+2025-05-11 10:14:01,841 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - -------------------------------
+2025-05-11 10:14:02,406 - A2A_risk.samples.python.agents.risk_agent.backend.main - ERROR - [notify_self_backend] Error notifying self backend: Client error '404 Not Found' for url 'http://localhost:8000/state/progress'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+Traceback (most recent call last):
+  File "C:\Users\nyham\work\A2A\A2A\A2A_risk\samples\python\agents\risk_agent\backend\main.py", line 152, in notify_self_backend
+    response.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\nyham\work\A2A\A2A\venv\Lib\site-packages\httpx\_models.py", line 829, in raise_for_status
+    raise HTTPStatusError(message, request=request, response=self)
+httpx.HTTPStatusError: Client error '404 Not Found' for url 'http://localhost:8000/state/progress'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+2025-05-11 10:14:02,410 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - --- Node: QueryDataAgent ---
+2025-05-11 10:14:04,446 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent skill_id: analyze_order, query: 担当者IDがEMP002で、取引先IDがV00055以外、かつ品目名が『調査業務委託』または『追加調査委託』の発注実績が新たに存在するか確認し、該当する場合は発注ID、取引先ID、品目名、単価、数量、発注金額を抽出してください。
+2025-05-11 10:14:04,446 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Found 1 agents with skill 'analyze_order'.
+2025-05-11 10:14:04,447 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - エージェント 発注データ管理エージェント にタスクを送信中...
+2025-05-11 10:14:04,447 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - input_message: role='user' parts=[DataPart(type='data', data={'input': '担当者IDがEMP002で、取引先IDがV00055以外、かつ品目名が『調査業務委託』または『追加調査委託』の発注実績が新たに存在するか確認し、該当する場合は発注ID、取引先ID、品目名、単価、数量、発注金額を抽出してください。'}, metadata=None)] metadata=None
+2025-05-11 10:14:10,140 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスクが送信されました。タスクID: 5f377f5c-d55c-43ea-84fb-9d7b8a22600e
+2025-05-11 10:14:10,414 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスク結果を取得しました
+2025-05-11 10:14:10,414 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent result: id='step_analyze_order' description='データエージェントへのクエリ: 担当者IDがEMP002で、取引先IDがV00055以外、かつ品目名が『調査業務委託』または『追加調査委託』の発注実績が新たに存在するか確認し、該当する場合は発注ID、取引先ID、品目名、単価、数量、発注金額を抽出してください。' skill_id='analyze_order' input_data={'input': '担当者IDがEMP002で、取引先IDがV00055以外、かつ品目名が『調査業務委託』または『追加調査委託』の発注実績が新たに存在するか確認し、該当する場合は発注ID、取引先ID、品目名、単価、数量、発注金額を抽出してください。'} parameters={} is_completed=True output_data={'text': 'ご指定の条件（担当者IDがEMP002、取引先IDがV00055以外、かつ品目名が『調査業務委託』または『追加調査委託』）に該当する新たな発注実績は存在しませんでした。\n\nしたがって、該当する発注ID、取引先ID、品目名、単価、数量、発注金額もありません。', 'data': None, 'agent': '発注データ管理エージェント'} error=None selected_agent=None start_time=datetime.datetime(2025, 5, 11, 10, 14, 4, 446747) transitions={}
+2025-05-11 10:14:14,414 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] data_summary: 担当者ID『EMP002』が『V00055』以外の取引先に対して『調査業務委託』または『追加調査委託』を発注した新たな実績は存在しませんでした。そのため、該当する発注ID、取引先ID、品目名、単価、数量、発注金額もありません。
+2025-05-11 10:14:14,988 - A2A_risk.samples.python.agents.risk_agent.backend.main - ERROR - [notify_self_backend] Error notifying self backend: Client error '404 Not Found' for url 'http://localhost:8000/state/progress'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+Traceback (most recent call last):
+  File "C:\Users\nyham\work\A2A\A2A\A2A_risk\samples\python\agents\risk_agent\backend\main.py", line 152, in notify_self_backend
+    response.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\nyham\work\A2A\A2A\venv\Lib\site-packages\httpx\_models.py", line 829, in raise_for_status
+    raise HTTPStatusError(message, request=request, response=self)
+httpx.HTTPStatusError: Client error '404 Not Found' for url 'http://localhost:8000/state/progress'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+2025-05-11 10:14:14,993 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - --- Node: DecisionMaker ---
+2025-05-11 10:14:14,993 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DecisionMaker] next_action: {'action_type': 'evaluate_hypothesis', 'parameters': {'hypothesis_id': 'sub_hyp_001_1'}}
+2025-05-11 10:14:15,611 - A2A_risk.samples.python.agents.risk_agent.backend.main - ERROR - [notify_self_backend] Error notifying self backend: Client error '404 Not Found' for url 'http://localhost:8000/state/progress'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+Traceback (most recent call last):
+  File "C:\Users\nyham\work\A2A\A2A\A2A_risk\samples\python\agents\risk_agent\backend\main.py", line 152, in notify_self_backend
+    response.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\nyham\work\A2A\A2A\venv\Lib\site-packages\httpx\_models.py", line 829, in raise_for_status
+    raise HTTPStatusError(message, request=request, response=self)
+httpx.HTTPStatusError: Client error '404 Not Found' for url 'http://localhost:8000/state/progress'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+2025-05-11 10:14:15,612 - A2A_risk.samples.python.agents.risk_agent.nodes.evaluate_hypothesis - INFO - --- Node: EvaluateHypothesis ---
+2025-05-11 10:14:20,150 - A2A_risk.samples.python.agents.risk_agent.nodes.evaluate_hypothesis - INFO - [AE] 評価結果: id=sub_hyp_001_1, status=needs_revision, reasoning=担当者EMP002が取引先V00055へ発注した『調査業務委託』『追加調査委託』について、同一担当者が他取引先へ同一品目を発注した実績がなく、価格比較に必要な平均単価がnullとなっています。これにより、仮説で想定される価格上乗せの有無を判断できる基礎データが恒常的に不足しており、追加実績の出現も現時点で確認できません。複数回のinconclusiveを経ており、現状の仮説内容やデータ取得方針の見直しが必要です。, required_next_data=EMP002以外の担当者も含めて、V00055およびその他取引先への同一品目発注データを網羅的に抽出し、担当者横断での平均単価比較など、仮説・検証方法の見直しまたは拡張が必要。
+2025-05-11 10:14:20,720 - A2A_risk.samples.python.agents.risk_agent.backend.main - ERROR - [notify_self_backend] Error notifying self backend: Client error '404 Not Found' for url 'http://localhost:8000/state/progress'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+Traceback (most recent call last):
+  File "C:\Users\nyham\work\A2A\A2A\A2A_risk\samples\python\agents\risk_agent\backend\main.py", line 152, in notify_self_backend
+    response.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\nyham\work\A2A\A2A\venv\Lib\site-packages\httpx\_models.py", line 829, in raise_for_status
+    raise HTTPStatusError(message, request=request, response=self)
+httpx.HTTPStatusError: Client error '404 Not Found' for url 'http://localhost:8000/state/progress'
+For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+2025-05-11 10:14:20,723 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - --- Node: DecisionMaker ---
+2025-05-11 10:14:20,723 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DM] Hypothesis sub_hyp_001_1 (needs_revision)のrefine判定
+2025-05-11 10:14:23,521 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - ---decision--------------------
+2025-05-11 10:14:23,522 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DM] LLM response: {'thought': "現在フォーカスしている仮説 sub_hyp_001_1 のステータスは 'needs_revision' です。ポリシー上、この場合は仮説の見直しや検証方法の拡張が必要なため 'refine_hypothesis' を選択します。履歴や観察結果からも、現状の仮説内容やデータ取得方針の見直しが求められています。", 'action': {'action_type': 'refine_hypothesis', 'parameters': {'hypothesis_id': 'sub_hyp_001_1'}}}
+2025-05-11 10:14:23,522 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - -------------------------------
+2025-05-11 10:14:26,131 - A2A_risk.samples.python.agents.risk_agent.backend.main - INFO - [notify_self_backend] Successfully notified self backend. Status: 200
+2025-05-11 10:14:26,132 - A2A_risk.samples.python.agents.risk_agent.nodes.refine_hypothesis - INFO - --- Node: RefineHypothesis ---

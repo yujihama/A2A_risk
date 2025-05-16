@@ -1,0 +1,97 @@
+2025-05-11 19:59:54,322 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Discovering agent at: http://localhost:8002/.well-known/agent.json
+2025-05-11 19:59:54,623 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Agent '発注データ管理エージェント' registered with URL: http://localhost:8002
+2025-05-11 19:59:54,623 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Discovering agent at: http://localhost:8003/.well-known/agent.json
+2025-05-11 19:59:54,901 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Agent '支払データ管理エージェント' registered with URL: http://localhost:8003
+2025-05-11 19:59:54,901 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Discovering agent at: http://localhost:8004/.well-known/agent.json
+2025-05-11 19:59:55,201 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Agent '取引先データ管理エージェント' registered with URL: http://localhost:8004
+2025-05-11 19:59:55,201 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Discovering agent at: http://localhost:8005/.well-known/agent.json
+2025-05-11 19:59:55,491 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Agent '経費データ管理エージェント' registered with URL: http://localhost:8005
+2025-05-11 19:59:55,491 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Discovering agent at: http://localhost:8006/.well-known/agent.json
+2025-05-11 19:59:55,785 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Agent '従業員データ管理エージェント' registered with URL: http://localhost:8006
+2025-05-11 19:59:55,785 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Discovering agent at: http://localhost:8007/.well-known/agent.json
+2025-05-11 19:59:56,078 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Agent 'メールデータ管理エージェント' registered with URL: http://localhost:8007
+2025-05-11 19:59:56,078 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Discovering agent at: http://localhost:8008/.well-known/agent.json
+2025-05-11 19:59:56,360 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Agent '通話データ管理エージェント' registered with URL: http://localhost:8008
+2025-05-11 19:59:56,360 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Discovering agent at: http://localhost:8009/.well-known/agent.json
+2025-05-11 19:59:56,639 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Agent '稟議書・申請書データ管理エージェント' registered with URL: http://localhost:8009
+2025-05-11 19:59:56,639 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Discovering agent at: http://localhost:8010/.well-known/agent.json
+2025-05-11 19:59:56,929 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Agent '不正事例管理エージェント' registered with URL: http://localhost:8010
+2025-05-11 19:59:56,929 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Discovered 9 agents from 9 URLs.
+2025-05-11 19:59:57,541 - A2A_risk.samples.python.common.client.smart_client - INFO - SmartA2AClient initialized with registry and skill selector.
+2025-05-11 20:00:01,947 - A2A_risk.samples.python.agents.risk_agent.nodes.eda - INFO - --- Node: EDA ---
+2025-05-11 20:00:01,947 - A2A_risk.samples.python.agents.risk_agent.nodes.eda - INFO - No data present. Ask LLM to propose initial data query.
+2025-05-11 20:00:03,489 - A2A_risk.samples.python.agents.risk_agent.nodes.eda - INFO - [EDA] LLM出力: {'agent_skill_id': 'analyze_order', 'query': '2024-05-01から2025-04-30までの発注データについて、担当者ID、担当者名、取引先ID、取引先名、品目名、単価、数量、発注金額を抽出してください。'}
+2025-05-11 20:00:03,489 - A2A_risk.samples.python.agents.risk_agent.nodes.eda - INFO - [EDA] アクション決定: query_data_agent, skill_id=analyze_order, query=2024-05-01から2025-04-30までの発注データについて、担当者ID、担当者名、取引先ID、取引先名、品目名、単価、数量、発注金額を抽出してください。
+2025-05-11 20:00:03,489 - A2A_risk.samples.python.agents.risk_agent.nodes.eda - INFO - [EDA] patch keys: ['data_collected', 'eda_summary', 'eda_stats', 'last_query', 'next_action']
+2025-05-11 20:00:03,497 - __main__ - INFO - Notifying backend with full state after node eda...
+2025-05-11 20:00:04,366 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-11 20:00:04,371 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - --- Node: DecisionMaker ---
+2025-05-11 20:00:04,371 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - [DecisionMaker] next_action: {'action_type': 'query_data_agent', 'parameters': {'agent_skill_id': 'analyze_order', 'query': '2024-05-01から2025-04-30までの発注データについて、担当者ID、担当者名、取引先ID、取引先名、品目名、単価、数量、発注金額を抽出してください。'}}
+2025-05-11 20:00:04,378 - __main__ - INFO - Notifying backend with full state after node decision_maker...
+2025-05-11 20:00:04,954 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-11 20:00:04,957 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - --- Node: QueryDataAgent ---
+2025-05-11 20:00:06,779 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent skill_id: analyze_order, query: 2024-05-01から2025-04-30までの発注データについて、担当者ID、担当者名、取引先ID、取引先名、品目名、単価、数量、発注金額を抽出してください。
+2025-05-11 20:00:06,780 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Found 1 agents with skill 'analyze_order'.
+2025-05-11 20:00:06,785 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - エージェント 発注データ管理エージェント にタスクを送信中...
+2025-05-11 20:00:06,785 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - input_message: role='user' parts=[DataPart(type='data', data={'input': '2024-05-01から2025-04-30までの発注データについて、担当者ID、担当者名、取引先ID、取引先名、品目名、単価、数量、発注金額を抽出してください。'}, metadata=None)] metadata=None
+2025-05-11 20:00:07,094 - __main__ - INFO - Notifying backend with full state after node agent...
+2025-05-11 20:00:07,754 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-11 20:00:19,902 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスクが送信されました。タスクID: 3b37f1fb-a1e2-48fd-8638-5e725b8851c5
+2025-05-11 20:00:20,201 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスク結果を取得しました
+2025-05-11 20:00:20,201 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] call_data_agent result: id='step_analyze_order' description='データエージェントへのクエリ: 2024-05-01から2025-04-30までの発注データについて、担当者ID、担当者名、取引先ID、取引先名、品目名、単価、数量、発注金額を抽出してください。' skill_id='analyze_order' input_data={'input': '2024-05-01から2025-04-30までの発注データについて、担当者ID、担当者名、取引先ID、取引先名、品目名、単価、数量、発注金額を抽出してください。'} parameters={} is_completed=True output_data={'text': 'ご指定の期間（2024-05-01 ～ 2025-04-30）の発注データについて、抽出した担当者ID、担当者名、取引先ID、取引先名、品目名、単価、数量、発注金額は以下の通りです。\n\n| 担当者ID | 担当者名 | 取引先ID | 取引先名         | 品目名         | 単価      | 数量   | 発注金額   |\n|----------|----------|----------|------------------|----------------|----------|--------|-----------|\n| EMP004   | 担当者D  | V00030   | 取引先W          | ライセンス費用 | 150000   | 1      | 150000    |\n| EMP001   | 担当者A  | V00001   | サプライヤーX    | 部品DDD        | 950      | 100    | 95000     |\n| EMP005   | 担当者E  | V00035   | 取引先V          | 研修費用       | 300000   | 1      | 300000    |\n| EMP003   | 担当者C  | V00026   | 取引先Z          | 部品EEE        | 1500     | 20     | 30000     |\n| EMP001   | 担当者A  | V00001   | サプライヤーX    | 部品FFF        | 2100     | 100    | 210000    |\n| EMP004   | 担当者D  | V00040   | 取引先U          | オフィスチェア | 50000    | 10     | 500000    |\n| EMP003   | 担当者C  | V00027   | 取引先Y          | システム保守費 | 120000   | 1      | 120000    |\n| EMP005   | 担当者E  | V00042   | 取引先T          | 広告掲載料     | 800000   | 1      | 800000    |\n| EMP001   | 担当者A  | V00001   | サプライヤーX    | 部品GGG        | 1650     | 100    | 165000    |\n| EMP003   | 担当者C  | V00026   | 取引先Z          | 試作品A        | 75000    | 1      | 75000     |\n| EMP002   | 担当者B  | V00055   | コンサルY        | 調査業務委託   | 5000000  | 1      | 5000000   |\n| EMP004   | 担当者D  | V00030   | 取引先W          | システム改修費 | 450000   | 1      | 450000    |\n| EMP002   | 担当者B  | V00056   | デザイン事務所S  | デザイン料     | 300000   | 1      | 300000    |\n| EMP002   | 担当者B  | V00055   | コンサルY        | 追加調査委託   | 4900000  | 1      | 4900000   |\n| EMP005   | 担当者E  | V00045   | イベント会社R    | 出展準備費用   | 1200000  | 1      | 1200000   |\n| EMP001   | 担当者A  | V00001   | サプライヤーX    | 部品HHH        | 2500     | 100    | 250000    |\n| EMP001   | 担当者A  | V00001   | サプライヤーX    | 部品FFF        | 2600     | 100    | 260000    |\n\n必要に応じてCSVやExcelへの出力方法も案内可能ですので、お申し付けください。', 'data': None, 'agent': '発注データ管理エージェント'} error=None selected_agent=None start_time=datetime.datetime(2025, 5, 11, 20, 0, 6, 780123) transitions={}
+2025-05-11 20:00:20,214 - __main__ - INFO - Notifying backend with full state after node tools...
+2025-05-11 20:00:20,938 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-11 20:00:29,118 - __main__ - INFO - Notifying backend with full state after node agent...
+2025-05-11 20:00:29,774 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-11 20:00:38,836 - A2A_risk.samples.python.agents.risk_agent.nodes.query_data_agent - INFO - [QDA] data_summary: {"data":[{"担当者ID":"EMP004","担当者名":"担当者D","取引先ID":"V00030","取引先名":"取引先W","品目名":"ライセンス費用","単価":150000,"数量":1,"発注金額":150000},{"担当者ID":"EMP001","担当者名":"担当者A","取引先ID":"V00001","取引先名":"サプライヤーX","品目名":"部品DDD","単価":950,"数量":100,"発注金額":95000},{"担当者ID":"EMP005","担当者名":"担当者E","取引先ID":"V00035","取引先名":"取引先V","品目名":"研修費用","単価":300000,"数量":1,"発注金額":300000},{"担当者ID":"EMP003","担当者名":"担当者C","取引先ID":"V00026","取引先名":"取引先Z","品目名":"部品EEE","単価":1500,"数量":20,"発注金額":30000},{"担当者ID":"EMP001","担当者名":"担当者A","取引先ID":"V00001","取引先名":"サプライヤーX","品目名":"部品FFF","単価":2100,"数量":100,"発注金額":210000},{"担当者ID":"EMP004","担当者名":"担当者D","取引先ID":"V00040","取引先名":"取引先U","品目名":"オフィスチェア","単価":50000,"数量":10,"発注金額":500000},{"担当者ID":"EMP003","担当者名":"担当者C","取引先ID":"V00027","取引先名":"取引先Y","品目名":"システム保守費","単価":120000,"数量":1,"発注金額":120000},{"担当者ID":"EMP005","担当者名":"担当者E","取引先ID":"V00042","取引先名":"取引先T","品目名":"広告掲載料","単価":800000,"数量":1,"発注金額":800000},{"担当者ID":"EMP001","担当者名":"担当者A","取引先ID":"V00001","取引先名":"サプライヤーX","品目名":"部品GGG","単価":1650,"数量":100,"発注金額":165000},{"担当者ID":"EMP003","担当者名":"担当者C","取引先ID":"V00026","取引先名":"取引先Z","品目名":"試作品A","単価":75000,"数量":1,"発注金額":75000},{"担当者ID":"EMP002","担当者名":"担当者B","取引先ID":"V00055","取引先名":"コンサルY","品目名":"調査業務委託","単価":5000000,"数量":1,"発注金額":5000000},{"担当者ID":"EMP004","担当者名":"担当者D","取引先ID":"V00030","取引先名":"取引先W","品目名":"システム改修費","単価":450000,"数量":1,"発注金額":450000},{"担当者ID":"EMP002","担当者名":"担当者B","取引先ID":"V00056","取引先名":"デザイン事務所S","品目名":"デザイン料","単価":300000,"数量":1,"発注金額":300000},{"担当者ID":"EMP002","担当者名":"担当者B","取引先ID":"V00055","取引先名":"コンサルY","品目名":"追加調査委託","単価":4900000,"数量":1,"発注金額":4900000},{"担当者ID":"EMP005","担当者名":"担当者E","取引先ID":"V00045","取引先名":"イベント会社R","品目名":"出展準備費用","単価":1200000,"数量":1,"発注金額":1200000},{"担当者ID":"EMP001","担当者名":"担当者A","取引先ID":"V00001","取引先名":"サプライヤーX","品目名":"部品HHH","単価":2500,"数量":100,"発注金額":250000},{"担当者ID":"EMP001","担当者名":"担当者A","取引先ID":"V00001","取引先名":"サプライヤーX","品目名":"部品FFF","単価":2600,"数量":100,"発注金額":260000}],"description":"2024年5月1日から2025年4月30日までの発注データについて、担当者ID、担当者名、取引先ID、取引先名、品目名、単価、数量、発注金額を抽出したものです。","background":"発注データ管理エージェント（発注情報分析スキル）に対し、指定期間の発注データから必要な項目を抽出するクエリを実行し、取得しました。"}
+2025-05-11 20:00:38,838 - __main__ - INFO - Notifying backend with full state after node generate_structured_response...
+2025-05-11 20:00:39,387 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-11 20:00:39,389 - __main__ - INFO - Notifying backend with full state after node query_data_agent...
+2025-05-11 20:00:39,956 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-11 20:00:39,959 - A2A_risk.samples.python.agents.risk_agent.nodes.decision_maker - INFO - --- Node: DecisionMaker ---
+2025-05-11 20:00:39,966 - __main__ - INFO - Notifying backend with full state after node decision_maker...
+2025-05-11 20:00:40,537 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-11 20:00:40,540 - A2A_risk.samples.python.agents.risk_agent.nodes.generate_hypothesis - INFO - --- Node: GenerateHypothesis ---
+2025-05-11 20:00:40,540 - A2A_risk.samples.python.agents.risk_agent.nodes.generate_hypothesis - INFO - Generating initial hypotheses.
+2025-05-11 20:00:43,072 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Found 1 agents with skill 'analyze_fraud_case'.
+2025-05-11 20:00:43,072 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - エージェント 不正事例管理エージェント にタスクを送信中...
+2025-05-11 20:00:43,072 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - input_message: role='user' parts=[DataPart(type='data', data={'input': 'RAGを使って、以下の不正を検知するためのリスクシナリオに関する兆候を複数生成してください。具体的な事例にフォーカスした兆候ではなく、汎用的な兆候を生成してください。\n\n不正:\n担当者と取引先の癒着による価格上乗せやキックバック \n\nリスクシナリオ:\n発注における、特定担当者による特定取引先への不透明な高値発注やリベート（金銭・便益）受領が行われている事例 \n\n 出力形式: [<兆候1>(ref:<参考事例>), 兆候2(ref:<参考事例>), 兆候3(ref:<参考事例>),...] '}, metadata=None)] metadata=None
+2025-05-11 20:00:43,400 - __main__ - INFO - Notifying backend with full state after node agent...
+2025-05-11 20:00:44,103 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-11 20:00:52,719 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスクが送信されました。タスクID: cb0e9695-6c19-4d6b-8334-809a0a9c4c08
+2025-05-11 20:00:53,047 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスク結果を取得しました
+2025-05-11 20:00:53,047 - A2A_risk.samples.python.agents.risk_agent.nodes.generate_hypothesis - INFO - --------------------------------
+2025-05-11 20:00:53,047 - A2A_risk.samples.python.agents.risk_agent.nodes.generate_hypothesis - INFO - tool_result: [  
+特定の取引先への発注単価が市場価格や過去実績と比較して不自然に高い傾向が継続している(ref: 目次「２ 協力会社と共謀した外注費の水増し・キックバックの受領」),  
+同一担当者による発注先の選定が固定化しており、複数部門や異なる案件でも同一取引先への発注が集中している(ref: 目次「２ 協力会社と共謀した外注費の水増し・キックバックの受領」),  
+発注の際の業者比較や相見積もり（競争見積）手続きが形骸化している、もしくは省略されている(ref: 目次「１ 社内調査委員会設置の経緯」「５ 調査方法等」),  
+発注記録や契約書等の書類に不自然な修正跡や記載漏れが多く、内容の裏付けとなる根拠が不十分(ref: 目次「５ 調査方法等」),  
+発注金額や取引件数において、特定期間にだけ急激な増加が見られる(ref: 目次「第三 調査の結果判明した事実」),  
+担当者や当該取引先の関係者の間で、通常業務時間外や社外での不自然な接触・交流が頻繁にある(ref: 目次「１ 社内調査委員会設置の経緯」「２ 協力会社と共謀した外注費の水増し・キックバックの受領」)  
+]
+2025-05-11 20:00:53,047 - A2A_risk.samples.python.agents.risk_agent.nodes.generate_hypothesis - INFO - --------------------------------
+2025-05-11 20:00:53,048 - A2A_risk.samples.python.common.registry.agent_registry - INFO - Found 1 agents with skill 'analyze_fraud_case'.
+2025-05-11 20:00:53,048 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - エージェント 不正事例管理エージェント にタスクを送信中...
+2025-05-11 20:00:53,048 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - input_message: role='user' parts=[DataPart(type='data', data={'input': 'RAGを使って、以下の不正を検知するためのリスクシナリオに関する兆候を複数生成してください。具体的な事例にフォーカスした兆候ではなく、汎用的な兆候を生成してください。\n\n不正:\n傾向把握のための代表サンプル抽出 \n\nリスクシナリオ:\nEDAサマリが不足している場合、初期的に注目すべき特徴的なパターン・アウトライアーをピックアップする事例 \n\n 出力形式: [<兆候1>(ref:<参考事例>), 兆候2(ref:<参考事例>), 兆候3(ref:<参考事例>),...] '}, metadata=None)] metadata=None
+2025-05-11 20:00:59,614 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスクが送信されました。タスクID: 8fb61b1d-b0fa-4f6b-aa7f-67a61f53abd9
+2025-05-11 20:00:59,906 - A2A_risk.samples.python.agents.risk_agent.agent - INFO - タスク結果を取得しました
+2025-05-11 20:00:59,906 - A2A_risk.samples.python.agents.risk_agent.nodes.generate_hypothesis - INFO - --------------------------------
+2025-05-11 20:00:59,906 - A2A_risk.samples.python.agents.risk_agent.nodes.generate_hypothesis - INFO - tool_result: [  
+珍しいパターンの取引や異常値が十分に説明されていない集計表やグラフがある(ref:サマリ/調査報告の目次パート),  
+通常と異なる分布や外れ値について具体的な記載や分析が見当たらないEDAサマリが提示されている(ref:調査概要・目的記載箇所),  
+データの概要情報や主要変数の分布状況が表層的で深掘りされていないEDAレポートが提出されている(ref:調査目的パート),  
+カテゴリ別・属性別等の代表サンプル抽出がなく、全体感のみでトピックが語られている(ref:目次の「調査方法等」「調査体制」記載箇所),  
+代表値（平均・中央値等）のみに言及し、極端な変動や例外の抽出・分析が省略されている(ref:調査サマリ全般・集約的説明箇所)  
+]
+2025-05-11 20:00:59,906 - A2A_risk.samples.python.agents.risk_agent.nodes.generate_hypothesis - INFO - --------------------------------
+2025-05-11 20:00:59,917 - __main__ - INFO - Notifying backend with full state after node tools...
+2025-05-11 20:01:00,559 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-11 20:01:16,225 - __main__ - INFO - Notifying backend with full state after node agent...
+2025-05-11 20:01:16,761 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-11 20:01:26,263 - A2A_risk.samples.python.agents.risk_agent.nodes.generate_hypothesis - INFO - Generated 4 new hypotheses (initial mode). Total hypotheses: 4
+2025-05-11 20:01:26,263 - A2A_risk.samples.python.agents.risk_agent.nodes.generate_hypothesis - INFO - Newly generated: [{'id': 'hyp_001', 'text': 'IF 2024-05-01〜2025-04-30の間、同一担当者IDが同一取引先ID・同一品目名への発注において、全担当者・全取引先の同一品目平均単価より1.5倍以上の単価で継続発注している場合、癒着による価格上乗せの可能性が高い。', 'priority': 0.95, 'status': 'new', 'time_window': '{"start":"2024-05-01","end":"2025-04-30"}', 'supporting_evidence_keys': ['担当者ID', '取引先ID', '品目名', '単価'], 'next_validation_step_suggestion': '全担当者・全取引先の品目別平均単価と個別担当者-取引先-品目単価を比較し、1.5倍超の発注を抽出する。', 'metric_definition': "SELECT * FROM orders WHERE unit_price > (SELECT AVG(unit_price) * 1.5 FROM orders WHERE item_name = orders.item_name AND order_date BETWEEN '2024-05-01' AND '2025-04-30')"}, {'id': 'hyp_002', 'text': 'IF 2024-05-01〜2025-04-30の間、同一担当者IDが特定取引先IDへの発注金額が当該担当者全発注金額の60%以上を占めている場合、その担当者と取引先の癒着による取引先偏重・キックバックの疑いが高い。', 'priority': 0.9, 'status': 'new', 'time_window': '{"start":"2024-05-01","end":"2025-04-30"}', 'supporting_evidence_keys': ['担当者ID', '取引先ID', '発注金額'], 'next_validation_step_suggestion': '担当者別・取引先別の発注金額シェアを計算し、偏重が見られるケースを抽出。', 'metric_definition': '発注金額割合 = SUM(order_amount) WHERE employee_id = ? AND vendor_id = ? / SUM(order_amount) WHERE employee_id = ?'}, {'id': 'hyp_003', 'text': 'IF 2024-05-01〜2025-04-30の間、発注金額が300,000円以上且つ同品目の95パーセンタイル以上の単価発注が担当者-取引先ペアに存在する場合、癒着や不当な便益供与のリスクがある。', 'priority': 0.85, 'status': 'new', 'time_window': '{"start":"2024-05-01","end":"2025-04-30"}', 'supporting_evidence_keys': ['担当者ID', '取引先ID', '品目名', '単価', '発注金額'], 'next_validation_step_suggestion': '発注金額・単価上位5%のデータを担当者・取引先軸で抽出し、該当案件を精査する。', 'metric_definition': '単価パーセンタイル = unit_price >= PERCENTILE(unit_price, 95) OVER (PARTITION BY item_name)'}, {'id': 'hyp_004', 'text': 'IF 2024-05-01〜2025-04-30の発注データから、発注金額や単価で極端に高い・低い代表サンプルが抽出される場合、そのサンプルには異常や癒着リスクのシグナルが含まれている。', 'priority': 0.8, 'status': 'new', 'time_window': '{"start":"2024-05-01","end":"2025-04-30"}', 'supporting_evidence_keys': ['担当者ID', '取引先ID', '品目名', '単価', '発注金額'], 'next_validation_step_suggestion': '発注金額と単価の分布から上下5%のサンプルを抽出し、内容詳細を確認する。', 'metric_definition': 'order_amount > PERCENTILE(order_amount, 95) OR order_amount < PERCENTILE(order_amount, 5) OR unit_price > PERCENTILE(unit_price, 95) OR unit_price < PERCENTILE(unit_price, 5)'}]
+2025-05-11 20:01:26,266 - __main__ - INFO - Notifying backend with full state after node generate_structured_response...
+2025-05-11 20:01:26,814 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-11 20:01:26,815 - __main__ - INFO - Notifying backend with full state after node generate_hypothesis...
+2025-05-11 20:01:27,360 - __main__ - INFO - Successfully notified backend. Status: 200
+2025-05-11 20:01:27,363 - A2A_risk.samples.python.agents.risk_agent.nodes.fork_hypotheses - INFO - --- Node: ForkHypotheses ---

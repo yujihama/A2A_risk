@@ -59,7 +59,7 @@ async def analyze_data(query, output_from_data_agent):
     """
     logger.info(f"[QDA] analyze_data: {query[:50]}")
 
-    tool_llm = ChatOpenAI(model="gpt-4.1")
+    tool_llm = ChatOpenAI(model="gpt-4.1-mini")
     prompt_for_data_analysis = get_query_data_analysis_prompt(query, output_from_data_agent)
 
     analysis_result = await tool_llm.ainvoke(prompt_for_data_analysis)
@@ -96,7 +96,7 @@ class QueryDataAgentNode(Node):
         data_summary: Dict[str, Any] = {}
 
         prompt_for_query = get_query_data_react_prompt(state,query_list)
-        react_llm = ChatOpenAI(model="gpt-4.1", temperature=0)
+        react_llm = ChatOpenAI(model="gpt-4.1-mini", temperature=0)
         react_agent = create_react_agent(
             model=react_llm, 
             tools=[call_data_agent, analyze_data],

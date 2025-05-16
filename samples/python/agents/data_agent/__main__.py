@@ -105,11 +105,33 @@ def load_config(config_path: str) -> Dict[str, Any]:
              config['port'] = int(config['port'])
         except (ValueError, TypeError):
              logger.warning(f"設定ファイルのポート番号が無効です: {config['port']}。デフォルト (8001) を使用します。")
-             config['port'] = 8001
 
-        # スキル定義のバリデーション
-        if not isinstance(config['skills'], list):
-            logger.warning(f"設定ファイルの skills はリスト形式である必要があります。デフォルト値を使用します。")
+        # 各スキルの必須フィールドをチェック
+        validated_skills = []
+        for skill in config['skills']:
+            if not isinstance(skill, dict):
+                logger.warning(f"無効なスキル定義: {skill}. スキップします。")
+                continue
+            
+            # 必須フィールドの確認
+            if 'id' not in skill or 'name' not in skill or 'description' not in skill:
+                logger.warning(f"スキル定義に必須フィールド (id, name, description) がありません: {skill}. スキップします。")
+                continue
+            
+            # 任意フィールドのデフォルト設定
+            if 'examples' not in skill:
+                skill['examples'] = []
+            if 'inputModes' not in skill:
+                skill['inputModes'] = ["text"]
+            if 'outputModes' not in skill:
+                skill['outputModes'] = ["text"]
+            
+            validated_skills.append(skill)
+        
+        if validated_skills:
+            config['skills'] = validated_skills
+        else:
+            logger.warning("有効なスキル定義がありません。デフォルト値を使用します。")
             config['skills'] = [
                 {
                     "id": "query_data",
@@ -124,47 +146,6 @@ def load_config(config_path: str) -> Dict[str, Any]:
                     "outputModes": ["text"]
                 }
             ]
-        else:
-            # 各スキルの必須フィールドをチェック
-            validated_skills = []
-            for skill in config['skills']:
-                if not isinstance(skill, dict):
-                    logger.warning(f"無効なスキル定義: {skill}. スキップします。")
-                    continue
-                
-                # 必須フィールドの確認
-                if 'id' not in skill or 'name' not in skill or 'description' not in skill:
-                    logger.warning(f"スキル定義に必須フィールド (id, name, description) がありません: {skill}. スキップします。")
-                    continue
-                
-                # 任意フィールドのデフォルト設定
-                if 'examples' not in skill:
-                    skill['examples'] = []
-                if 'inputModes' not in skill:
-                    skill['inputModes'] = ["text"]
-                if 'outputModes' not in skill:
-                    skill['outputModes'] = ["text"]
-                
-                validated_skills.append(skill)
-            
-            if validated_skills:
-                config['skills'] = validated_skills
-            else:
-                logger.warning("有効なスキル定義がありません。デフォルト値を使用します。")
-                config['skills'] = [
-                    {
-                        "id": "query_data",
-                        "name": "Query Data",
-                        "description": "Query the configured data source using natural language.",
-                        "examples": [
-                            "What is the total sales amount?",
-                            "Show me products with price over 10000",
-                            "Which category has the highest average rating?"
-                        ],
-                        "inputModes": ["text"],
-                        "outputModes": ["text"]
-                    }
-                ]
 
         # 入出力モードのバリデーション
         for mode_key in ['defaultInputModes', 'defaultOutputModes']:
@@ -191,8 +172,8 @@ def main(args: argparse.Namespace):
         port = args.port if args.port else config.get('port', 8001)
         agent_name = config.get('agent_name', "Generic Data Agent")
         agent_description = config.get('agent_description', "Analyzes data based on configuration.")
-        data_source = config['data_source'] # 必須キーなので必ず存在する
-        llm_model = config.get('llm_model', "gpt-4o-mini")
+        # data_source = config['data_source'] # 必須キーなので必ず存在する
+        # llm_model = config.get('llm_model', "gpt-4o-mini")
         organization = config.get('organization', "Your Organization")
         version = config.get('version', "1.0.0")
         endpoint = config.get('endpoint', "/a2a")
